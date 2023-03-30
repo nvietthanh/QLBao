@@ -44,7 +44,7 @@ class CommentController extends Controller
             abort(404);
         }
         else {
-            $isLikeComment = $comment->whereHas('commentAccounts', function($query) use ($account_id, $id) {
+            $isLikeComment = $comment->whereHas('commentsHasLikeAccounts', function($query) use ($account_id, $id) {
                 $query->where('account_id', $account_id)
                     ->where('comment_id', $id);
             })->first();
@@ -53,7 +53,7 @@ class CommentController extends Controller
             }
         }
 
-        $comment->commentAccounts()->attach($account_id);
+        $comment->commentsHasLikeAccounts()->attach($account_id);
 
         return response()->json(true);
     }
@@ -66,7 +66,7 @@ class CommentController extends Controller
             abort(404);
         }
         else {
-            $isLikeComment = $comment->whereHas('commentAccounts', function($query) use ($account_id, $id) {
+            $isLikeComment = $comment->whereHas('commentsHasLikeAccounts', function($query) use ($account_id, $id) {
                 $query->where('account_id', $account_id)
                     ->where('comment_id', $id);
             })->first();
@@ -75,7 +75,7 @@ class CommentController extends Controller
             }
         }
 
-        $comment->commentAccounts()->detach($account_id);
+        $comment->commentsHasLikeAccounts()->detach($account_id);
 
         return response()->json(true);
     }
