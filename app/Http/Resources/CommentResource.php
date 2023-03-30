@@ -22,11 +22,11 @@ class CommentResource extends JsonResource
             'creator_code' => $this->account->code,
             'creator_image' => $this->account->accountProfile->image,
             'created_at' => $this->created_at,
-            'is_like_comment' => $this->whereHas('commentAccounts', function($query) use ($account_id) {
+            'is_like_comment' => $this->whereHas('commentsHasLikeAccounts', function($query) use ($account_id) {
                     $query->where('account_id', $account_id)
                         ->where('comment_id', $this->id);
                 })->first() ? true : false,
-            'count_like_comment' => $this->commentAccounts()->count(),
+            'count_like_comment' => $this->commentsHasLikeAccounts()->count(),
         ];
     }
 }

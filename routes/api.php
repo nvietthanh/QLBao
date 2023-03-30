@@ -2,8 +2,7 @@
 
 // use App\Http\Controllers\Api\BackEnd\CategoryController;
 
-use App\Http\Controllers\Api\BackEnd\CommentController;
-use App\Http\Controllers\Api\BackEnd\Creator\PostController;
+use App\Http\Controllers\Api\FrontEnd\PostController;
 use App\Http\Controllers\Api\FrontEnd\CreatorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;

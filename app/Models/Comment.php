@@ -27,7 +27,7 @@ class Comment extends Model
         return $this->belongsTo(Post::class, 'post_id', 'id');
     }
 
-    public function commentAccounts()
+    public function commentsHasLikeAccounts()
     {
         return $this->belongsToMany(Account::class, 'like_comment_post', 'comment_id', 'account_id');
     }

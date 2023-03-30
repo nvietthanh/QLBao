@@ -18,7 +18,7 @@
                         <div class="text-[14px]">{{ convertTime(dataForm.created_at) }}</div>
                     </div>
                     <div class="mt-[18px]">
-                        <img :src="dataForm.image" alt="" class="w-[100%]">
+                        <img :src="dataForm.image" alt="" class="w-[100%] h-[400px]">
                         <div class="text-[14px] text-center mt-[8px]">
                             {{ dataForm.description }}
                         </div>
