@@ -27,12 +27,13 @@ class PostController extends Controller
         return PostResource::collection($listPostCategory);
     }
 
-    public function getPost($slugPost)
-    {
-        $post = Post::where('slug', $slugPost)->first();
+    // public function getPost($slugPost)
+    // {
+    //     dd(auth('accounts')->user());
+    //     $post = Post::where('slug', $slugPost)->first();
 
-        return PostResource::make($post);
-    }
+    //     return PostResource::make($post);
+    // }
 
     public function getListPostCreator($id, Request $request)
     {

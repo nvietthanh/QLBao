@@ -22,7 +22,7 @@ use Inertia\Inertia;
 */
 
 Route::get('test', function() {
-    return Account::find(1)->accountComments;
+    return Account::find(1)->following;
 });
 
 Route::post('login', [LoginController::class, 'login'])->name('guest.login');

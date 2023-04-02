@@ -1,7 +1,7 @@
 <template>
     <AppLayout>
         <template v-slot:main-1>
-            <div class="main mb-[24px]">
+            <div class="main mb-[24px] relative">
                 <div class="py-[12px] px-[12px]">
                     <div class="text-[22px] font-bold">
                         {{ dataForm.title }}
@@ -18,7 +18,7 @@
                         <div class="text-[14px]">{{ convertTime(dataForm.created_at) }}</div>
                     </div>
                     <div class="mt-[18px]">
-                        <img :src="dataForm.image" alt="" class="w-[100%] h-[400px]">
+                        <img :src="dataForm.image" alt="" class="w-[100%] min-h-[400px]">
                         <div class="text-[14px] text-center mt-[8px]">
                             {{ dataForm.description }}
                         </div>
@@ -55,14 +55,14 @@
                              :class="{ 'active-comment' : filters.tabComment == 'tab-1'}">Mới nhất</div>
                         </div>
                         <div class="mt-[18px] mx-[8px]">
-                            <template v-for="comment in comments">
+                            <template v-if="comments.length > 0" v-for="comment in comments">
                                 <div class="flex mb-[18px]">
                                     <Link :href="route('home')">
                                         <img v-if="comment.creator_image" :src="comment.creator_image" alt="" class="w-[36px] min-w-[36px] h-[36px] rounded-[50%]">
                                         <div v-else class="bg-[#5c6bc0] w-[36px] h-[36px] border-[1px] rounded-[50%]
                                                 flex justify-center items-center">
                                             <span class="text-[#fff] text-[14px]">{{
-                                                this.$page.props.auth.account.first_name[0] }}</span>
+                                                comment.creator[0] }}</span>
                                         </div>
                                     </Link>
                                     <div class="ml-[12px] mt-[-4px]">
@@ -87,10 +87,35 @@
                                     </div>
                                 </div>
                             </template>
+                            <template v-else>
+                                <div class="text-center my-[32px] text-[15px]">Không có bình luận, hãy là người bình luận đầu tiên</div>
+                            </template>
                         </div>
                         <div v-if="nextComment" class="btn mt-[28px] mx-[8px] border-[1px] border-[#adb5bd] text-center py-[12px] 
                             cursor-pointer text-[17px] active:bg-[#eff1f3]" @click="loadComment">
                             Xem thêm bình luận
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute top-[18%] right-[100%]">
+                    <div class="mr-[12px]">
+                        <div class="rounded-[50%] w-[36px] h-[36px] bg-[#fff] box-shadow flex justify-center items-center
+                          text-[22px] text-[#6c757d] cursor-pointer hover:text-[#17a2b8] hover:scale-[1.1]" @click="backHome">
+                            <i class="bi bi-house-door-fill"></i>
+                        </div>
+                        <div class="mt-[12px] rounded-[50%] w-[36px] h-[36px] bg-[#fff] box-shadow flex justify-center items-center
+                         text-[19px] text-[#6c757d] cursor-pointer hover:text-[#17a2b8] hover:scale-[1.1]" 
+                         :class=" {'text-[#17a2b8]' : dataForm.is_save} " @click="savePost">
+                            <i class="bi bi-bookmark-fill mt-[2px]"></i>
+                        </div>
+                        <div class="mt-[12px] rounded-[50%] w-[36px] h-[36px] bg-[#fff] box-shadow flex justify-center items-center
+                          text-[19px] text-[#6c757d] cursor-pointer hover:text-[#17a2b8] hover:scale-[1.1]" @click="reportPost">
+                            <i class="bi bi-flag-fill mt-[2px]"></i>
+                        </div>
+                        <div class="mt-[12px] rounded-[50%] w-[36px] h-[36px] bg-[#fff] box-shadow flex justify-center items-center
+                          text-[19px] text-[#6c757d] cursor-pointer hover:text-[#17a2b8] hover:scale-[1.1]"
+                           @click="backPage">
+                            <i class="bi bi-arrow-left mt-[2px]"></i>
                         </div>
                     </div>
                 </div>
@@ -183,6 +208,7 @@ export default{
                 page: 0,
             },
             dataForm: {
+                id: '',
                 title: '',
                 slug: '',
                 title: '',
@@ -190,6 +216,7 @@ export default{
                 image: '',
                 categorySlug: '',
                 categoryName: '',
+                is_save: false,
                 creator: '',
                 creatorCode: '',
                 created_at: '',
@@ -198,23 +225,13 @@ export default{
             contentComment: '',
             comments: [],
             pageComment: 2,
-            totalcomment: '',
+            totalcomment: 0,
             nextComment: false,
             errors: []
         }  
     },
     created() {
         this.fetchData()
-    },
-    mounted() {
-        // let index = 0
-        // setInterval(() => {
-        //     document.querySelector('.partners .main > div').style.transform = `translateX(-${index}px)`
-        //     index++
-        //     if (index >= 300) {
-        //         index = 0
-        //     }
-        // }, 20);
     },
     methods: {
         moment,
@@ -267,24 +284,24 @@ export default{
         sendComment() {
             if(this.$page.props.auth.account) {
                 const pagram = {
-                ...{
-                    'content': this.contentComment
+                    ...{
+                        'content': this.contentComment
+                    }
                 }
-            }
-            axios.post(route('create-comment', this.dataForm.id), pagram)
-                .then(response => {
-                    ElMessage({
-                        showClose: true,
-                        message: 'Thêm bình luận thành công',
-                        type: 'success',
+                axios.post(route('create-comment', this.dataForm.id), pagram)
+                    .then(response => {
+                        ElMessage({
+                            showClose: true,
+                            message: 'Thêm bình luận thành công',
+                            type: 'success',
+                        })
+                        this.contentComment = ''
+                        this.fetchDataComment()
                     })
-                    this.contentComment = ''
-                    this.fetchDataComment()
-                })
-                .catch(errors => {
-                    this.errors = errors.response.data.errors
-                })
-            }
+                    .catch(errors => {
+                        this.errors = errors.response.data.errors
+                    })
+                }
             else {
                 this.$refs.loginForm.open()
             }
@@ -294,26 +311,65 @@ export default{
             this.fetchDataComment()
         },
         changeStatusLike(comment) {
-            if(comment.is_like_comment) {
-                axios.get(route('unlike-comment', comment.id))
-                    .then(response => {
-                        this.fetchDataComment()
+            if(this.$page.props.auth.account) {
+                if(comment.is_like_comment) {
+                    axios.get(route('unlike-comment', comment.id))
+                        .then(response => {
+                            this.fetchDataComment()
 
-                    })
-                    .catch(errors => {})
+                        })
+                        .catch(errors => {})
+                }
+                else {
+                    axios.get(route('like-comment', comment.id))
+                        .then(response => {
+                            this.fetchDataComment()
+
+                        })
+                        .catch(errors => {})
+                }
             }
             else {
-                axios.get(route('like-comment', comment.id))
-                    .then(response => {
-                        this.fetchDataComment()
-
-                    })
-                    .catch(errors => {})
+                this.$refs.loginForm.open()
             }
-
         },
         login() {
             location.reload()
+        },
+        backPage() {
+            history.back()
+        },
+        backHome() {
+            window.location = route('home')
+        },
+        savePost() {
+            if(this.$page.props.auth.account) {
+                if(this.dataForm.is_save) {
+                    axios.get(route('unsave-post', this.dataForm.id))
+                        .then(response => {
+                            this.fetchData()
+                        })
+                        .catch(errors => {})
+                }
+                else{
+                    axios.get(route('save-post', this.dataForm.id))
+                        .then(response => {
+                            this.fetchData()
+                        })
+                        .catch(errors => {})
+                }
+            }
+            else {
+                this.$refs.loginForm.open()
+            }
+        },
+        reportPost() {
+            if(this.$page.props.auth.account) {
+
+            }
+            else {
+                this.$refs.loginForm.open()
+            }
         }
     }
 }

@@ -18,7 +18,7 @@ class AccountSeeder extends Seeder
         for ($i = 1; $i <= 10; $i ++) {
             $account = Account::create([
                 'code' => rand(10000000, 99999999),
-                'email' => 'creator'. $i . '@rabilooo.com',
+                'email' => 'creator'. $i . '@rabiloo.com',
                 'password' => bcrypt('12345678'),
                 'userable_type' => 'Creator'
             ]);
@@ -43,7 +43,7 @@ class AccountSeeder extends Seeder
         for ($i = 1; $i <= 10; $i ++) {
             $account = Account::create([
                 'code' => rand(10000000, 99999999),
-                'email' => 'user'. $i . '@rabilooo.com',
+                'email' => 'user'. $i . '@rabiloo.com',
                 'password' => bcrypt('12345678'),
                 'userable_type' => 'Reader'
             ]);

@@ -22,11 +22,11 @@ Route::get('/get-new-post', [PostController::class, 'getNewPost'])->name('post.g
 
 // List category
 Route::get('/category/get-all/{category}', [PostController::class, 'getListPostCategory'])->name('category.list-post');
-Route::get('/get-post/{slugPost}', [PostController::class, 'getPost'])->name('post.get-post');
+// Route::get('/get-post/{slugPost}', [PostController::class, 'getPost'])->name('post.get-post');
 Route::get('/get-list-post-creator/id={id}', [PostController::class, 'getListPostCreator'])->name('post.get-list-post-creator');
 
 // Infor cretor
-Route::get('/get-infor-user/{id}', [CreatorController::class, 'getInfor'])->name('cretor.get-infor');
+// Route::get('/get-infor-user/{id}', [CreatorController::class, 'getInfor'])->name('cretor.get-infor');
 
 // List user popular
 Route::get('/get-list-user-popular/{id?}', [CreatorController::class, 'getListPopular'])->name('cretor.get-list-popular');

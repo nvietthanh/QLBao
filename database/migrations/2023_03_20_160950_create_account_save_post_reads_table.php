@@ -12,12 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('account_save_post', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('account_id')->nullable();
             $table->unsignedBigInteger('post_id')->nullable();
             $table->timestamps();
 
-            $table->foreign('account_id')->references('id')->on('accounts')->onDelete('set null');
-            $table->foreign('post_id')->references('id')->on('posts')->onDelete('set null');
+            $table->foreign('account_id')->references('id')->on('accounts')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('post_id')->references('id')->on('posts')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

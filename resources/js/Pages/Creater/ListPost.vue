@@ -64,7 +64,7 @@
                             <div class="post-icon absolute top-[38px] right-[8px] h-[24px] w-[28px] text-center pt-[3px]
                               cursor-pointer bg-[#fff] rounded-[4px] box-shadow text-[14px] active:scale-95 hover:bg-[#ced4da]" 
                               @click="editPost(item)">
-                                <i class="bi bi-pen"></i>
+                                <i class="bi bi-pen mb-[4px]"></i>
                             </div>
                         </div>
                     </div>
@@ -102,7 +102,7 @@ export default{
     data() {
         return {
             currentTab: 'tab-2',
-            options: [15, 20, 25],
+            options: [15, 21, 25],
             filter: {
                 limit: 15,
                 categorySelect: [],
@@ -110,8 +110,7 @@ export default{
                 page: 1,
             },
             paginate: [],
-            postsData: [
-            ]
+            postsData: []
         }  
     },
     created() {

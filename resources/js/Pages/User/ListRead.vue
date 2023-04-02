@@ -11,24 +11,35 @@
                             Danh sách đã xem
                         </div>
                     </div>
-                    <div class="mt-[24px] mb-[16px] mx-[12px] grid grid-cols-3 gap-3">
-                        <div v-for="item in formData" class="mt-[8px] post-item">
-                            <Link :href="route('post', item.slugPost)">
-                                <img :src="item.image" :alt="item.description" class="post-image">
-                            </Link>
-                            <div class="px-[2px]">
-                                <Link :href="route('post', item.slugPost)">
-                                    <div class="font-bold text-[15px] mt-[4px]">{{ item.title }}</div>
+                    <template v-if="formData.length == 0">
+                        <div class="text-center text-[16px] mt-[18px] mb-[6px]">
+                            Bạn chưa lưu bài viết nào
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div class="mt-[24px] mb-[16px] mx-[12px] grid grid-cols-3 gap-3">
+                            <div v-for="item in formData" class="mt-[8px] post-item">
+                                <Link :href="route('post', item.slug)">
+                                    <img :src="item.image" :alt="item.description" class="post-image w-[100%] h-[150px] object-cover">
                                 </Link>
-                                <div class="flex items-center mt-[8px]">
-                                    <Link :href="route('list-category', item.slugCategory)">
-                                        <div class="text-[14px] font-bold text-[#076db6]">{{ item.category }}</div>
+                                <div class="px-[2px]">
+                                    <Link :href="route('post', item.slug)">
+                                        <div class="font-bold text-[15px] mt-[4px]">{{ item.title }}</div>
                                     </Link>
-                                    <div class="ml-[16px] text-[13px] mt-[4px]">{{ item.time }}</div>
+                                    <div class="flex items-center mt-[8px]">
+                                        <Link :href="route('list-category', item.categorySlug)">
+                                            <div class="text-[14px] font-bold text-[#076db6]">{{ item.categoryName }}</div>
+                                        </Link>
+                                        <div class="ml-[16px] text-[13px] mt-[4px]">{{ convertTime(item.created_at) }}</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <div class="flex mt-[34px] mb-[54px] justify-center">
+                            <Paginate @page-change="handleCurrentPage" :paginate="paginate" :current-page="filter.page || 1"
+                              paginate-background/>
+                        </div>
+                    </template>
                 </div>
             </div>
         </template>
@@ -36,94 +47,67 @@
 </template>
 <script>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import { useForm } from '@inertiajs/inertia-vue3'
 import { Link } from '@inertiajs/vue3'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { h } from 'vue'
 import Navigation from '@/Components/User/Navigation.vue'
+import Paginate from "@/Components/UI/Paginate.vue";
+import moment from "moment";
 
 export default{
     components:{
         AppLayout,
         Link,
+        Paginate,
         Navigation
     },
     data() {
         return {
             currentTab: 'tab-2',
-            formData: [
-                {
-                    title: 'Giá xăng dầu ngày mai 13/3 có thể tăng nhẹ',
-                    description: 'Tình hình giá xăng dầu hiện tại',
-                    slugPost: 'chung-ta-cua-hien-tai',
-                    image: '/image/cf2a58bd5ff0b6aeefe1.jpg',
-                    category: 'Chính trị',
-                    slugCategory: 'chinh-tri',
-                    time: '1 giờ trước'
-                },
-                {
-                    title: 'Giá xăng dầu ngày mai 13/3 có thể tăng nhẹ',
-                    description: 'Tình hình giá xăng dầu hiện tại',
-                    slugPost: 'chung-ta-cua-hien-tai',
-                    image: '/image/cf2a58bd5ff0b6aeefe1.jpg',
-                    category: 'Chính trị',
-                    slugCategory: 'chinh-tri',
-                    time: '1 giờ trước'
-                },
-                {
-                    title: 'Giá xăng dầu ngày mai 13/3 có thể tăng nhẹ',
-                    description: 'Tình hình giá xăng dầu hiện tại',
-                    slugPost: 'chung-ta-cua-hien-tai',
-                    image: '/image/cf2a58bd5ff0b6aeefe1.jpg',
-                    category: 'Chính trị',
-                    slugCategory: 'chinh-tri',
-                    time: '1 giờ trước'
-                },
-                {
-                    title: 'Giá xăng dầu ngày mai 13/3 có thể tăng nhẹ',
-                    description: 'Tình hình giá xăng dầu hiện tại',
-                    slugPost: 'chung-ta-cua-hien-tai',
-                    image: '/image/cf2a58bd5ff0b6aeefe1.jpg',
-                    category: 'Chính trị',
-                    slugCategory: 'chinh-tri',
-                    time: '1 giờ trước'
-                },
-                {
-                    title: 'Giá xăng dầu ngày mai 13/3 có thể tăng nhẹ',
-                    description: 'Tình hình giá xăng dầu hiện tại',
-                    slugPost: 'chung-ta-cua-hien-tai',
-                    image: '/image/cf2a58bd5ff0b6aeefe1.jpg',
-                    category: 'Chính trị',
-                    slugCategory: 'chinh-tri',
-                    time: '1 giờ trước'
-                },
-                {
-                    title: 'Giá xăng dầu ngày mai 13/3 có thể tăng nhẹ',
-                    description: 'Tình hình giá xăng dầu hiện tại',
-                    slugPost: 'chung-ta-cua-hien-tai',
-                    image: '/image/cf2a58bd5ff0b6aeefe1.jpg',
-                    category: 'Chính trị',
-                    slugCategory: 'chinh-tri',
-                    time: '1 giờ trước'
-                },
-                {
-                    title: 'Giá xăng dầu ngày mai 13/3 có thể tăng nhẹ',
-                    description: 'Tình hình giá xăng dầu hiện tại',
-                    slugPost: 'chung-ta-cua-hien-tai',
-                    image: '/image/cf2a58bd5ff0b6aeefe1.jpg',
-                    category: 'Chính trị',
-                    slugCategory: 'chinh-tri',
-                    time: '1 giờ trước'
-                },
-            ]
+            filter: {
+                limit: 18,
+                page: 1,
+            },
+            paginate: [],
+            formData: [],
         }  
     },
     created() {
         this.fetchData()
     },
     methods: {
-        fetchData() {
-        }
+        moment,
+        async fetchData() {
+            const pagram = { ...this.filter }
+            const response = await axios.get(route('get-list-read', pagram))
+            this.formData = response.data.data
+            this.paginate = response.data.meta
+        },
+        handleCurrentPage(value) {
+            this.filter.page = value
+            this.fetchData()
+        },
+        convertTime(created_at) {
+            const now = moment()
+            const time = moment(created_at)
+
+            if (now.diff(time, 'years') > 0) {
+                return `${now.diff(time, 'years')} năm trước`
+            }
+            else if (now.diff(time, 'months') > 0) {
+                return `${now.diff(time, 'months')} tháng trước`
+            }
+            else if (now.diff(time, 'days') > 0) {
+                return `${now.diff(time, 'days')} ngày trước`
+            }
+            else if (now.diff(time, 'hours') > 0) {
+                return `${now.diff(time, 'hours')} giờ trước`
+            }
+            else if (now.diff(time, 'minutes') > 0) {
+                return `${now.diff(time, 'minutes')} phút trước`
+            }
+            else if (now.diff(time, 'seconds') > 0) {
+                return `${now.diff(time, 'seconds')} giây trước`
+            }
+        },
     }
 }
 

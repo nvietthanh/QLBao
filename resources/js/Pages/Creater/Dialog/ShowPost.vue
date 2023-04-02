@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-model="dialogVisible" id="show-post" class="bg-[#f4f1f8] max-h-[90%] overflow-scroll" width="800px" 
+    <el-dialog v-model="dialogVisible" id="show-post" class="bg-[#f4f1f8] h-[90%] overflow-scroll" width="800px" 
      style="margin-top: 34px !important;" :show-close="true">
         <template #header>
             <div class="text-center font-bold text-[18px]">
