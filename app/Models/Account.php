@@ -35,4 +35,19 @@ class Account extends Authenticatable
     {
         return $this->belongsToMany(Comment::class, 'like_comment_post', 'account_id', 'comment_id');
     }
+
+    public function accountHasReadPosts()
+    {
+        return $this->belongsToMany(Post::class, 'account_read_post', 'account_id', 'post_id')->withPivot('read_at');
+    }
+
+    public function follows()
+    {
+        return $this->belongsToMany(Account::class, 'follows', 'account_id', 'follower_id');
+    }
+
+    // public function accountHasSavePosts()
+    // {
+    //     return  $this->
+    // }
 }

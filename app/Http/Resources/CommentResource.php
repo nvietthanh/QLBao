@@ -14,7 +14,7 @@ class CommentResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $account_id = auth('accounts')->user()->id;
+        $account_id = auth('accounts')->user()->id ?? '';
         return [
             'id' => $this->id,
             'content' => $this->content,

@@ -11,112 +11,110 @@
                             Thông tin tài khoản cá nhân
                         </div>
                     </div>
-                    <div class="flex ml-[22px] mt-[38px]">
-                        <div class="relative">
-                            <div v-if="!imageSelected && !formData.image"  class="bg-[#5c6bc0] w-[200px] h-[200px] border-[1px] flex justify-center items-center"
-                            :class="{ 'cursor-pointer': isEditProfile }" @click="changeImage">
-                                <span class="text-[#fff] text-[50px]">{{ formData.first_name[0] }}</span>
-                            </div>
-                            <img v-else-if="imageSelected == ''" :src="formData.image" :alt="formData.image" class="w-[200px] h-[200px] border-[1px]"
-                                :class="{ 'cursor-pointer': isEditProfile }" @click="changeImage">
-                            <img v-else :src="imageSelected" :alt="formData.img" class="w-[200px] h-[200px] border-[1px]"
-                                :class="{ 'cursor-pointer': isEditProfile }" @click="changeImage">
-                            
-                            <div v-if="isEditProfile" class="absolute top-[12px] right-[12px] z-50">
-                                <div v-if="imageSelected || formData.img" class="bg-[#fff] py-[3px] px-[5px] text-[#000] 
-                                text-[15px] rounded-[6px] mb-[8px] cursor-pointer hover:bg-[#ced4da]" @click="deleteImage">
-                                    <i class="bi bi-trash3"></i>
+                    <div class="mx-[22px] mt-[24px]">
+                        <div class="text-[16px] font-bold text-[#6c757d] ml-[12px] mb-[18px]">ID: {{ formData.code }}</div>
+
+                        <div class="row gap-y-[12px]">
+                            <div class="relative col-4">
+                                <div v-if="!imageSelected && !formData.image"  class="bg-[#5c6bc0] w-[226px] h-[226px] rounded-[8px] border-[1px] flex justify-center items-center"
+                                  :class="{ 'cursor-pointer': isEditProfile }" @click="changeImage">
+                                    <span class="text-[#fff] text-[50px]">{{ formData.first_name[0] }}</span>
                                 </div>
-                                <div class="bg-[#fff] py-[3px] px-[5px] text-[#000] 
-                                text-[15px] rounded-[6px] cursor-pointer hover:bg-[#ced4da]" @click="changeImage">
-                                    <i class="bi bi-camera"></i>
-                                </div>
-                            </div>
-    
-                            <input v-show="false" ref="file" type="file" @change="handleUploadContent"
-                                accept=".jpg,.png,.bmp,.jpeg,.tif,.gif" />
-                        </div>
-                        <div class="ml-[24px]">
-                            <div class="flex">
-                                <div class="w-[150px]">
-                                    <div class="text-[#000] font-bold text-[14px] mb-[3px]">Họ <span class="text-[red]">*</span>
+                                <img v-else-if="imageSelected" :src="imageSelected" :alt="formData.image" class="w-[226px] h-[226px] rounded-[8px] border-[1px] object-cover"
+                                    :class="{ 'cursor-pointer': isEditProfile }" @click="changeImage">
+                                <img v-else :src="formData.image" :alt="formData.image" class="w-[226px] h-[226px] rounded-[8px] border-[1px] object-cover"
+                                    :class="{ 'cursor-pointer': isEditProfile }" @click="changeImage">
+                                
+                                <div v-if="isEditProfile" class="absolute top-[12px] right-[24px] z-50">
+                                    <div v-if="formData.image || imageSelected" class="bg-[#fff] py-[2px] px-[6px] text-[#000] 
+                                    text-[15px] rounded-[6px] mb-[8px] cursor-pointer hover:bg-[#ced4da]" @click="deleteImage">
+                                        <i class="bi bi-trash3"></i>
                                     </div>
-                                    <el-input v-if="!isEditProfile" v-model="formData.first_name" placeholder="Họ" class="h-[30px]"
-                                        disabled />
-                                    <el-input v-else v-model="formData.first_name" placeholder="Họ" class="h-[30px]" />
-                                </div>
-                                <div class="w-[150px] ml-[30px]">
-                                    <div class="text-[#000] font-bold text-[14px] mb-[3px]">Tên <span class="text-[red]">*</span>
+                                    <div class="bg-[#fff] py-[2px] px-[6px] text-[#000] 
+                                    text-[15px] rounded-[6px] cursor-pointer hover:bg-[#ced4da]" @click="changeImage">
+                                        <i class="bi bi-camera"></i>
                                     </div>
-                                    <el-input v-if="!isEditProfile" v-model="formData.last_name" placeholder="Tên" class="h-[30px]"
-                                        disabled />
-                                    <el-input v-else v-model="formData.last_name" placeholder="Tên" class="h-[30px]" />
+                                </div>
+        
+                                <input v-show="false" ref="file" type="file" @change="handleUploadContent"
+                                    accept=".jpg,.png,.bmp,.jpeg,.tif,.gif" />
+                            </div>
+                            <div class="col-6">
+                                <div class="flex">
+                                    <div class="w-[150px]">
+                                        <div class="text-[#000] font-bold text-[14px] mb-[3px]">Họ <span class="text-[red]">*</span>
+                                        </div>
+                                        <el-input v-model="formData.first_name" placeholder="Họ" class="h-[30px]"
+                                            :disabled="!isEditProfile" />
+                                    </div>
+                                    <div class="w-[150px] ml-[30px]">
+                                        <div class="text-[#000] font-bold text-[14px] mb-[3px]">Tên <span class="text-[red]">*</span>
+                                        </div>
+                                        <el-input v-model="formData.last_name" placeholder="Tên" class="h-[30px]"
+                                            :disabled="!isEditProfile" />
+                                    </div>
+                                </div>
+                                <div class="mt-[16px] flex">
+                                    <div class="w-[80px] mr-[24px]">
+                                        <div class="text-[#000] font-bold text-[14px] mb-[3px]">Giới tính</div>
+                                        <el-select v-model="formData.male" placeholder="Giới tính" :disabled="!isEditProfile">
+                                            <el-option value="0" label="Nam"/>
+                                            <el-option value="1" label="Nữ"/>
+                                            <el-option value="2" label="Khác"/>
+                                        </el-select>
+                                    </div>
+                                    <div class="flex-auto">
+                                        <div class="text-[#000] font-bold text-[14px] mb-[3px]">Ngày sinh</div>
+                                        <el-date-picker
+                                            class="mt-[2px] text-[10px]"
+                                            v-model="formData.date_of_birth"
+                                            type="date"
+                                            format="DD-MM-YYYY"
+                                            value-format="DD-MM-YYYY"
+                                            :default-time="defaultTime"
+                                            placeholder="Nhập ngày sinh"
+                                            clearable
+                                            :disabled="!isEditProfile"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="mt-[16px]">
+                                    <div class="text-[#000] font-bold text-[14px] mb-[3px]">Số điện thoại</div>
+                                    <el-input v-model="formData.phone" placeholder="Số điện thoại" class="h-[30px]"
+                                        :disabled="!isEditProfile"/>
                                 </div>
                             </div>
-                            <div class="mt-[16px] flex">
-                                <div class="w-[80px] mr-[24px]">
-                                    <div class="text-[#000] font-bold text-[14px] mb-[3px]">Giới tính</div>
-                                    <el-select v-if="!isEditProfile" v-model="formData.male" placeholder="Giới tính" disabled>
-                                        <el-option value="0" label="Nam"/>
-                                        <el-option value="1" label="Nữ"/>
-                                        <el-option value="2" label="Khác"/>
-                                    </el-select>
-                                    <el-select v-else v-model="formData.male" placeholder="Select">
-                                        <el-option value="0" label="Nam"/>
-                                        <el-option value="1" label="Nữ"/>
-                                        <el-option value="2" label="Khác"/>
-                                    </el-select>
-                                </div>
-                                <div class="flex-auto">
-                                    <div class="text-[#000] font-bold text-[14px] mb-[3px]">Ngày sinh</div>
-                                    <el-date-picker v-if="!isEditProfile"
-                                        class="mt-[2px] text-[10px]"
-                                        v-model="formData.date_of_birth"
-                                        type="date"
-                                        format="DD-MM-YYYY"
-                                        value-format="DD-MM-YYYY"
-                                        :default-time="defaultTime"
-                                        placeholder="Nhập ngày sinh"
-                                        clearable
-                                        disabled
-                                    />
-                                    <el-date-picker v-else
-                                        class="mt-[2px] text-[10px]"
-                                        v-model="formData.date_of_birth"
-                                        type="date"
-                                        format="DD-MM-YYYY"
-                                        value-format="DD-MM-YYYY"
-                                        :default-time="defaultTime"
-                                        placeholder="Nhập ngày sinh"
-                                        clearable
-                                    />
-                                </div>
+                            <div class="col-12 mt-[12px] h-[80px]">
+                                <div class="text-[16px] font-bold">Mô tả</div>
+                                <el-input v-model="formData.description" type="textarea" placeholder="Mô tả" class="h-[36px] mt-[4px]"
+                                    maxlength="255"    
+                                    :disabled="!isEditProfile" />
                             </div>
-                            <div class="mt-[16px]">
-                                <div class="text-[#000] font-bold text-[14px] mb-[3px]">Số điện thoại</div>
-                                <el-input v-if="!isEditProfile" v-model="formData.phone" placeholder="Số điện thoại" class="h-[30px]"
-                                    disabled />
-                                <el-input v-else v-model="formData.phone" placeholder="Số điện thoại" class="h-[30px]" disable/>
+                            <div class="col-12 mt-[12px] h-[170px]">
+                                <div class="text-[16px] font-bold">Đánh dấu</div>
+                                <el-input v-model="formData.remark" type="textarea" placeholder="Chi tiết comment" class="h-[30px] mt-[4px]"
+                                    :autosize="{ minRows: 8 , maxRows: 8}"
+                                    :disabled="!isEditProfile" />
                             </div>
                         </div>
-                    </div>
-                    <div class="pb-[12px] pt-[58px] mr-[34px]" v-if="!isEditProfile">
-                        <div class="flex justify-end text-[14px] mr-[24px]">
-                            <div class="w-[100px] py-[6px] bg-[#007bff] text-[#fff] text-center rounded-[4px] cursor-pointer"
-                                @click="editProfile">
-                                Chỉnh sửa
+                        <div class="pb-[12px] pt-[58px] mr-[34px]" v-if="!isEditProfile">
+                            <div class="flex justify-end text-[14px] mr-[24px]">
+                                <div class="w-[100px] py-[6px] bg-[#007bff] text-[#fff] text-center rounded-[4px] cursor-pointer"
+                                    @click="editProfile">
+                                    Chỉnh sửa
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="pb-[12px] pt-[58px] mr-[34px]" v-else>
-                        <div class="flex justify-end text-[14px] mr-[24px]">
-                            <div @click="cancel"
-                                class="cursor-pointer flex justify-center items-center w-[110px] rounded-[4px] bg-[#ffffff] py-[4px] text-[15px] text-black border border-[#7d7f92]">
-                                Hủy bỏ
-                            </div>
-                            <div class="cursor-pointer flex justify-center items-center w-[110px] ml-[18px] rounded-[4px] bg-[#007bff] py-[4px] text-[15px] text-white"
-                                @click="changeProfile">
-                                Xác nhận
+                        <div class="pb-[12px] pt-[58px] mr-[34px]" v-else>
+                            <div class="flex justify-end text-[14px] mr-[24px]">
+                                <div @click="cancel"
+                                    class="cursor-pointer flex justify-center items-center w-[110px] rounded-[4px] bg-[#ffffff] py-[4px] text-[15px] text-black border border-[#7d7f92]">
+                                    Hủy bỏ
+                                </div>
+                                <div class="cursor-pointer flex justify-center items-center w-[110px] ml-[18px] rounded-[4px] bg-[#007bff] py-[4px] text-[15px] text-white"
+                                    @click="changeProfile">
+                                    Xác nhận
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -143,6 +141,7 @@ export default{
             currentTab: 'tab-0',
             isEditProfile: false,
             imageSelected: '',
+            fileImage: '',
             formData: {
                 id: '',
                 first_name: '',
@@ -170,7 +169,8 @@ export default{
         },
         cancel() {
             this.fetchData()
-            this.imageSelected = ''
+            this.imageSelected = ""
+            this.fileImage = ""
             this.isEditProfile = false
         },
         editProfile() {
@@ -182,10 +182,13 @@ export default{
             }
         },
         deleteImage() {
-            this.imageSelected = ""
-            this.formData.img = ""
-            this.$refs.file = null
-            console.log(this.$refs.file)
+            if(this.formData.image && !this.imageSelected) {
+                this.formData.image = ""
+            }
+            else{
+                this.imageSelected = ""
+                this.fileImage = ""
+            }
         },
         async handleUploadContent(e) {
             try {
@@ -205,7 +208,7 @@ export default{
 
                     return false;
                 }
-                this.formData.image = files[0]
+                this.fileImage = files[0]
                 this.imageSelected = URL.createObjectURL(files[0])
             } catch (err) {
                 console.log('handleUploadContent', err);
@@ -225,11 +228,19 @@ export default{
                         instance.confirmButtonLoading = true
                         instance.confirmButtonText = 'Loading...'
                         instance.closeForm = false
-                        const pagram = new FormData();
+                        const pagram = new FormData()
+                        let image = ""
+                        if(this.fileImage) {
+                            image = this.fileImage
+                        }
+                        else{
+                            image = this.formData.image
+                        }
+                        console.log(this.fileImage ?? this.formData.image)
                         pagram.append('first_name', this.formData.first_name)
                         pagram.append('last_name', this.formData.last_name)
                         pagram.append('date_of_birth', this.formData.date_of_birth ?? '')
-                        pagram.append('image', this.formData.image ?? '')                        
+                        pagram.append('image', image)
                         pagram.append('phone', this.formData.phone ?? '')
                         pagram.append('male', this.formData.male ?? '')
                         pagram.append('description', this.formData.description ?? '')
@@ -250,7 +261,7 @@ export default{
                     type: 'success',
                     message: `Thay đổi thông tin cá nhân thành công`,
                 })
-                this.isEditProfile = 'tab-0'
+                this.isEditProfile = 'false'
                 location.reload()
             }).catch(() => {})
         }

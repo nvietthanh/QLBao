@@ -60,24 +60,29 @@ class ProfileController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-    {        
+    {
         DB::beginTransaction();
         try {
             // $request->validated();
 
             $accountProfile = AccountProfile::find($id);
 
-            $path = $request->file('image') ? Storage::putFile('public/avatars', $request->file('image')) : '';
-
+            
             $accountProfile->update(
                 array_merge(
-                    $request->only(['first_name', 'last_name', 'male', 'phone', 'image', 'description', 'remark']),
+                    $request->only(['first_name', 'last_name', 'male', 'phone', 'description', 'remark']),
                     [
                         'date_of_birth' => $request->date_of_birth ? Carbon::create($request->date_of_birth) : null,
-                        'image' => $path ? Storage::url($path) : ''
                     ]
                 )
             );
+            
+            if(!($request->image == $accountProfile->image)) {
+                $path = $request->file('image') ? Storage::putFile('public/avatars', $request->file('image')) : '';
+                $accountProfile->update([
+                    'image' => $path ? Storage::url($path) : ''
+                ]);
+            }
 
             DB::commit();
 

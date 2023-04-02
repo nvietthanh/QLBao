@@ -39,12 +39,21 @@ class HandleInertiaRequests extends Middleware
     {
         $categories = $categories = Category::select(['name', 'slug'])->get();
         $account = auth()->guard('accounts')->user();
+        if($account) {
+            $account = array_merge(
+                $account->accountProfile->only('first_name' , 'last_name', 'image'),
+                [
+                    'code' => $account->code
+                ]
+                );
+        }
+
         $user = auth()->user();
         return array_merge(parent::share($request), [
             'categories' => $categories,
             'roles' => $request->user() ? $request->user()->getRoleNames() : [],
             'auth' => [
-                'account' => $account ? $account->accountProfile->only('first_name', 'last_name', 'image') : '',
+                'account' => $account ?  : '',
                 'user' => $user ? $user->only('id', 'name', 'email') : '',
             ],
         ]);

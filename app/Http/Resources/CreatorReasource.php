@@ -21,6 +21,23 @@ class CreatorReasource extends JsonResource
             'image' => $this->accountProfile->image,
             'description' => $this->accountProfile->description,
             'remark' => $this->accountProfile->remark,
+            'is_follow' => $this->isFollowing()
         ];
+    }
+
+    protected function isFollowing()
+    {
+        $currentAccount = auth('accounts')->user();
+        if(!$currentAccount) {
+            return false;
+        }
+        else {
+            $isFolling = $currentAccount->whereHas('follows', function ($query) use ($currentAccount) {
+                $query->where('account_id', $currentAccount->id)
+                    ->where('follower_id', $this->id);
+            })->first();
+
+            return $isFolling  ? true : false;
+        }
     }
 }

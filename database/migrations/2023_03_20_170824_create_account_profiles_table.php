@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('phone')->nullable();      
             $table->text('image')->nullable();
             $table->string('description')->nullable();
-            $table->string('remark')->nullable();
+            $table->longText('remark')->nullable();
             $table->timestamps();
 
             $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
