@@ -28,6 +28,7 @@ class CategorySeeder extends Seeder
                 'content' => $faker->paragraph,
                 'slug' => Str::slug($title),
                 'image' => '',
+                'is_approved' => 1,
                 'creator_id' => $id,
                 'updater_id' => $id,
             ]);
@@ -46,6 +47,7 @@ class CategorySeeder extends Seeder
                 'content' => $faker->paragraph,
                 'slug' => Str::slug($title),
                 'image' => '',
+                'is_approved' => 1,
                 'creator_id' => $id,
                 'updater_id' => $id,
             ]);
@@ -64,6 +66,7 @@ class CategorySeeder extends Seeder
                 'content' => $faker->paragraph,
                 'slug' => Str::slug($title),
                 'image' => '',
+                'is_approved' => 1,
                 'creator_id' => $id,
                 'updater_id' => $id,
             ]);
@@ -82,6 +85,7 @@ class CategorySeeder extends Seeder
                 'content' => $faker->paragraph,
                 'slug' => Str::slug($title),
                 'image' => '',
+                'is_approved' => 1,
                 'creator_id' => $id,
                 'updater_id' => $id,
             ]);
@@ -100,6 +104,7 @@ class CategorySeeder extends Seeder
                 'content' => $faker->paragraph,
                 'slug' => Str::slug($title),
                 'image' => '',
+                'is_approved' => 1,
                 'creator_id' => $id,
                 'updater_id' => $id,
             ]);
@@ -118,6 +123,7 @@ class CategorySeeder extends Seeder
                 'content' => $faker->paragraph,
                 'slug' => Str::slug($title),
                 'image' => '',
+                'is_approved' => 1,
                 'creator_id' => $id,
                 'updater_id' => $id,
             ]);
