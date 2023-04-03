@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\PostResource;
 use App\Models\AccountSavePost;
 use App\Models\Post;
+use App\Support\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Expr\FuncCall;
 
 class HomeController extends Controller
 {
@@ -16,10 +18,25 @@ class HomeController extends Controller
         $currentAccount = auth('accounts')->user();
         $post = Post::where('slug', $slugPost)->first();
 
+        $post->count_view++;
+        $post->save();
+
         if($currentAccount) {
-            $post->postHasAccountReads()->attach([
-                $currentAccount->id => ['read_at' => now()]
-            ]);
+            $isSaveRead =  $post->whereHas('postHasAccountReads', function ($query) use ($currentAccount, $post) {
+                $query->where('account_id', $currentAccount->id)
+                    ->where('post_id', $post->id);
+            })->first();
+
+            if(!$isSaveRead) {
+                $post->postHasAccountReads()->attach([
+                    $currentAccount->id => ['read_at' => now()]
+                ]);
+            }
+            else {
+                $post->postHasAccountReads()->first()->pivot->update([
+                    'read_at' => now()
+                ]);
+            }
         }
 
         return PostResource::make($post);
@@ -28,18 +45,11 @@ class HomeController extends Controller
     public function getListRead(Request $request)
     {
         $currentAccount = auth('accounts')->user();
-        $accountReadPost = $currentAccount->accountHasReadPosts;
-        $postIds = [];
+        $accountReadPosts = $currentAccount->accountHasReadPosts;
 
-        foreach ($accountReadPost as $post) {
-            array_push($postIds, $post->pivot->post_id);
-        }
-        $postIds = array_unique($postIds);
+        $readPosts = (new Collection($accountReadPosts))->paginate($request->limit ?? 18);
 
-        $posts = Post::whereIn('id', $postIds)
-            ->paginate($request->limit ?? 18);
-
-        return PostResource::collection($posts);
+        return PostResource::collection($readPosts);
     }
 
     public function getListSave(Request $request)

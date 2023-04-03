@@ -105,7 +105,7 @@
                         </div>
                         <div class="mt-[12px] rounded-[50%] w-[36px] h-[36px] bg-[#fff] box-shadow flex justify-center items-center
                          text-[19px] text-[#6c757d] cursor-pointer hover:text-[#17a2b8] hover:scale-[1.1]" 
-                         :class=" {'text-[#17a2b8]' : dataForm.is_save} " @click="savePost">
+                         :class=" {'text-[red]' : dataForm.is_save} " @click="savePost">
                             <i class="bi bi-bookmark-fill mt-[2px]"></i>
                         </div>
                         <div class="mt-[12px] rounded-[50%] w-[36px] h-[36px] bg-[#fff] box-shadow flex justify-center items-center
@@ -346,17 +346,11 @@ export default{
             if(this.$page.props.auth.account) {
                 if(this.dataForm.is_save) {
                     axios.get(route('unsave-post', this.dataForm.id))
-                        .then(response => {
-                            this.fetchData()
-                        })
-                        .catch(errors => {})
+                    this.dataForm.is_save = false
                 }
                 else{
                     axios.get(route('save-post', this.dataForm.id))
-                        .then(response => {
-                            this.fetchData()
-                        })
-                        .catch(errors => {})
+                    this.dataForm.is_save = true
                 }
             }
             else {

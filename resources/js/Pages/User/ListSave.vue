@@ -27,7 +27,7 @@
                         <div class="mt-[24px] mb-[16px] mx-[12px] grid grid-cols-3 gap-3">
                             <div v-for="item in formData" class="mt-[8px] relative post-item">
                                 <Link :href="route('post', item.slug)">
-                                    <img :src="item.image" class="post-image h-[140px] w-[100%] object-cover">
+                                    <img :src="item.image" class="post-image h-[160px] w-[100%] object-cover">
                                 </Link>
                                 <div class="px-[2px]">
                                     <Link :href="route('post', item.slug)">

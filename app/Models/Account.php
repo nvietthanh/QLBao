@@ -38,16 +38,13 @@ class Account extends Authenticatable
 
     public function accountHasReadPosts()
     {
-        return $this->belongsToMany(Post::class, 'account_read_post', 'account_id', 'post_id')->withPivot('read_at');
+        return $this->belongsToMany(Post::class, 'account_read_post', 'account_id', 'post_id')->withPivot('read_at')
+            ->orderByPivot('read_at', 'desc');
     }
 
     public function follows()
     {
-        return $this->belongsToMany(Account::class, 'follows', 'account_id', 'follower_id');
+        return $this->belongsToMany(Account::class, 'follows', 'account_id', 'follower_id')->withPivot('follow_at')
+            ->orderByPivot('follow_at', 'desc');
     }
-
-    // public function accountHasSavePosts()
-    // {
-    //     return  $this->
-    // }
 }
