@@ -139,14 +139,23 @@ export default {
             pagram.append('image', this.dataForm.image ?? '')
             pagram.append('content', this.$refs['content'].editorData ?? '')
             await axios.post(route('creator.posts.update', this.dataForm.id), pagram)
-                .then(() => {
-                    ElMessage({
-                        showClose: true,
-                        message: 'Cập nhật bài viết thành công',
-                        type: 'success',
-                    })
-                    this.dialogVisible = false
-                    this.$emit('change-post')
+                .then(response => {
+                    if(!response.data.status){
+                        ElMessage({
+                            showClose: true,
+                            message: response.data.msg,
+                            type: 'error',
+                        })
+                    }
+                    else {
+                        ElMessage({
+                            showClose: true,
+                            message: 'Cập nhật bài viết thành công',
+                            type: 'success',
+                        })
+                        this.dialogVisible = false
+                        this.$emit('change-post')
+                    }
                 })
                 .catch(errors => {
                     this.errors = errors.response.data.errors

@@ -20,8 +20,11 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
+        $isApproved = $request->is_approved ?? true;
+
         $posts = Post::filter($request->all())
             ->where('creator_id', auth('accounts')->user()->id)
+            ->where('is_approved', $isApproved)
             ->orderBy('created_at', 'desc')
             ->paginate($request->limit ?? '10');
         
@@ -88,7 +91,9 @@ class PostController extends Controller
 
         DB::beginTransaction();
         try {
-            $post = Post::findOrFail($id);
+            $post = Post::where('id', $id)
+                    ->where('is_approved', 0)
+                    ->first();
             
             if(!$post) {
                 throw new FailException('Không thể cập nhật bài viết');

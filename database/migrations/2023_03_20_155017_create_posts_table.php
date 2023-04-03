@@ -19,7 +19,7 @@ return new class extends Migration
             $table->longText('content');
             $table->string('image')->nullable();
             $table->integer('count_view')->default(0);
-            $table->boolean('is_confirm')->default(0);
+            $table->boolean('is_approved')->default(0);
             $table->unsignedBigInteger('category_id')->nullable();
             $table->unsignedBigInteger('creator_id')->nullable();
             $table->unsignedBigInteger('updater_id')->nullable();
