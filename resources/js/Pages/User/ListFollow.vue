@@ -38,6 +38,10 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="flex mt-[32px] mb-[32px] justify-center">
+                            <Paginate @page-change="handleCurrentPage" :paginate="paginate" :current-page="filter.page || 1"
+                            paginate-background/>
+                        </div>
                     </template>
                 </div>
             </div>
@@ -50,16 +54,23 @@ import { Link } from '@inertiajs/vue3'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { h } from 'vue'
 import Navigation from '@/Components/User/Navigation.vue'
+import Paginate from "@/Components/UI/Paginate.vue";
 
 export default{
     components:{
         AppLayout,
         Link,
-        Navigation
+        Navigation,
+        Paginate,
     },
     data() {
         return {
             currentTab: 'tab-2',
+            filter: {
+                limit: 14,
+                page: 1,
+            },
+            paginate: [],
             formData: []
         }  
     },
@@ -68,8 +79,14 @@ export default{
     },
     methods: {
         async fetchData() {
-            const response = await axios.get(route('list-follows')  )
+            const pagram = { ...this.filter }
+            const response = await axios.get(route('list-follows', pagram)  )
             this.formData = response.data.data
+            this.paginate = response.data.meta
+        },
+        handleCurrentPage(value) {
+            this.filter.page = value
+            this.fetchData()
         },
         unFollow(code, name) {
             ElMessageBox({

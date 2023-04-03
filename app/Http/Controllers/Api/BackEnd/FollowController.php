@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\BackEnd;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CreatorReasource;
 use App\Models\Account;
+use App\Support\Collection;
 use Illuminate\Http\Request;
 
 class FollowController extends Controller
@@ -12,17 +13,10 @@ class FollowController extends Controller
     public function listFollow(Request $request)
     {
         $currentAccount = auth('accounts')->user();
-        $accountIds = [];
 
-        foreach($currentAccount->follows as $follow)
-        {
-            $accountIds[] = $follow->id;
-        }
+        $follows = (new Collection($currentAccount->follows))->paginate($request->limit ?? 1);
 
-        $accountFollows = Account::whereIn('id', $accountIds)
-            ->get();
-
-        return CreatorReasource::collection($accountFollows);
+        return CreatorReasource::collection($follows);
     }
 
     public function follow(Request $request, $code)
