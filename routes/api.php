@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/get-new-post', [PostController::class, 'getNewPost'])->name('post.get-new-all');
 
 // List category
-Route::get('/category/get-all/{category}', [PostController::class, 'getListPostCategory'])->name('category.list-post');
+Route::post('/category/get-all/{category}', [PostController::class, 'getListPostCategory'])->name('category.list-post');
 // Route::get('/get-post/{slugPost}', [PostController::class, 'getPost'])->name('post.get-post');
 Route::get('/get-list-post-creator/id={id}', [PostController::class, 'getListPostCreator'])->name('post.get-list-post-creator');
 
