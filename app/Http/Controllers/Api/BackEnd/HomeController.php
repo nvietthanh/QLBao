@@ -16,7 +16,13 @@ class HomeController extends Controller
     public function getPost($slugPost)
     {
         $currentAccount = auth('accounts')->user();
-        $post = Post::where('slug', $slugPost)->first();
+        $post = Post::where('slug', $slugPost)
+            ->where('is_approved', 1)
+            ->first();
+
+        if(!$post) {
+            abort(404);
+        }
 
         $post->count_view++;
         $post->save();
@@ -55,17 +61,13 @@ class HomeController extends Controller
     public function getListSave(Request $request)
     {
         $currentAccount = auth('accounts')->user();
-        $accountSavePost = AccountSavePost::where('account_id', $currentAccount->id)
-                            ->orderBy('created_at', 'desc')
-                            ->get();
-        $postIds = [];
 
-        foreach ($accountSavePost as $post) {
-            array_push($postIds, $post->post_id);
-        }
+        $posts = Post::whereHas('postHasAccountReads', function ($query) use ($currentAccount) {
+                $query->where('account_id', $currentAccount->id)
+                    ->orderBy('id', 'asc');
+        })->get()->reverse();
 
-        $posts = Post::whereIn('id', $postIds)
-            ->paginate($request->limit ?? 2);
+        $posts = (new Collection($posts))->paginate($request->limit ?? 15);
 
         return PostResource::collection($posts);
     }

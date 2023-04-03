@@ -23,7 +23,7 @@
                                         <div v-else class="pb-[12px]">
                                             <template  v-for="post in dataSearch">
                                                 <a :href="route('post', post.slug)">
-                                                    <div class="text-[14px] px-[12px] py-[6px] hover:text-[#0d6efd] hover:bg-[#e9ecef]">
+                                                    <div class="header-title text-[14px] px-[12px] py-[6px] hover:text-[#0d6efd] hover:bg-[#e9ecef]">
                                                         {{ post.title }}
                                                     </div>
                                                 </a>
@@ -109,8 +109,9 @@
                 <div class="main flex items-center py-[2px]">
                     <div class="main flex items-center">
                         <Link :href="route('home')">
-                        <div class="main-item hover:bg-[#22b1c7]" :class="{ 'active-tab': 'home' == currentTab }"> Trang
-                            chủ</div>
+                            <div class="main-item hover:bg-[#22b1c7]" :class="{ 'active-tab': 'home' == currentTab }">
+                                Trang chủ
+                            </div>
                         </Link>
                         <template v-for="(item, index) in this.$page.props.categories">
                             <Link :href="route('list-category', item.slug)" v-if="index <= 3">
@@ -483,6 +484,14 @@ export default {
 </script>
 
 <style>
+.header-title {
+  max-height: 53px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
 .el-dropdown {
     border-color: white !important;
 }

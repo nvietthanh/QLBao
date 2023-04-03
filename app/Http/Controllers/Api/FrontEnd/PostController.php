@@ -13,7 +13,9 @@ class PostController extends Controller
 {
     public function getNewPost()
     {
-        $newPosts = Post::orderBy('created_at', 'desc')->take(10)->get();
+        $newPosts = Post::orderBy('created_at', 'desc')
+            ->where('is_approved', 1)
+            ->take(10)->get();
 
         return PostResource::collection($newPosts);
     }
@@ -22,6 +24,7 @@ class PostController extends Controller
     {
         $categoryId = Category::where('slug', $category)->first()->id;
         $listPostCategory = Post::where('category_id', $categoryId)
+            ->where('is_approved', 1)
             ->orderBy('created_at', 'desc')->paginate(10);
 
         return PostResource::collection($listPostCategory);
@@ -39,6 +42,7 @@ class PostController extends Controller
     {
         $account = Account::where('code', $id)->first();
         $posts = Post::where('creator_id', $account->id)
+            ->where('is_approved', 1)
             ->orderBy('created_at', 'desc')
             ->paginate($request->number_data ? $request->number_data : 12);
 

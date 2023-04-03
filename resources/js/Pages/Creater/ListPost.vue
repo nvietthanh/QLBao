@@ -61,17 +61,17 @@
                         <div class="mt-[12px] mb-[16px] mx-[12px] grid grid-cols-3 gap-3">
                             <div v-for="item in postsData" class="mt-[8px] relative post-item">
                                 <Link :href="route('post', item.slug)">
-                                    <img :src="item.image" :alt="item.description" class="post-image w-[100%] h-[150px] object-cover">
+                                    <img :src="item.image" alt="" class="post-image w-[100%] h-[150px] object-cover">
                                 </Link>
                                 <div class="px-[2px]">
                                     <Link :href="route('post', item.slug)">
-                                        <div class="font-bold text-[15px] mt-[4px]">{{ item.title }}</div>
+                                        <div class="description font-bold text-[15px] mt-[8px]">{{ item.title }}</div>
                                     </Link>
                                     <div class="flex items-center mt-[8px]">
                                         <Link :href="route('list-category', item.categorySlug)">
                                             <div class="text-[14px] font-bold text-[#076db6]">{{ item.categoryName }}</div>
                                         </Link>
-                                        <div class="ml-[16px] text-[13px] mt-[4px]">{{ item.time }}</div>
+                                        <div class="ml-[16px] text-[13px] mt-[4px]">{{ convertTime(item.created_at) }}</div>
                                     </div>
                                 </div>
                                 <div class="post-icon absolute top-[8px] right-[8px] h-[24px] w-[28px] text-center
@@ -107,6 +107,7 @@ import { Link } from '@inertiajs/vue3'
 import ShowPostForm from './Dialog/ShowPost.vue'
 import AddPostForm from './Dialog/AddPost.vue'
 import EditPostForm from './Dialog/EditPost.vue'
+import moment from "moment";
 
 export default{
     components:{
@@ -138,6 +139,7 @@ export default{
         this.fetchData()
     },
     methods: {
+        moment,
         async fetchData() {
             const pagram = { ...this.filter }
             const response = await axios.get(route('creator.posts.index', pagram));
@@ -174,7 +176,40 @@ export default{
             this.filter.page = 1
             this.filter.paginate = []
             this.fetchData()
+        },
+        convertTime(created_at) {
+            const now = moment()
+            const time = moment(created_at)
+
+            if (now.diff(time, 'years') > 0) {
+                return `${now.diff(time, 'years')} năm trước`
+            }
+            else if (now.diff(time, 'months') > 0) {
+                return `${now.diff(time, 'months')} tháng trước`
+            }
+            else if (now.diff(time, 'days') > 0) {
+                return `${now.diff(time, 'days')} ngày trước`
+            }
+            else if (now.diff(time, 'hours') > 0) {
+                return `${now.diff(time, 'hours')} giờ trước`
+            }
+            else if (now.diff(time, 'minutes') > 0) {
+                return `${now.diff(time, 'minutes')} phút trước`
+            }
+            else if (now.diff(time, 'seconds') > 0) {
+                return `${now.diff(time, 'seconds')} giây trước`
+            }
         }
     }
 }
 </script>
+<style>
+.description {
+  height: 40px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+</style>

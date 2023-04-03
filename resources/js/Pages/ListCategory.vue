@@ -40,6 +40,10 @@
                             </div>
                         </template>
                     </div>
+                    <div class="flex mt-[24px] mb-[64px] justify-center">
+                        <Paginate @page-change="handleCurrentPage" :paginate="paginate" :current-page="filter.page || 1"
+                            paginate-background/>
+                    </div>
                 </div>
             </div>
         </template>
@@ -49,14 +53,21 @@
 import AppLayout from '../Layouts/AppLayout.vue';
 import moment from "moment";
 import { Link } from '@inertiajs/vue3'
+import Paginate from "@/Components/UI/Paginate.vue";
 
 export default{
     components:{
         AppLayout,
         Link,
+        Paginate
     },
     data() {
         return {
+            filter: {
+                limit: 15,
+                page: 1,
+            },
+            paginate: [],
             listPost: []
         }  
     },
@@ -66,8 +77,14 @@ export default{
     methods: {
         moment,
         async fetchData() {
-            const response = await axios.get(route('category.list-post', this.$page.props.category))
+            const pagram = { ...this.filter }
+            const response = await axios.post(route('category.list-post', this.$page.props.category), pagram)
             this.listPost = response.data.data
+            this.paginate = response.data.meta
+        },
+        handleCurrentPage(value) {
+            this.filter.page = value
+            this.fetchData()
         },
         convertTime(created_at) {
             const now = moment()
