@@ -24,6 +24,14 @@
                         </div>
                     </div>
                     <div v-html="dataForm.content" class="mt-[12px] text-[16px] mb-[18px]"></div>
+                    <div class="mt-[42px]">
+                        <span class="text-[16px] font-bold">Hagtag: </span>
+                        <template v-for="hagtag in dataForm.hagtagNames">
+                            <span class="mr-[8px] text-[16px] text-[#17a2b8]">
+                                <a :href="route('list-post-hagtag', hagtag.slug)">{{ hagtag.name }}</a>
+                            </span>
+                        </template>
+                    </div>
                 </div>
                 <div class="py-[12px] pt-[18px]">
                     <div class="font-bold text-[17px]">Bình luận ({{totalcomment}})</div>
@@ -220,7 +228,9 @@ export default{
                 creator: '',
                 creatorCode: '',
                 created_at: '',
-                updated_at: ''
+                updated_at: '',
+                hagtags: [],
+                hagtagNames: [],
             },
             contentComment: '',
             comments: [],

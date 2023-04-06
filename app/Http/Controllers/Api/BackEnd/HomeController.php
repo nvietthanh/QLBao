@@ -74,7 +74,9 @@ class HomeController extends Controller
 
     public function savePost($id)
     {
-        $post = Post::find($id);
+        $post = Post::where('id', $id)
+            ->where('is_approved', 1)
+            ->first();
         $currentAccount = auth('accounts')->user();
         
         if(!$post) {
@@ -101,7 +103,9 @@ class HomeController extends Controller
 
     public function unsavePost($id)
     {
-        $post = Post::find($id);
+        $post = Post::where('id', $id)
+            ->where('is_approved', 1)
+            ->first();
         $currentAccount = auth('accounts')->user();
         
         if(!$post) {

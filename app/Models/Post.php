@@ -48,4 +48,10 @@ class Post extends Model
         return $this->belongsToMany(Account::class, 'account_read_post', 'post_id', 'account_id')
             ->withPivot('read_at');
     }
+
+    public function postHasHagtag()
+    {
+        return $this->belongsToMany(HagTag::class, 'post_has_hagtag', 'post_id', 'hagtag_id')
+            ->withPivot('created_at');
+    }
 }

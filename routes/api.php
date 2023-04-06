@@ -2,6 +2,7 @@
 
 // use App\Http\Controllers\Api\BackEnd\CategoryController;
 
+use App\Http\Controllers\Api\BackEnd\Creator\HagTagController;
 use App\Http\Controllers\Api\FrontEnd\PostController;
 use App\Http\Controllers\Api\FrontEnd\CreatorController;
 use Illuminate\Http\Request;
@@ -33,3 +34,6 @@ Route::get('/get-list-user-popular/{id?}', [CreatorController::class, 'getListPo
 
 // Search post header
 Route::get('/search-header', [PostController::class, 'searchHeader'])->name('search-header');
+
+// List Hagtag
+Route::get('/list-hagtag', [HagTagController::class, 'getAllHagTag'])->name('list-hagtag');

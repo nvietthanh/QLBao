@@ -21,6 +21,16 @@
                     {{ errors.description[0] }}
                 </div>
             </div>
+            <div class="mt-[18px]">
+                <div class="text-[16px] font-bold text-[#000]">Hagtag</div>
+                <el-select v-model="dataForm.hagtags" class="mt-[2px] max-w-[250px]" placeholder="Chọn hagtag" multiple>
+                    <el-option v-for="item in listHagTag"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id"
+                    />
+                </el-select>
+            </div>
             <div class="mt-[18px] w-[100%]">
                 <div class="text-[16px] font-bold text-[#000]">Hình ảnh <span class="text-[red]">*</span></div>
                 <div class="w-[280px] mt-[8px]">
@@ -79,7 +89,8 @@ export default {
             dialogVisible: false,
             imageSelected: '',
             dataForm: {},
-            errors: []
+            errors: [],
+            listHagTag: []
         }
     },
     watch: {
@@ -102,6 +113,12 @@ export default {
                 .then(response => {
                     this.dataForm = response.data.data
                     this.$refs['content'].editorData = response.data.data.content
+                    console.log(this.dataForm)
+                })
+                .catch(errors => {})
+            await axios.get(route('list-hagtag'))
+                .then(response => {
+                    this.listHagTag = response.data
                 })
                 .catch(errors => {})
         },
@@ -138,9 +155,10 @@ export default {
             pagram.append('description', this.dataForm.description ?? '')
             pagram.append('image', this.dataForm.image ?? '')
             pagram.append('content', this.$refs['content'].editorData ?? '')
+            pagram.append('hagtags', this.dataForm.hagtags ?? '')
             await axios.post(route('creator.posts.update', this.dataForm.id), pagram)
                 .then(response => {
-                    if(!response.data.status){
+                    if(response.data.status == 'false'){
                         ElMessage({
                             showClose: true,
                             message: response.data.msg,

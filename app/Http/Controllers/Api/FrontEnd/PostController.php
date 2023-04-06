@@ -54,6 +54,7 @@ class PostController extends Controller
         $search = $request->search;
 
         $posts = Post::where('title', 'like', '%'. $search .'%')
+            ->where('is_approved', 1)
             ->orderBy('created_at', 'desc')
             ->take(6)->get();
 

@@ -49,4 +49,9 @@ class HomeController extends Controller
 
         return Inertia::render('Creator', ['id' => $id  ]);
     }
+
+    public function listPostHagtag($slug)
+    {
+        
+    }
 }

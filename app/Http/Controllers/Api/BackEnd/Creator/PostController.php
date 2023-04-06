@@ -45,6 +45,7 @@ class PostController extends Controller
     public function store(PostRequest $request)
     {
         $request->validated();
+        $hagtags = $request->hagtags ? explode(",", $request->hagtags ) : '';
         
         $currentAccount = auth('accounts')->user();
 
@@ -60,6 +61,14 @@ class PostController extends Controller
                 'updated_id' => $currentAccount->id
             ])
         );
+
+        if($hagtags) {
+            foreach($hagtags as $hagtag) {
+                $post->postHasHagtag()->attach([
+                    $hagtag => ['created_at' => now()]
+                ]);
+            }
+        }
 
         return response()->json($post);
     }
@@ -88,6 +97,7 @@ class PostController extends Controller
     public function update(PostRequest $request, string $id)
     {
         $request->validated();
+        $hagtags = $request->hagtags ? explode(",", $request->hagtags ) : '';
 
         DB::beginTransaction();
         try {
@@ -112,6 +122,15 @@ class PostController extends Controller
                 $post->update([
                     'image' => $path ? Storage::url($path) : '',
                 ]);
+            }
+
+            $post->postHasHagtag()->detach();
+            if($hagtags) {
+                foreach($hagtags as $hagtag) {
+                    $post->postHasHagtag()->attach([
+                        $hagtag => ['created_at' => now()]
+                    ]);
+                }
             }
 
             DB::commit();

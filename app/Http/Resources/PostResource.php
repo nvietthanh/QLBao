@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\AccountSavePost;
+use App\Models\HagTag;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -26,6 +27,8 @@ class PostResource extends JsonResource
             'categorySlug' => $this->category->slug,
             'is_save' => $this->checkSavePost(),
             'creator' => $this->creator->accountProfile->getFullName(),
+            'hagtags' => $this->getHagtags(),
+            'hagtagNames' => $this->getHagtagNames(),
             'creatorCode' => $this->creator->code,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
@@ -49,6 +52,32 @@ class PostResource extends JsonResource
         else {
             return false;
         }
+    }
+
+    public function getHagtags()
+    {
+        $resultHagtag = [];
+        $hagtags = $this->postHasHagtag;
+
+        if($hagtags) {
+            foreach($hagtags as $hagtag) {
+                array_push($resultHagtag, $hagtag->pivot->hagtag_id);
+            }
+        }
+
+        return $resultHagtag;
+    }
+
+    public function getHagtagNames()
+    {
+        $resultHagtagName = [];
+        $hagtagIds = $this->getHagtags();
+
+        if($hagtagIds) {
+            $resultHagtagName = HagTag::select(['id', 'name', 'slug'])->whereIn('id', $hagtagIds)
+                ->orderBy('name', 'asc')->get();
+        }
         
+        return $resultHagtagName;
     }
 }

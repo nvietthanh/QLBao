@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('post_has_hastag', function (Blueprint $table) {
+        Schema::create('post_has_hagtag', function (Blueprint $table) {
             $table->unsignedBigInteger('hagtag_id')->nullable();
             $table->unsignedBigInteger('post_id')->nullable();
-            $table->timestamps();
+            $table->dateTime('created_at')->nullable();
 
             $table->foreign('hagtag_id')->references('id')->on('hagtags')->onDelete('set null');
             $table->foreign('post_id')->references('id')->on('posts')->onDelete('set null');
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('post_has_hastag');
+        Schema::dropIfExists('post_has_hagtag');
     }
 };

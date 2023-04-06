@@ -7,21 +7,31 @@
             </div>
         </template>
         <div class="mx-[4px] mt-[42px]">
-            <div class="mt-[18px] w-[100%]">
+            <div class="mt-[18px]">
                 <div class="text-[16px] font-bold text-[#000]">Tiêu đề <span class="text-[red]">*</span></div>
                 <el-input class="mt-[2px]" v-model="dataForm.title" placeholder="Nhập tiêu đề" clearable/>
                 <div v-if="errors.title" class="mt-[5px] text-[#ff0000]">
                     {{ errors.title[0] }}
                 </div>
             </div>
-            <div class="mt-[18px] w-[100%]">
+            <div class="mt-[18px]">
                 <div class="text-[16px] font-bold text-[#000]">Mô tả </div>
                 <el-input class="mt-[2px]" v-model="dataForm.description" placeholder="Nhập mô tả" clearable/>
                 <div v-if="errors.description" class="mt-[5px] text-[#ff0000]">
                     {{ errors.description[0] }}
                 </div>
             </div>
-            <div class="mt-[18px] w-[100%]">
+            <div class="mt-[18px]">
+                <div class="text-[16px] font-bold text-[#000]">Hagtag</div>
+                <el-select v-model="dataForm.hagtags" class="mt-[2px] max-w-[250px]" placeholder="Chọn hagtag" multiple>
+                    <el-option v-for="item in listHagTag"
+                        :key="item.name"
+                        :label="item.name"
+                        :value="item.id"
+                    />
+                </el-select>
+            </div>
+            <div class="mt-[18px]">
                 <div class="text-[16px] font-bold text-[#000]">Hình ảnh <span class="text-[red]">*</span></div>
                 <div class="w-[280px] mt-[8px]" v-if="imageSelected != ''">
                     <img :src="imageSelected" alt="" class="rounded-[4px]">
@@ -36,7 +46,7 @@
                     {{ errors.image[0] }}
                 </div>
             </div>
-            <div class="mt-[18px] w-[100%]">
+            <div class="mt-[18px]">
                 <div class="text-[16px] font-bold text-[#000]">Nội dung <span class="text-[red]">*</span></div>
                 <ckeditor-post class="mt-[8px]" ref="content" :contentProp="dataForm.content" />
                 <div v-if="errors.content" class="mt-[5px] text-[#ff0000]">
@@ -80,8 +90,10 @@ export default {
                 title: '',
                 description: '',
                 image: '',
-                content: ''
+                content: '',
+                hagtags: [],
             },
+            listHagTag: [],
             errors: []
         }
     },
@@ -99,11 +111,17 @@ export default {
             this.dataForm.description = ''
             this.dataForm.image = ''
             this.dataForm.content = ''
+            this.listHagTag = []
             this.errors = []
+        },
+        async fetchData() {
+            const response = await axios.get(route('list-hagtag'))
+            this.listHagTag = response.data
         },
         open() {
             this.dialogVisible = true
             this.clearResult()
+            this.fetchData()
         },
         cancel() {
             this.dialogVisible = false;
@@ -138,6 +156,7 @@ export default {
             pagram.append('description', this.dataForm.description ?? '')
             pagram.append('image', this.dataForm.image ?? '')
             pagram.append('content', this.$refs['content'].editorData ?? '')
+            pagram.append('hagtags', this.dataForm.hagtags ?? '')
             axios.post(route('creator.posts.store', this.id), pagram)
                 .then(() => {
                     ElMessage({

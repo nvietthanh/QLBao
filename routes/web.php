@@ -56,6 +56,8 @@ Route::get('/post/{slugPost}', [HomeController::class, 'post'])->name('post');
 
 Route::get('/creator/id={id}', [HomeController::class, 'creator'])->name('creator');
 
+Route::get('/hagtag/{slug}', [HomeController::class, 'listPostHagtag'])->name('list-post-hagtag');
+
 
 Route::get('/dieu-khoan-su-dung', function () {
     return Inertia::render('TermOfUse');
