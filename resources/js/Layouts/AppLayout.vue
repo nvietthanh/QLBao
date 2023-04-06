@@ -437,12 +437,6 @@ export default {
         openChangePassword() {
             this.$refs.changePasswordForm.open()
         },
-        changePassword() {
-
-        },
-        querySearch() {
-
-        },
         showClick() {
             this.$refs.dropdown1.handleOpen()
         },
@@ -461,23 +455,23 @@ export default {
                     cancelButtonText: 'Hủy bỏ',
                 }
             )
-                .then(() => {
-                    axios.get(route('guest.logout'))
-                        .then(response => {
-                            ElMessage({
-                                type: 'success',
-                                message: 'Đăng xuất tài khoản thành công',
-                            })
-                            location.reload()
+            .then(() => {
+                axios.get(route('guest.logout'))
+                    .then(response => {
+                        ElMessage({
+                            type: 'success',
+                            message: 'Đăng xuất tài khoản thành công',
                         })
-                        .catch(errors => {
-                            ElMessage({
-                                type: 'error',
-                                message: errors.data,
-                            })
+                        location.reload()
+                    })
+                    .catch(errors => {
+                        ElMessage({
+                            type: 'error',
+                            message: errors.data,
                         })
-                })
-                .catch(() => { })
+                    })
+            })
+            .catch(() => {})
         }
     }
 }
@@ -485,7 +479,8 @@ export default {
 
 <style>
 .header-title {
-  max-height: 53px;
+  max-height: 52px;
+  line-height: 22px;
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;

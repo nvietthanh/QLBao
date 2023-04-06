@@ -23,7 +23,9 @@ class CommentController extends Controller
 
     public function createComment(CommentRequest $request, $id)
     {
-        $post = Post::find($id);
+        $post = Post::where('id', $id)
+            ->where('is_approved', 1)
+            ->first();
         if(!$post) {
             throw new FailException('Không tìm thấy bài viết');
         }
