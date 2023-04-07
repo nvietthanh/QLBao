@@ -27,4 +27,10 @@ class HagTag extends Model
     {
         return $this->belongsTo(Account::class, 'updater_id', 'id');
     }
+
+    public function hastagHasPost()
+    {
+        return $this->belongsToMany(Post::class, 'post_has_hagtag', 'hagtag_id', 'post_id')
+            ->withPivot('created_at');
+    }
 }

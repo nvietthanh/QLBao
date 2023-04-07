@@ -121,16 +121,13 @@
                             </div>
                             </Link>
                         </template>
-                        <Link>
-                        <div class="text-[12px] px-[12px] py-[2px] border-[2px] rounded-[16px] ml-[10px]">
-                            # Năng lượng tích cực
-                        </div>
-                        </Link>
-                        <Link>
-                        <div class="text-[12px] px-[12px] py-[2px] border-[2px] rounded-[16px] ml-[10px]">
-                            # Khám phá thế giới
-                        </div>
-                        </Link>
+                        <template v-for="(hagtag, index) in listHagTag">
+                            <Link v-if="index < 2" :href="route('list-post-hagtag', hagtag.slug)">
+                                <div class="text-[12px] px-[12px] py-[2px] border-[2px] rounded-[16px] ml-[10px]">
+                                    {{ hagtag.name }}
+                                </div>
+                            </Link>
+                        </template>
                     </div>
                     <div class="py-[1px] px-[12px] mr-[8px] text-[#fff] text-[24px] cursor-pointer hover:bg-[#22b1c7]"
                         :class="{ 'bg-[#22b1c7]': hiddenMenu == true }" @click="hiddenMenu = !hiddenMenu">
@@ -144,27 +141,27 @@
                     <div v-for="(item, index) in this.$page.props.categories" :key="index"
                         class="w-[180px] inline-block my-[8px] px-[18px]">
                         <Link :href="route('list-category', item.slug)">
-                        <span class="border-l-[5px] border-l-[#076db6] pl-[12px] text-[15px] 
-                                 font-bold hover:text-[#17a2b8] hover:border-l-[#17a2b8] relative"
-                            :class="{ 'border-l-[#db562b] text-[#db562b] ': currentTab == item.slug }">
-                            {{ item.name }}
-                            <div class="absolute left-[102%] top-[-10px] bg-[#db562b] text-[#fff] h-[18px] min-w-[18px]
-                                     leading-[19px] pl-[3px] pr-[4px] rounded-[50%] text-center text-[10px]"
-                                v-if="item.quality > 0"> {{ item.quality }}</div>
-                        </span>
+                            <span class="border-l-[5px] border-l-[#076db6] pl-[12px] text-[15px] 
+                                    font-bold hover:text-[#17a2b8] hover:border-l-[#17a2b8] relative"
+                                :class="{ 'border-l-[#db562b] text-[#db562b] ': currentTab == item.slug }">
+                                {{ item.name }}
+                                <div class="absolute left-[102%] top-[-10px] bg-[#db562b] text-[#fff] h-[18px] min-w-[18px]
+                                        leading-[19px] pl-[3px] pr-[4px] rounded-[50%] text-center text-[10px]"
+                                    v-if="item.quality > 0"> {{ item.quality }}</div>
+                            </span>
                         </Link>
                     </div>
                     <div class="text-[15px] font-bold mb-[4px] mt-[12px] text-[#2b94a5]">Danh mục hagtag:</div>
-                    <div v-for="(item, index) in listHagTag" :key="index" class="w-[230px] inline-block my-[8px] px-[18px]">
-                        <Link :href="route(item.route, item.category)">
-                        <span class="border-l-[5px] border-l-[#076db6] pl-[12px] text-[15px] 
-                                 font-bold hover:text-[#17a2b8] hover:border-l-[#17a2b8] relative"
-                            :class="{ 'border-l-[#db562b] text-[#db562b] ': currentTab == item.category }">
-                            {{ item.name }}
-                            <div class="absolute left-[102%] top-[-10px] bg-[#db562b] text-[#fff] h-[18px] min-w-[18px]
-                                     leading-[19px] pl-[3px] pr-[4px] rounded-[50%] text-center text-[10px]"
-                                v-if="item.quality > 0"> {{ item.quality }}</div>
-                        </span>
+                    <div v-for="item in listHagTag" class="w-[230px] inline-block my-[8px] px-[18px]">
+                        <Link :href="route('list-post-hagtag', item.slug)">
+                            <span class="border-l-[5px] border-l-[#076db6] pl-[12px] text-[15px] 
+                                    font-bold hover:text-[#17a2b8] hover:border-l-[#17a2b8] relative"
+                                :class="{ 'border-l-[#db562b] text-[#db562b] ': currentTab == item.slug }">
+                                {{ item.name }}
+                                <!-- <div class="absolute left-[102%] top-[-10px] bg-[#db562b] text-[#fff] h-[18px] min-w-[18px]
+                                        leading-[19px] pl-[3px] pr-[4px] rounded-[50%] text-center text-[10px]"
+                                    v-if="item.quality > 0"> {{ item.quality }}</div> -->
+                            </span>
                         </Link>
                     </div>
                 </div>
@@ -192,15 +189,13 @@
                                 Tin mới nhất
                             </div>
                         </div>
-                        <div v-for="item in listNewPost" class="new-item flex border-b-[2px] mx-[8px] py-[8px] hover:bg-[#e9ecef]">
+                        <div v-for="item in listNewPost" class="post-item flex border-b-[2px] mx-[8px] py-[8px] hover:bg-[#e9ecef]">
                             <Link :href="route('post', item.slug)">
                             <img :src="item.image" alt="" class="w-[60px] min-w-[60px] h-[60px] rounded-[3px] object-cover">
                             </Link>
                             <div class="ml-[8px]">
                                 <Link :href="route('post', item.slug)">
-                                <div class="text-[15px]">
-                                    {{ item.title }}
-                                </div>
+                                <div class="post-new-title post-title text-[15px] mr-[8px]"> {{ item.title }} </div>
                                 </Link>
                                 <div class="flex items-center mt-[6px]">
                                     <Link :href="route('list-category', item.categorySlug)">
@@ -336,6 +331,7 @@ import LoginForm from '../Components/Auth/Login.vue';
 import RegisterForm from '../Components/Auth/Register.vue';
 import ChangePasswordForm from '../Components/Auth/ChangePassword.vue';
 import moment from "moment";
+import axios from 'axios';
 
 export default {
     components: {
@@ -363,7 +359,12 @@ export default {
             },
             dataSearch: [],
             options: [],
-            listHagTag: [],
+            listHagTag: [
+                {
+                    name: '',
+                    slug: ''
+                }
+            ],
             listNewPost: []
         }
     },
@@ -391,6 +392,7 @@ export default {
                 .catch(() => { })
         },
         async fetchData() {
+            this.listHagTag = this.$page.props.hagtags
             if (this.currentTab != 'main-full' && this.currentTab != 'main-creater') {
                 const responseNewPost = await axios.get(route('post.get-new-all'))
                 this.listNewPost = responseNewPost.data.data
@@ -490,20 +492,16 @@ export default {
 .el-dropdown {
     border-color: white !important;
 }
-
 header {
     z-index: 100;
 }
-
 header .absolute {
     width: 100%;
 }
-
 header .main {
     width: 970px;
     margin: 0 auto;
 }
-
 header .header-extend {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     border-radius: 5px;
@@ -515,7 +513,6 @@ header .header-extend {
     -ms-user-select: none !important;
     user-select: none !important;
 }
-
 header .main-item {
     padding: 9px 12px;
     border-left: 1px solid #ffffffc3;
@@ -523,12 +520,10 @@ header .main-item {
     text-transform: uppercase;
     cursor: pointer;
 }
-
 header .main-item a {
     height: 100%;
     width: 100%;
 }
-
 header .main-hagtag {
     padding: 1px 8px;
     border-radius: 20px;
@@ -536,50 +531,49 @@ header .main-hagtag {
     border: 1px solid white;
     font-size: 0.82rem;
 }
-
 header .header-search .search {
     padding: 0 !important;
 }
-
 .active-tab {
     background-color: #2b94a5;
 }
-
 .sticky {
     position: fixed;
     top: 0;
     width: 100%
 }
-
 .sticky+.content {
     padding-top: 58px;
 }
-
 main .container-fuild {
     width: 1070px;
     margin: 0 auto;
     padding-top: 118px;
     padding-bottom: 30px;
 }
-
 main .container-fuild .main-1 {
     margin-right: 16px;
     flex: 2;
 }
-
 footer .main {
     width: 970px;
     margin: 0 auto;
 }
-
 footer .main .infor {
     font-size: 0.9rem;
 }
-
 footer .main .infor:nth-child(2) {
     padding: 0 24px;
 }
-
 footer .main .search {
     width: 450px;
-}</style>
+}
+.post-new-title {
+    max-height: 48px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+</style>

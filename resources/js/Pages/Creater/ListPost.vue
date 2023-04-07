@@ -66,37 +66,7 @@
                                     </Link>
                                     <div class="px-[2px]">
                                         <Link :href="route('post', item.slug)">
-                                            <div class="description font-bold text-[15px] mt-[8px]">{{ item.title }}</div>
-                                        </Link>
-                                        <div class="flex items-center mt-[8px]">
-                                            <Link :href="route('list-category', item.categorySlug)">
-                                                <div class="text-[14px] font-bold text-[#076db6]">{{ item.categoryName }}</div>
-                                            </Link>
-                                            <div class="ml-[16px] text-[13px] mt-[4px]">{{ convertTime(item.created_at) }}</div>
-                                        </div>
-                                    </div>
-                                    <div class="post-icon absolute top-[8px] right-[8px] h-[24px] w-[28px] text-center
-                                      cursor-pointer bg-[#fff] rounded-[4px] box-shadow text-[18px] active:scale-95 hover:bg-[#ced4da]" 
-                                      @click="showPost(item)">
-                                        <i class="bi bi-eye"></i>
-                                    </div>
-                                    <div v-if="!filter.is_approved" class="post-icon absolute top-[38px] right-[8px] h-[24px] w-[28px] text-center pt-[3px]
-                                      cursor-pointer bg-[#fff] rounded-[4px] box-shadow text-[14px] active:scale-95 hover:bg-[#ced4da]" 
-                                      @click="editPost(item)">
-                                        <i class="bi bi-pen mb-[4px]"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </template>
-                        <template v-if="filter.is_approved">
-                            <div class="mt-[12px] mb-[16px] mx-[12px] grid grid-cols-3 gap-3">
-                                <div v-for="item in postsData" class="mt-[8px] relative post-item">
-                                    <Link :href="route('post', item.slug)">
-                                        <img :src="item.image" alt="" class="post-image w-[100%] h-[150px] object-cover">
-                                    </Link>
-                                    <div class="px-[2px]">
-                                        <Link :href="route('post', item.slug)">
-                                            <div class="description font-bold text-[15px] mt-[8px]">{{ item.title }}</div>
+                                            <div class="post-title font-bold text-[15px] mt-[8px]">{{ item.title }}</div>
                                         </Link>
                                         <div class="flex items-center mt-[8px]">
                                             <Link :href="route('list-category', item.categorySlug)">
@@ -123,7 +93,7 @@
                                 <div v-for="item in postsData" class="mt-[8px] relative post-item">
                                     <img :src="item.image" alt="" class="post-image w-[100%] h-[150px] object-cover">
                                     <div class="px-[2px]">
-                                        <div class="description font-bold text-[15px] mt-[8px]">{{ item.title }}</div>
+                                        <div class="post-title font-bold text-[15px] mt-[8px]">{{ item.title }}</div>
                                         <div class="flex items-center mt-[8px]">
                                             <Link :href="route('list-category', item.categorySlug)">
                                                 <div class="text-[14px] font-bold text-[#076db6]">{{ item.categoryName }}</div>
@@ -263,7 +233,7 @@ export default{
 }
 </script>
 <style>
-.description {
+.post-title {
   height: 40px;
   overflow: hidden;
   display: -webkit-box;
