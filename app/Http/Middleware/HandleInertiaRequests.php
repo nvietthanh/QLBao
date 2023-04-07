@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Category;
+use App\Models\HagTag;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -37,7 +38,9 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        $categories = $categories = Category::select(['name', 'slug'])->get();
+        $categories = Category::select(['name', 'slug'])->get();
+        $hagtags = HagTag::select(['name', 'slug'])->get();
+
         $account = auth()->guard('accounts')->user();
         if($account) {
             $account = array_merge(
@@ -51,6 +54,7 @@ class HandleInertiaRequests extends Middleware
         $user = auth()->user();
         return array_merge(parent::share($request), [
             'categories' => $categories,
+            'hagtags' => $hagtags,
             'roles' => $request->user() ? $request->user()->getRoleNames() : [],
             'auth' => [
                 'account' => $account ?  : '',

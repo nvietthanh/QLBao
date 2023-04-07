@@ -2,8 +2,61 @@
     <AppLayout :currentTab="'home'" :title="'Trang chủ'">
         <template v-slot:main-1>
             <div class="main">
-                <div class="new-outstanding">
-                    <div class="border-b-[2px] pb-[16px]">
+                <div class="row p-[8px]">
+                    <template v-for="(post, index) in listPostPopular">
+                        <div v-if="index == 0" class="border-b-[2px] pb-[18px]">
+                            <Link :href="route('post', post.slug)">
+                                <img class="w-[100%] h-[480px] object-cover" :src="post.image" :alt="post.description">
+                                <div class="font-bold text-[21px] py-2">{{ post.title }}</div>
+                            </Link>
+                            <div class="flex items-end">
+                                <Link :href="route('list-category', post.categorySlug)">
+                                    <div class="text-[#076db6] text-[16px] font-bold">
+                                        {{ post.categoryName }}
+                                    </div>
+                                </Link>
+                                <div class="text-[15px] mx-[16px]">{{ convertTime(post.created_at) }}</div>
+                                <div class="text-[15px]">1000 liên quan</div>
+                            </div>
+                        </div>
+                        <div v-else-if="index < 4" class="col-4 py-[24px] border-b-[2px]">
+                            <Link :href="route('post', post.slug)">
+                                <img :src="post.image" :alt="post.description" class="w-[100%] h-[140px] object-cover">
+                                <div class="py-2 font-bold text-[16px]">{{ post.title }}</div>
+                            </Link>
+                            <div>
+                                <Link :href="route('list-category', post.categorySlug)">
+                                    <div class="text-[#076db6] font-bold text-[14px]">
+                                        {{ post.categoryName }}
+                                    </div>
+                                </Link>
+                                <div class="text-[14px] mt-[2px]">{{ convertTime(post.created_at) }}</div>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <div class="flex py-[18px] border-b-[2px]">
+                                <Link :href="route('post', post.slug)">
+                                    <img :src="post.image" :alt="post.description" class="w-[220px] h-[150px] object-cover">
+                                </Link>
+                                <div class="ml-[12px]">
+                                    <Link :href="route('post', post.slug)">
+                                        <div class="text-[16px] font-bold">
+                                            {{ post.title }}
+                                        </div>
+                                    </Link>
+                                    <div class="mt-[12px] flex items-end">
+                                        <Link :href="route('list-category', post.categorySlug)">
+                                            <div class="text-[15px] font-bold text-[#076db6]">
+                                                {{ post.categoryName }}
+                                            </div>
+                                        </Link>
+                                        <div class="text-[13px] mx-[16px]">{{ convertTime(post.created_at) }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    <!-- <div class="border-b-[2px] pb-[16px]">
                         <Link :href="route('post', 'bai-bao-moi-nay-cua-chung-ta')">
                             <img class="w-[100%]"
                                 src="\image\cf2a58bd5ff0b6aeefe1.jpg" alt="Giá xăng dầu ngày mai 13/3 có thể tăng nhẹ">
@@ -127,7 +180,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="mt-[20px]">
                     <div class="border-l-[5px] pl-[12px] border-l-[red] font-bold text-[red]">
@@ -204,8 +257,10 @@
     </AppLayout>
 </template>
 <script>
+import axios from 'axios';
 import AppLayout from '../Layouts/AppLayout.vue';
 import { Link } from '@inertiajs/vue3'
+import moment  from 'moment';
 
 export default{
     components:{
@@ -215,17 +270,47 @@ export default{
     data() {
         return {
             currentTab: 'tab-0',
-            FormData: {
-                
-            }
+            listPostPopular: [],
+            listHagtagPopular: [],
         }  
     },
     created() {
-        
+        this.fecthData()
     },
     methods: {
+        moment,
+        async fecthData() {
+            await axios.get(route('post.get-list-post-popular'))
+                .then(response => {
+                    this.listPostPopular = response.data.data
+                })
+                .catch(errors => {})
+        },
+        convertTime(created_at) {
+            const now = moment()
+            const time = moment(created_at)
 
-    }
+            if( now.diff(time, 'years') > 0 ) {
+                return `${now.diff(time, 'years')} năm trước`
+            }
+            else if(now.diff(time, 'months') > 0) {
+                return `${now.diff(time, 'months')} tháng trước`
+            }
+            else if(now.diff(time, 'days') > 0) {
+                return `${now.diff(time, 'days')} ngày trước`
+            }
+            else if(now.diff(time, 'hours') > 0) {
+                return `${now.diff(time, 'hours')} giờ trước`
+            }
+            else if(now.diff(time, 'minutes') > 0) {
+                return `${now.diff(time, 'minutes')} phút trước`
+            }
+            else if(now.diff(time, 'seconds') > 0) {
+                return `${now.diff(time, 'seconds')} giây trước`
+            }
+        },
+    },
+
 }
 
 </script>

@@ -5,7 +5,9 @@ namespace App\Http\Controllers\FrontEnd;
 use App\Http\Controllers\Controller;
 use App\Models\Account;
 use App\Models\Category;
+use App\Models\HagTag;
 use App\Models\Post;
+use Database\Seeders\HagtagSeeder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -24,7 +26,7 @@ class HomeController extends Controller
             abort(404);
         }
 
-        return Inertia::render('ListCategory', ['category' => $category->slug, 'categoryName' =>  $category->name]);
+        return Inertia::render('ListPostCategory', ['category' => $category->slug, 'categoryName' =>  $category->name]);
     }
     
     public function post($slugPost)
@@ -52,6 +54,11 @@ class HomeController extends Controller
 
     public function listPostHagtag($slug)
     {
-        
+        $hagtag = HagTag::where('slug', $slug)->first();
+        if(!$hagtag) {
+            abort(404);
+        }
+
+        return Inertia::render('ListPostHagtag', ['hagtag' => $slug, 'hagtagName' => $hagtag->name]); 
     }
 }

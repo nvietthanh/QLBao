@@ -3,39 +3,39 @@
         <template v-slot:main-1>
             <div class="main">
                 <div class="heading">{{ this.$page.props.categoryName }}</div>
-                <div class="news mb-[24px]">
-                    <div class="mt-[20px] grid grid-cols-2 gap-2">
-                        <div v-for="(item, index) in listPost"  class="new-item-default">
+                <div class="mb-[24px]">
+                    <div class="mt-[20px] grid grid-cols-2 gap-3">
+                        <div v-for="(item, index) in listPost" class="post-item">
                             <template v-if="index < 2">
                                 <Link :href="route('post', item.slug)">
-                                    <img :src="item.image" :alt="item.description" class="border-[1px] h-[260px] w-[100%] object-cover">
+                                    <img :src="item.image" :alt="item.description" class="post-image border-[1px] rounded-[4px] h-[260px] w-[100%] object-cover">
                                 </Link>
                                 <div class="mt-[12px] mx-[4px]">
                                     <Link :href="route('post', item.slug)">
-                                        <div class="title mt-[8px]">{{ item.title }}</div>
+                                        <div class="post-title font-bold text-[17px]">{{ item.title }}</div>
                                     </Link>
                                     <Link :href="route('list-category', item.categorySlug)">
-                                        <div class="category my-[4px]">{{ item.categoryName }}</div>
+                                        <div class="text-[#076db6] font-bold text-[15px] my-[4px]">{{ item.categoryName }}</div>
                                     </Link>
-                                    <div class="time">{{ convertTime(item.created_at) }}</div>
+                                    <div class="text-[14px]">{{ convertTime(item.created_at) }}</div>
                                 </div>
                             </template>
                         </div>
                     </div>
                     <div class="mt-[24px]">
                         <template v-for="(item, index) in listPost">
-                            <div class="new-item flex mt-[24px]" v-if="index >= 2">
-                                <Link :href="route('post', item.slug)">
-                                    <img :src="item.image" :alt="item.description" class="h-[200px] w-[100%] object-cover">
+                            <div class="flex mt-[24px] post-item" v-if="index >= 2">
+                                <Link :href="route('post', item.slug)" class="mr-[4px]">
+                                    <img :src="item.image" :alt="item.description" class="post-image rounded-[4px] border-[1px] min-w-[260px] w-[260px] h-[200px] object-cover">
                                 </Link>
-                                <div class="ml-[12px]">
+                            <div class="ml-[12px]">
                                     <Link :href="route('post', item.slug)">
-                                        <div class="title">{{ item.title }}</div>
+                                        <div class="post-title font-bold text-[17px]" style="height: auto;">{{ item.title }}</div>
                                     </Link>
                                     <Link :href="route('list-category', item.categorySlug)">
-                                        <div class="category mt-[8px] mb-[4px]">{{ item.categoryName }}</div>
+                                        <div class="text-[#076db6] mt-[8px] font-bold text-[15px] my-[4px]">{{ item.categoryName }}</div>
                                     </Link>
-                                    <div class="time">{{ convertTime(item.created_at) }}</div>
+                                    <div class="text-[14px]">{{ convertTime(item.created_at) }}</div>
                                 </div>
                             </div>
                         </template>
@@ -120,26 +120,6 @@ main .main {
     box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
 }
-main .container-fuild .main-1 .new-item-default img,
-main .container-fuild .main-1 .new-item img {
-    border-radius: 4px;
-}
-main .container-fuild .main-1 .new-item img {
-    min-width: 260px;
-    width: 260px;
-}
-main .container-fuild .main-1 .title {
-    font-size: 1.0rem;
-    font-weight: 600;
-}
-main .container-fuild .main-1 .category {
-    font-size: 0.8rem;
-    color: #076db6;
-    font-weight: 600;
-}
-main .container-fuild .main-1 .time {
-    font-size: 0.9rem;
-}
 main .container-fuild .main-1 .heading {
     margin-top: 12px;
     text-transform: uppercase;
@@ -147,6 +127,15 @@ main .container-fuild .main-1 .heading {
     font-size: 17px;
     border-left: 4px solid #db562b;
     padding-left: 12px;
+}
+.post-title {
+    height: 80px;
+    max-height: 80px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
 }
 </style>
   

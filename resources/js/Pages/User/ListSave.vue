@@ -31,7 +31,7 @@
                                 </Link>
                                 <div class="px-[2px]">
                                     <Link :href="route('post', item.slug)">
-                                        <div class="font-bold text-[15px] mt-[4px]">{{ item.title }}</div>
+                                        <div class="post-title font-bold text-[15px] mt-[4px]">{{ item.title }}</div>
                                     </Link>
                                     <div class="flex items-center mt-[8px]">
                                         <Link :href="route('list-category', item.categorySlug)">
