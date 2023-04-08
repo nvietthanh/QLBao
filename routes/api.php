@@ -30,6 +30,8 @@ Route::post('/get-list-post-hagtag/{slug}', [PostController::class, 'getListPost
 
 Route::get('/get-list-post-popular', [PostController::class, 'getListPostPopular'])->name('post.get-list-post-popular');
 
+Route::get('/get-list-post-hagtag-popular', [PostController::class, 'getListHagtagPopular'])->name('post.get-list-hagtag-popular');
+
 // Infor cretor
 // Route::get('/get-infor-user/{id}', [CreatorController::class, 'getInfor'])->name('cretor.get-infor');
 

@@ -62,10 +62,12 @@ class HomeController extends Controller
     {
         $currentAccount = auth('accounts')->user();
 
-        $posts = Post::whereHas('postHasAccountReads', function ($query) use ($currentAccount) {
-                $query->where('account_id', $currentAccount->id)
-                    ->orderBy('id', 'asc');
-        })->get()->reverse();
+        $posts = Post::whereHas('postHasAccountSave', function($query) use ($currentAccount) {
+            $query->where('account_id', $currentAccount->id)
+                ->orderBy('created_at', 'desc');
+        })->get();
+            
+        $posts = $posts->reverse()->values()->all();
 
         $posts = (new Collection($posts))->paginate($request->limit ?? 15);
 

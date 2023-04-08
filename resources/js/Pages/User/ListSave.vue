@@ -33,7 +33,7 @@
                                     <Link :href="route('post', item.slug)">
                                         <div class="post-title font-bold text-[15px] mt-[4px]">{{ item.title }}</div>
                                     </Link>
-                                    <div class="flex items-center mt-[8px]">
+                                    <div class="flex items-center mt-[12px]">
                                         <Link :href="route('list-category', item.categorySlug)">
                                             <div class="text-[14px] font-bold text-[#076db6]">{{ item.categoryName }}</div>
                                         </Link>
@@ -165,4 +165,14 @@ export default{
 }
 
 </script>
+<style>
+.post-title {
+  height: 40px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+</style>
   

@@ -26,7 +26,7 @@
                                     <Link :href="route('post', item.slug)">
                                         <div class="post-title font-bold text-[15px] mt-[4px]">{{ item.title }}</div>
                                     </Link>
-                                    <div class="flex items-center mt-[8px]">
+                                    <div class="flex items-center mt-[12px]">
                                         <Link :href="route('list-category', item.categorySlug)">
                                             <div class="text-[14px] font-bold text-[#076db6]">{{ item.categoryName }}</div>
                                         </Link>
@@ -113,13 +113,13 @@ export default{
 
 </script>
 <style scoped>
-.post-item:hover .post-image {
-    transform: scale(1.03);
-    transition: .1s linear all;
-}
-.box-shadow {
-    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
+.post-title {
+  height: 40px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 </style>
   

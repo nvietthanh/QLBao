@@ -4,10 +4,10 @@
             <div class="main">
                 <div class="row p-[8px]">
                     <template v-for="(post, index) in listPostPopular">
-                        <div v-if="index == 0" class="border-b-[2px] pb-[18px]">
+                        <div v-if="index == 0" class="post-item border-b-[2px] pb-[18px]">
                             <Link :href="route('post', post.slug)">
-                                <img class="w-[100%] h-[480px] object-cover" :src="post.image" :alt="post.description">
-                                <div class="font-bold text-[21px] py-2">{{ post.title }}</div>
+                                <img class="post-image w-[100%] h-[480px] object-cover" :src="post.image" :alt="post.description">
+                                <div class="post-title font-bold text-[21px] py-2">{{ post.title }}</div>
                             </Link>
                             <div class="flex items-end">
                                 <Link :href="route('list-category', post.categorySlug)">
@@ -16,13 +16,12 @@
                                     </div>
                                 </Link>
                                 <div class="text-[15px] mx-[16px]">{{ convertTime(post.created_at) }}</div>
-                                <div class="text-[15px]">1000 liên quan</div>
                             </div>
                         </div>
-                        <div v-else-if="index < 4" class="col-4 py-[24px] border-b-[2px]">
+                        <div v-else-if="index < 4" class="post-item col-4 py-[24px] border-b-[2px]">
                             <Link :href="route('post', post.slug)">
-                                <img :src="post.image" :alt="post.description" class="w-[100%] h-[140px] object-cover">
-                                <div class="py-2 font-bold text-[16px]">{{ post.title }}</div>
+                                <img :src="post.image" :alt="post.description" class="post-image w-[100%] h-[140px] object-cover">
+                                <div class="post-title py-2 font-bold text-[16px]">{{ post.title }}</div>
                             </Link>
                             <div>
                                 <Link :href="route('list-category', post.categorySlug)">
@@ -34,15 +33,13 @@
                             </div>
                         </div>
                         <div v-else>
-                            <div class="flex py-[18px] border-b-[2px]">
+                            <div class="post-item flex py-[18px] border-b-[2px]">
                                 <Link :href="route('post', post.slug)">
-                                    <img :src="post.image" :alt="post.description" class="w-[220px] h-[150px] object-cover">
+                                    <img :src="post.image" :alt="post.description" class="post-image w-[220px] h-[150px] object-cover">
                                 </Link>
                                 <div class="ml-[12px]">
                                     <Link :href="route('post', post.slug)">
-                                        <div class="text-[16px] font-bold">
-                                            {{ post.title }}
-                                        </div>
+                                        <div class="post-title text-[16px] font-bold">{{ post.title }}</div>
                                     </Link>
                                     <div class="mt-[12px] flex items-end">
                                         <Link :href="route('list-category', post.categorySlug)">
@@ -182,71 +179,28 @@
                         </div>
                     </div> -->
                 </div>
-                <div class="mt-[20px]">
+                <div v-for="(hagtag, index) in listHagtagPopular" class="mt-[15px]">
                     <div class="border-l-[5px] pl-[12px] border-l-[red] font-bold text-[red]">
-                        Năng lượng tích cực
+                        <Link :href="route('list-post-hagtag', hagtag.slug)">
+                            {{ hagtag.name }}
+                        </Link>
                     </div>
-                    <div class="mt-[2px]">
-                        <div class="flex py-[18px] border-b-[2px]">
-                            <Link :href="route('home')">
-                                <img src="\image\cf2a58bd5ff0b6aeefe1.jpg" alt="" class="min-w-[220px] w-[220px] h-[150px]">
+                    <div v-for="post in listPosts[index]" class="mt-[2px]">
+                        <div class="post-item flex py-[18px] border-b-[2px]">
+                            <Link :href="route('post', post.slug)">
+                                <img :src="post.image" :alt="post.description" class="post-image min-w-[220px] w-[220px] h-[150px]">
                             </Link>
                             <div class="ml-[12px]">
-                                <Link :href="route('home')">
-                                    <div class="text-[16px] font-bold">
-                                        Cơi nới, chở quá tải mức thấp, tài xế xin 'đừng giữ xe' nhưng bất thành
-                                    </div>
+                                <Link :href="route('post', post.slug)">
+                                    <div class="post-title text-[16px] font-bold">{{ post.title }}</div>
                                 </Link>
                                 <div class="mt-[12px] flex items-end">
-                                    <Link :href="route('home')">
+                                    <Link :href="route('list-category', post.categorySlug)">
                                         <div class="text-[15px] font-bold text-[#076db6]">
-                                            Kinh tế chính trị
+                                            {{ post.categoryName }}
                                         </div>
                                     </Link>
-                                    <div class="text-[13px] mx-[16px]">1 giờ trước</div>
-                                    <div class="text-[13px]">1000 liên quan</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex py-[18px] border-b-[2px]">
-                            <Link :href="route('home')">
-                                <img src="\image\cf2a58bd5ff0b6aeefe1.jpg" alt="" class="min-w-[220px] w-[220px] h-[150px]">
-                            </Link>
-                            <div class="ml-[12px]">
-                                <Link :href="route('home')">
-                                    <div class="text-[16px] font-bold">
-                                        Cơi nới, chở quá tải mức thấp, tài xế xin 'đừng giữ xe' nhưng bất thành
-                                    </div>
-                                </Link>
-                                <div class="mt-[12px] flex items-end">
-                                    <Link :href="route('home')">
-                                        <div class="text-[15px] font-bold text-[#076db6]">
-                                            Kinh tế chính trị
-                                        </div>
-                                    </Link>
-                                    <div class="text-[13px] mx-[16px]">1 giờ trước</div>
-                                    <div class="text-[13px]">1000 liên quan</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex py-[18px]">
-                            <Link :href="route('home')">
-                                <img src="\image\cf2a58bd5ff0b6aeefe1.jpg" alt="" class="min-w-[220px] w-[220px] h-[150px]">
-                            </Link>
-                            <div class="ml-[12px]">
-                                <Link :href="route('home')">
-                                    <div class="text-[16px] font-bold">
-                                        Cơi nới, chở quá tải mức thấp, tài xế xin 'đừng giữ xe' nhưng bất thành
-                                    </div>
-                                </Link>
-                                <div class="mt-[12px] flex items-end">
-                                    <Link :href="route('home')">
-                                        <div class="text-[15px] font-bold text-[#076db6]">
-                                            Kinh tế chính trị
-                                        </div>
-                                    </Link>
-                                    <div class="text-[13px] mx-[16px]">1 giờ trước</div>
-                                    <div class="text-[13px]">1000 liên quan</div>
+                                    <div class="text-[13px] mx-[16px]">{{ convertTime(post.created_at) }}</div>
                                 </div>
                             </div>
                         </div>
@@ -272,10 +226,12 @@ export default{
             currentTab: 'tab-0',
             listPostPopular: [],
             listHagtagPopular: [],
+            listPosts: []
         }  
     },
     created() {
         this.fecthData()
+        this.listHagtagPopular = this.$page.props.hagtags
     },
     methods: {
         moment,
@@ -283,6 +239,13 @@ export default{
             await axios.get(route('post.get-list-post-popular'))
                 .then(response => {
                     this.listPostPopular = response.data.data
+                })
+                .catch(errors => {})
+
+            const pagram = { ...this.listHagtagPopular }
+            await axios.get(route('post.get-list-hagtag-popular', pagram))
+                .then(response => {
+                    this.listPosts = response.data
                 })
                 .catch(errors => {})
         },

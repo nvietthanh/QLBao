@@ -94,7 +94,7 @@
                                     <img :src="item.image" alt="" class="post-image w-[100%] h-[150px] object-cover">
                                     <div class="px-[2px]">
                                         <div class="post-title font-bold text-[15px] mt-[8px]">{{ item.title }}</div>
-                                        <div class="flex items-center mt-[8px]">
+                                        <div class="flex items-center mt-[12px]">
                                             <Link :href="route('list-category', item.categorySlug)">
                                                 <div class="text-[14px] font-bold text-[#076db6]">{{ item.categoryName }}</div>
                                             </Link>

@@ -71,6 +71,22 @@ class PostController extends Controller
         return PostResource::collection($posts);
     }
 
+    public function getListHagtagPopular(Request $request)
+    {
+        $hagtags = $request->all();
+        $posts = [];
+
+        foreach($hagtags as $item){
+            $hastag = HagTag::where('slug', $item['slug'])->first();
+
+            $posts[] = PostResource::collection(
+                $hastag->hastagHasPost()->where('is_approved', 1)->take(7)->get()
+            );
+        }
+
+        return $posts;
+    }
+
     public function searchHeader(Request $request)
     {
         $search = $request->search;

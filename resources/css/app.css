@@ -36,7 +36,10 @@ body {
 }
 .post-item:hover .post-title {
     color: #17a2b8;
-    }
+}
+.post-item:hover .post-new-title {
+    color: #17a2b8;
+}
 .post-image {
     border: 1px solid #ced4da;
     border-radius: 8px;
