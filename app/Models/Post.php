@@ -54,4 +54,9 @@ class Post extends Model
         return $this->belongsToMany(HagTag::class, 'post_has_hagtag', 'post_id', 'hagtag_id')
             ->withPivot('created_at');
     }
+
+    public function postHasAccountSave()
+    {
+        return $this->hasMany(AccountSavePost::class, 'post_id', 'id');
+    }
 }

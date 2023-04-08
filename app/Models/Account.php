@@ -41,6 +41,11 @@ class Account extends Authenticatable
         return $this->belongsToMany(Post::class, 'account_read_post', 'account_id', 'post_id')->withPivot('read_at')
             ->orderByPivot('read_at', 'desc');
     }
+    
+    public function accountHasSavePosts()
+    {
+        return $this->hasMany(AccountSavePost::class, 'account_id', 'id');
+    }
 
     public function follows()
     {

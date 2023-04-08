@@ -191,11 +191,11 @@
                         </div>
                         <div v-for="item in listNewPost" class="post-item flex border-b-[2px] mx-[8px] py-[8px] hover:bg-[#e9ecef]">
                             <Link :href="route('post', item.slug)">
-                            <img :src="item.image" alt="" class="w-[60px] min-w-[60px] h-[60px] rounded-[3px] object-cover">
+                            <img :src="item.image" alt="" class="post-image w-[60px] min-w-[60px] h-[60px] rounded-[3px] object-cover">
                             </Link>
                             <div class="ml-[8px]">
                                 <Link :href="route('post', item.slug)">
-                                <div class="post-new-title post-title text-[15px] mr-[8px]"> {{ item.title }} </div>
+                                <div class="post-new-title text-[15px] mr-[8px]"> {{ item.title }} </div>
                                 </Link>
                                 <div class="flex items-center mt-[6px]">
                                     <Link :href="route('list-category', item.categorySlug)">
