@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Activitylog\LogOptions;
@@ -11,6 +12,7 @@ class Account extends Authenticatable
 {
     use HasFactory;
     use HasRoles;
+    use Filterable;
 
     protected $fillable = [
         'code',
@@ -18,7 +20,8 @@ class Account extends Authenticatable
         'password',
         'creator_id',
         'updater_id',
-        'userable_type'
+        'userable_type',
+        'status'
     ];
 
     public function accountProfile()
