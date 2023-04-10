@@ -15,7 +15,7 @@
     </AppLayout>
 </template>
 <script>
-import AppLayout from '../Layouts/AppLayout.vue';
+import AppLayout from '@/Layouts/AppLayout.vue';
 import { Link } from '@inertiajs/vue3'
 
 export default{

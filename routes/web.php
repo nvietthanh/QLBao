@@ -3,7 +3,11 @@
 use App\Http\Controllers\BackEnd\Auth\ForgotPasswordController;
 use App\Http\Controllers\BackEnd\Auth\LoginController;
 use App\Http\Controllers\BackEnd\Auth\ResgisterController;
+use App\Http\Controllers\FrontEnd\Admin\Auth\LoginController as AdminLoginController;
+use App\Http\Controllers\FrontEnd\Admin\HomeController as AdminHomeController;
+use App\Http\Controllers\FrontEnd\Creator\CreatorController;
 use App\Http\Controllers\FrontEnd\HomeController;
+use App\Http\Controllers\FrontEnd\User\UserController;
 use App\Models\Account;
 use App\Models\Comment;
 use Illuminate\Support\Facades\Route;
@@ -48,47 +52,45 @@ Route::get('/home', function () {
     return redirect()->route('home');
 });
 
+// user and creator
+
 Route::get('/', [HomeController::class, 'home'])->name('home');
-
 Route::get('/category/{category}', [HomeController::class, 'category'])->name('list-category');
-
 Route::get('/post/{slugPost}', [HomeController::class, 'post'])->name('post');
-
 Route::get('/creator/id={id}', [HomeController::class, 'creator'])->name('creator');
-
 Route::get('/hagtag/{slug}', [HomeController::class, 'listPostHagtag'])->name('list-post-hagtag');
+Route::get('/dieu-khoan-su-dung', [HomeController::class, 'teamOfUse'])->name('termofuse');
 
+Route::middleware(['auth:accounts'])->prefix('user')->name('user.')->group(function () {
+    Route::get('my-profile', [UserController::class, 'myProfile'])->name('my-profile');
+    Route::get('follows', [UserController::class, 'lisFollows'])->name('list-follow');
+    Route::get('list-reads', [UserController::class, 'listReads'])->name('list-read');
+    Route::get('list-saves', [UserController::class, 'listSaves'])->name('list-save');
 
-Route::get('/dieu-khoan-su-dung', function () {
-    return Inertia::render('TermOfUse');
-})->name('termofuse');
-
-// Route::get('/profile/list-post', function () {
-//     return Inertia::render('Creater/ListPost');
-// })->name('creater.list-post');
-
-Route::middleware(['auth:accounts'])->prefix('user')->group(function () {
-    Route::get('my-profile', function () {
-        return Inertia::render('User/MyProfile');
-    })->name('user.my-profile');
-    
-    Route::get('follows', function () {
-        return Inertia::render('User/ListFollow');
-    })->name('user.list-follow');
-    
-    Route::get('list-read', function () {
-        return Inertia::render('User/ListRead');
-    })->name('user.list-read');
-    
-    Route::get('list-save', function () {
-        return Inertia::render('User/ListSave');
-    })->name('user.list-save');
-    
     Route::middleware('is_creator')->group(function () {
-        Route::get('my-post', function () {
-            return Inertia::render('Creater/ListPost');
-        })->name('user.my-post');
+        Route::get('my-post', [CreatorController::class, 'listPosts'])->name('my-post');
     });
 });
 
 
+// admin
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::middleware(['guest:' . config('fortify.guard')])
+        ->get('/login', [AdminLoginController::class, 'formLogin'])->name('login');
+    Route::get('/logout', function(){
+        auth('web')->logout();
+
+        return redirect()->route('admin.login');
+    })->name('logout');
+});
+
+Route::get('/admin', function () {
+    return redirect()->route('admin.dashboard');
+});
+
+Route::middleware([
+    'is_admin'
+])->prefix('admin')->name('admin.')->group(function (){
+    Route::get('dashboard', [AdminHomeController::class, 'home'])->name('dashboard');
+
+});
