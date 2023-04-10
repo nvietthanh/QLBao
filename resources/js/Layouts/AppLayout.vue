@@ -6,7 +6,7 @@
                     <div class="row">
                         <div class="col-2 flex items-center cursor-pointer text-black pr-5">
                             <Link :href="route('home')">
-                            <img src="/image/logo/logo.png" alt="Logo bao moi" class="h-[60px]">
+                                <img src="/image/logo/logo.png" alt="Logo bao moi" class="h-[60px]">
                             </Link>
                         </div>
                         <div class="col-6 mt-1 flex items-center search relative">

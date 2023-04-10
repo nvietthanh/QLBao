@@ -7,9 +7,7 @@ use App\Models\Account;
 use App\Models\Category;
 use App\Models\HagTag;
 use App\Models\Post;
-use Database\Seeders\HagtagSeeder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class HomeController extends Controller
@@ -60,5 +58,10 @@ class HomeController extends Controller
         }
 
         return Inertia::render('ListPostHagtag', ['hagtag' => $slug, 'hagtagName' => $hagtag->name]); 
+    }
+
+    public function termOfUse()
+    {
+        return Inertia::render('TermOfUse');
     }
 }

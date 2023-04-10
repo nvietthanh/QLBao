@@ -22,7 +22,6 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        Fortify::ignoreRoutes();
     }
 
     /**
@@ -30,6 +29,7 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Fortify::ignoreRoutes();
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
@@ -45,17 +45,22 @@ class FortifyServiceProvider extends ServiceProvider
             return Limit::perMinute(5)->by($request->session()->get('login.id'));
         });
 
-                // Custom login fortify
+        // Custom login fortify
         Fortify::authenticateUsing(function (Request $request) {
             $user = User::where(['email' => $request->email])->first();
-
+            
             // Check username and password
-            if (!$user || !Hash::check($request->password, $user->password)) {
+            if (!$user) {
                 throw ValidationException::withMessages([
-                    Fortify::username() => __('These credentials do not match our records.'),
+                    Fortify::username() => 'Email không tồn tại trong hệ thống',
                 ]);
             }
-
+            if(!Hash::check($request->password, $user->password)) {
+                throw ValidationException::withMessages([
+                    'password' => 'Mật khẩu không chính xác'
+                ]);
+            }
+            
             return $user;
         });
     }
