@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\BackEnd\Admin\UserController;
 use App\Http\Controllers\Api\BackEnd\CommentController;
 use App\Http\Controllers\Api\BackEnd\Creator\PostController;
 use App\Http\Controllers\Api\BackEnd\FollowController;
@@ -68,4 +69,14 @@ Route::middleware(['auth:accounts'])->prefix('user')->group(function () {
     Route::get('/save-post/{id}', [HomeController::class, 'savePost'])->name('save-post');
     Route::get('/unsave-post/{id}', [HomeController::class, 'unsavePost'])->name('unsave-post');
     Route::get('/unsave-all-post', [HomeController::class, 'unsaveAllPost'])->name('unsave-all-post');
+});
+
+
+// admin
+Route::middleware('is_admin')->prefix('admin')->name('admin.')->group(function () {
+    Route::apiResource('users', UserController::class);
+    Route::get('/change-status-user', [UserController::class, 'changeStatus'])->name('users.change-status');
+    Route::get('/delete-selected-account', [UserController::class, 'deleteAccoutns'])->name('users.delete-accounts');
+
+    
 });

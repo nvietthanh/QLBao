@@ -75,13 +75,12 @@ Route::middleware(['auth:accounts'])->prefix('user')->name('user.')->group(funct
 
 // admin
 Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('check-otp-user', [AdminLoginController::class, 'sendOtp'])->name('check-otp');
+
     Route::middleware(['guest:' . config('fortify.guard')])
         ->get('/login', [AdminLoginController::class, 'formLogin'])->name('login');
-    Route::get('/logout', function(){
-        auth('web')->logout();
 
-        return redirect()->route('admin.login');
-    })->name('logout');
+    Route::get('/logout', [AdminLoginController::class, 'logout'])->name('logout');
 });
 
 Route::get('/admin', function () {
@@ -91,6 +90,15 @@ Route::get('/admin', function () {
 Route::middleware([
     'is_admin'
 ])->prefix('admin')->name('admin.')->group(function (){
-    Route::get('dashboard', [AdminHomeController::class, 'home'])->name('dashboard');
+    Route::get('/dashboard', [AdminHomeController::class, 'home'])->name('dashboard');
 
+    Route::get('/users', [AdminHomeController::class, 'listUser'])->name('list-user');
+
+    Route::get('/categories', [AdminHomeController::class, 'listCategory'])->name('list-category');
+
+    Route::get('/hagtags', [AdminHomeController::class, 'listHagtag'])->name('list-hagtag');
+
+    Route::get('/posts', [AdminHomeController::class, 'listPost'])->name('list-post');
+
+    Route::get('/reports', [AdminHomeController::class, 'listReport'])->name('list-report');
 });

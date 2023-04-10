@@ -15,7 +15,7 @@ class AccountSeeder extends Seeder
 
     public function run(): void
     {
-        for ($i = 1; $i <= 10; $i ++) {
+        for ($i = 1; $i <= 100; $i ++) {
             $account = Account::create([
                 'code' => rand(10000000, 99999999),
                 'email' => 'creator'. $i . '@rabiloo.com',
@@ -40,7 +40,7 @@ class AccountSeeder extends Seeder
             );
         }
 
-        for ($i = 1; $i <= 10; $i ++) {
+        for ($i = 1; $i <= 50; $i ++) {
             $account = Account::create([
                 'code' => rand(10000000, 99999999),
                 'email' => 'user'. $i . '@rabiloo.com',

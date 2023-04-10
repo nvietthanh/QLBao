@@ -21,6 +21,7 @@ return new class extends Migration
             $table->dateTime('otp_expires_at')->nullable();
             $table->string('token_set_password')->nullable();
             $table->string('userable_type')->nullable();
+            $table->boolean('status')->default(1);
             $table->unsignedBigInteger('creator_id')->nullable();
             $table->unsignedBigInteger('updater_id')->nullable();
             $table->timestamps();

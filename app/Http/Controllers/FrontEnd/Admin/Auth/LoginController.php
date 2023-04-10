@@ -12,4 +12,16 @@ class LoginController extends Controller
     {
         return Inertia::render('Admin/Auth/Login');
     }
+
+    public function sendOtp()
+    {
+        
+    }
+
+    public function logout()
+    {
+        auth('web')->logout();
+
+        return redirect()->route('admin.login');
+    }
 }

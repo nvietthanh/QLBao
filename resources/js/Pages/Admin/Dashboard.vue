@@ -1,7 +1,7 @@
 <template>
-    <AppLayoutAdmin>
+    <AppLayoutAdmin :currentTab="'tab-0'">
         <template v-slot:main-full>
-            <div class="h-[1500px]">
+            <div class="bg-[red]">
                 aagag
             </div>
         </template>
