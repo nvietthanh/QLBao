@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AccountResource extends JsonResource
+class CategoryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,9 +17,8 @@ class AccountResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'code' => $this->code,
-            'name' => $this->accountProfile->first_name  . ' ' . $this->accountProfile->last_name,
-            'email' => $this->email,
+            'name' => $this->name,
+            'slug' => $this->slug,
             'status' => $this->status ? true : false,
             'created_at' => Carbon::create($this->created_at)->format('Y-m-d h:i'),
             'updated_at' => Carbon::create($this->updated_at)->format('Y-m-d h:i')

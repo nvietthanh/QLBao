@@ -1,20 +1,20 @@
 <template>
-    <AppLayoutAdmin :currentTab="'tab-1'">
+    <AppLayoutAdmin :currentTab="'tab-4'">
         <template v-slot:main-full>
             <div class="mt-[12px] flex text-[18px] font-bold uppercase">
-                Danh sách người dùng
+                Danh sách bài viết 
             </div>
             <div class="mt-[12px] flex items-center text-[15px] border-b-[3px] border-b-[#adb5bd]">
                 <div class="w-[120px] text-center py-[6px] cursor-pointer"
                  :class="{ 'bg-[#495057] text-white' : tab == 'tab-0' }" @click="changeTab('tab-0')">
-                    Người đọc
+                    Chưa duyệt
                 </div>
                 <div class="w-[120px] text-center py-[6px] cursor-pointer"
                  :class="{ 'bg-[#495057] text-white' : tab == 'tab-1' }" @click="changeTab('tab-1')">
-                    Tác giả
+                    Đã duyệt
                 </div>
             </div>
-            <div class="my-[28px]">
+            <div class="my-[18px]">
                 <div class="mb-[18px] flex items-center">
                     <el-select v-model="filterSearch.limit" class="max-w-[60px] ml-[8px]" @change="fetchData()">
                         <el-option
@@ -31,23 +31,10 @@
                     </el-select>
                     <el-input class="mx-[20px] max-w-[300px]" v-model="filterSearch.search"
                                    placeholder="Nhập từ khóa" clearable @keyup.enter="fetchData()"/>
-                    <div class="text-[14px] bg-[red] w-[130px] h-[32px] leading-[32px] text-white 
-                     text-center rounded-[4px] cursor-pointer" @click="deleteSelections">
-                        Xóa người dùng
-                    </div>
                 </div>
                 <DataTable :fields="fields" :items="tableData" enable-select-box @row-selected="handleSelectionChange">
-                    <template class="flex justify-center" #status ="{ row }">
-                        <div class="h-[36px] flex justify-center items-center">
-                            <el-switch v-model="row.status"  @click="changeStatus(row)"/>
-                            <span class="ml-[6px] text-[13px]" v-if="row.status">Activated</span>
-                            <span class="ml-[6px] text-[13px]" v-else>Deactivated</span>
-                        </div>
-                    </template>
-                    <template #options="{ row }">
-                        <span class="px-[16px] py-[8px] text-[20px] cursor-pointer" @click="deleteSelection(row)">
-                            <i class="bi bi-trash3-fill"></i>
-                        </span>
+                    <template #image="{ row }">
+                        <img :src="row.image" alt="">
                     </template>
                 </DataTable>
                 <div v-if="tableData.length != 0" class="flex justify-end mt-[32px] mr-[16px]">
@@ -77,18 +64,19 @@ export default{
         return {
             tab: 'tab-0',
             fields: [
-                { key: 'code', label: 'Code', align: 'center', width: 140 },
-                { key: 'name', label: 'Họ tên', align: 'center' },
-                { key: 'email', label: 'Email', align: 'center' },
-                { key: 'created_at', label: 'Ngày tạo', align: 'center', width: 180 },
-                { key: 'updated_at', label: 'Ngày cập nhật', align: 'center', width: 160 },
-                { key: 'status', label: 'Trạng thái', align: 'center', width: 150 },
-                { key: 'options', label: 'Tùy chỉnh', align: 'center', width: 130 },
+                { key: 'title', label: 'Tiêu đề', align: 'center' },
+                { key: 'slug', label: 'Slug', align: 'center' },
+                // { key: 'description', label: 'Mô tả', align: 'center', width: 180 },
+                { key: 'content', label: 'Nội dung', align: 'center' },
+                { key: 'image', label: 'Hình ảnh', align: 'center', width: 180 },
+                { key: 'count_view', label: 'View', align: 'center', width: 70 },
+                { key: 'created_at', label: 'Ngày tạo', align: 'center', width: 140 },
+                { key: 'updated_at', label: 'Ngày cập nhật', align: 'center', width: 140 },
+                // { key: 'status', label: 'Trạng thái', align: 'center', width: 180 },
             ],
             options: [10, 20, 30],
             filterSearch: {
                 limit: 10,
-                type: 'Reader',
                 isApproved: "2",
                 search: '',
                 page: 1
@@ -112,7 +100,7 @@ export default{
         },
         async fetchData() {
             const pagram = { ...this.filterSearch }
-            const response = await axios.get(route('admin.users.index', pagram))
+            const response = await axios.get(route('admin.posts.index', pagram))
             this.tableData = response.data.data
             this.paginate = response.data.meta
         },
@@ -138,7 +126,10 @@ export default{
             const pagram = {
                 ...{ 'id': row.id }
             }
-            axios.get(route('admin.users.change-status', pagram))
+            axios.get(route('admin.categories.change-status', pagram))
+        },
+        editCategory(row) {
+            alert('thay doi nhe')
         },
         deleteSelection(row) {
             ElMessageBox.confirm(

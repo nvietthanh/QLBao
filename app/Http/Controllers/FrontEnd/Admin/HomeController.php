@@ -20,17 +20,17 @@ class HomeController extends Controller
 
     public function listCategory()
     {
-        return 1;
+        return Inertia::render('Admin/Category/ListCategory');
     }
 
     public function listHagtag()
     {
-        return 1;
+        return Inertia::render('Admin/Category/ListPost');
     }
 
     public function listPost()
     {
-        return 1;
+        return Inertia::render('Admin/Post/ListPost');
     }
 
     public function listReport()

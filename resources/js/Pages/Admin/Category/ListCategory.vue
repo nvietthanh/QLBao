@@ -1,20 +1,10 @@
 <template>
-    <AppLayoutAdmin :currentTab="'tab-1'">
+    <AppLayoutAdmin :currentTab="'tab-2'">
         <template v-slot:main-full>
             <div class="mt-[12px] flex text-[18px] font-bold uppercase">
-                Danh sách người dùng
+                Danh sách chủ đề
             </div>
-            <div class="mt-[12px] flex items-center text-[15px] border-b-[3px] border-b-[#adb5bd]">
-                <div class="w-[120px] text-center py-[6px] cursor-pointer"
-                 :class="{ 'bg-[#495057] text-white' : tab == 'tab-0' }" @click="changeTab('tab-0')">
-                    Người đọc
-                </div>
-                <div class="w-[120px] text-center py-[6px] cursor-pointer"
-                 :class="{ 'bg-[#495057] text-white' : tab == 'tab-1' }" @click="changeTab('tab-1')">
-                    Tác giả
-                </div>
-            </div>
-            <div class="my-[28px]">
+            <div class="my-[18px]">
                 <div class="mb-[18px] flex items-center">
                     <el-select v-model="filterSearch.limit" class="max-w-[60px] ml-[8px]" @change="fetchData()">
                         <el-option
@@ -31,10 +21,6 @@
                     </el-select>
                     <el-input class="mx-[20px] max-w-[300px]" v-model="filterSearch.search"
                                    placeholder="Nhập từ khóa" clearable @keyup.enter="fetchData()"/>
-                    <div class="text-[14px] bg-[red] w-[130px] h-[32px] leading-[32px] text-white 
-                     text-center rounded-[4px] cursor-pointer" @click="deleteSelections">
-                        Xóa người dùng
-                    </div>
                 </div>
                 <DataTable :fields="fields" :items="tableData" enable-select-box @row-selected="handleSelectionChange">
                     <template class="flex justify-center" #status ="{ row }">
@@ -45,7 +31,10 @@
                         </div>
                     </template>
                     <template #options="{ row }">
-                        <span class="px-[16px] py-[8px] text-[20px] cursor-pointer" @click="deleteSelection(row)">
+                        <span class="px-[8px] py-[8px] text-[20px] cursor-pointer" @click="editCategory(row)">
+                            <i class="bi bi-pencil-fill"></i>
+                        </span>
+                        <span class="px-[8px] py-[8px] text-[20px] cursor-pointer" @click="deleteSelection(row)">
                             <i class="bi bi-trash3-fill"></i>
                         </span>
                     </template>
@@ -77,18 +66,16 @@ export default{
         return {
             tab: 'tab-0',
             fields: [
-                { key: 'code', label: 'Code', align: 'center', width: 140 },
-                { key: 'name', label: 'Họ tên', align: 'center' },
-                { key: 'email', label: 'Email', align: 'center' },
-                { key: 'created_at', label: 'Ngày tạo', align: 'center', width: 180 },
-                { key: 'updated_at', label: 'Ngày cập nhật', align: 'center', width: 160 },
-                { key: 'status', label: 'Trạng thái', align: 'center', width: 150 },
-                { key: 'options', label: 'Tùy chỉnh', align: 'center', width: 130 },
+                { key: 'name', label: 'Tên chủ đề', align: 'center'},
+                { key: 'slug', label: 'Slug', align: 'center'},
+                { key: 'created_at', label: 'Ngày tạo', align: 'center', width: 190 },
+                { key: 'updated_at', label: 'Ngày cập nhật', align: 'center', width: 170 },
+                { key: 'status', label: 'Trạng thái', align: 'center', width: 180 },
+                { key: 'options', label: 'Tùy chỉnh', align: 'center', width: 180 },
             ],
             options: [10, 20, 30],
             filterSearch: {
                 limit: 10,
-                type: 'Reader',
                 isApproved: "2",
                 search: '',
                 page: 1
@@ -112,7 +99,7 @@ export default{
         },
         async fetchData() {
             const pagram = { ...this.filterSearch }
-            const response = await axios.get(route('admin.users.index', pagram))
+            const response = await axios.get(route('admin.categories.index', pagram))
             this.tableData = response.data.data
             this.paginate = response.data.meta
         },
@@ -138,7 +125,10 @@ export default{
             const pagram = {
                 ...{ 'id': row.id }
             }
-            axios.get(route('admin.users.change-status', pagram))
+            axios.get(route('admin.categories.change-status', pagram))
+        },
+        editCategory(row) {
+            alert('thay doi nhe')
         },
         deleteSelection(row) {
             ElMessageBox.confirm(
