@@ -114,16 +114,22 @@ export default {
                     tab: 'tab-2'
                 },
                 {
+                    icon: '<i class="bi bi-book"></i>',
+                    name: 'Quản lý Hagtag',
+                    route: 'admin.list-hagtag',
+                    tab: 'tab-3'
+                },
+                {
                     icon: '<i class="bi bi-card-text"></i>',
                     name: 'Quản lý bài báo',
                     route: 'admin.list-post',
-                    tab: 'tab-3'
+                    tab: 'tab-4'
                 },
                 {
                     icon: '<i class="bi bi-flag"></i>',
                     name: 'Quản lý báo cáo vi phạm',
                     route: 'admin.list-report',
-                    tab: 'tab-4'
+                    tab: 'tab-5'
                 },
                 
             ],

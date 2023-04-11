@@ -4,23 +4,22 @@ namespace App\Http\Controllers\Api\BackEnd\Admin;
 
 use App\Exceptions\FailException;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\AccountResource;
-use App\Models\Account;
+use App\Http\Resources\CategoryResource;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $users = Account::filter($request->all())
-                ->where('userable_type', $request->type ?? 'Reader')
-                ->orderBy('created_at', 'desc')
-                ->paginate($request->limit ?? 10);
+        $categories = Category::filter($request->all())
+            ->orderBy('created_at', 'desc')
+            ->paginate($request->limit ?? 10);
 
-        return AccountResource::collection($users);
+        return CategoryResource::collection($categories);
     }
 
     /**
@@ -66,16 +65,16 @@ class UserController extends Controller
     public function changeStatus(Request $request)
     {
         $id = $request->id;
-        $account = Account::find($id);
+        $category = Category::find($id);
         
-        if(!$account) {
-            throw new FailException('Không thể thay đổi trạng thái tài khoản người dùng');
+        if(!$category) {
+            throw new FailException('Không thể thay đổi trạng thái chủ đề');
         }
 
-        $account->update([
-            'status' => !$account->status
+        $category->update([
+            'status' => !$category->status
         ]);
-        $account->save();
+        $category->save();
 
         return response()->json(200);
     }
@@ -85,28 +84,6 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        $account = Account::find($id);
-
-        if(!$account) {
-            throw new FailException('Không thể xóa tài khoản người dùng');
-        }
-
-        $account->delete();
-
-        return response()->json(200);
-    }
-
-    public function deleteAccounts(Request $request)
-    {
-        $accounts = $request->accounts;
-        foreach ($accounts as $item) {
-            $account = Account::find($item['id']);
-
-            if($account) {
-                $account->delete();
-            }
-        }
-
-        return response()->json(200);
+        //
     }
 }

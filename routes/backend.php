@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\BackEnd\Admin\CategoryController;
+use App\Http\Controllers\Api\BackEnd\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Api\BackEnd\Admin\UserController;
 use App\Http\Controllers\Api\BackEnd\CommentController;
 use App\Http\Controllers\Api\BackEnd\Creator\PostController;
@@ -76,7 +78,10 @@ Route::middleware(['auth:accounts'])->prefix('user')->group(function () {
 Route::middleware('is_admin')->prefix('admin')->name('admin.')->group(function () {
     Route::apiResource('users', UserController::class);
     Route::get('/change-status-user', [UserController::class, 'changeStatus'])->name('users.change-status');
-    Route::get('/delete-selected-account', [UserController::class, 'deleteAccoutns'])->name('users.delete-accounts');
+    Route::post('/delete-selected-account', [UserController::class, 'deleteAccounts'])->name('users.delete-accounts');
 
-    
+    Route::apiResource('categories', CategoryController::class);
+    Route::get('/change-status-category', [CategoryController::class, 'changeStatus'])->name('categories.change-status');
+
+    Route::apiResource('/posts', AdminPostController::class);
 });
