@@ -58,7 +58,7 @@ class PostController extends Controller
                 'category_id' => '1',
                 'image' => $path ? Storage::url($path) : '',
                 'creator_id' => $currentAccount->id,
-                'updated_id' => $currentAccount->id
+                'updater_id' => $currentAccount->id
             ])
         );
 
@@ -98,6 +98,7 @@ class PostController extends Controller
     {
         $request->validated();
         $hagtags = $request->hagtags ? explode(",", $request->hagtags ) : '';
+        $currentAccount = auth('accounts')->user();
 
         DB::beginTransaction();
         try {
@@ -115,6 +116,8 @@ class PostController extends Controller
                 array_merge($request->only(['title', 'description', 'content']),
                 [
                     'slug' =>  Str::slug($request->title),
+                    'updated_at' => now(),
+                    'updater_id' => $currentAccount->id
                 ])
             );
             

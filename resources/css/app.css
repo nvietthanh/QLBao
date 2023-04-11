@@ -60,3 +60,6 @@ body {
 [type='number']:focus{
     --tw-ring-color: none
 }
+#edit-post .el-dialog__header {
+    z-index: 100;
+}

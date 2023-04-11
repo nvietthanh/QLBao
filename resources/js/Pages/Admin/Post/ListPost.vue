@@ -7,14 +7,14 @@
             <div class="mt-[12px] flex items-center text-[15px] border-b-[3px] border-b-[#adb5bd]">
                 <div class="w-[120px] text-center py-[6px] cursor-pointer"
                  :class="{ 'bg-[#495057] text-white' : tab == 'tab-0' }" @click="changeTab('tab-0')">
-                    Chưa duyệt
+                    Đã duyệt
                 </div>
                 <div class="w-[120px] text-center py-[6px] cursor-pointer"
                  :class="{ 'bg-[#495057] text-white' : tab == 'tab-1' }" @click="changeTab('tab-1')">
-                    Đã duyệt
+                    Chưa duyệt
                 </div>
             </div>
-            <div class="my-[18px]">
+            <div class="my-[24px]">
                 <div class="mb-[18px] flex items-center">
                     <el-select v-model="filterSearch.limit" class="max-w-[60px] ml-[8px]" @change="fetchData()">
                         <el-option
@@ -24,17 +24,42 @@
                             :value="item"
                         />
                     </el-select>
-                    <el-select v-model="filterSearch.isApproved" class="max-w-[140px] ml-[20px]" @change="fetchData()">
-                        <el-option label="Tất cả" value="2"/>
-                        <el-option label="Đã kích hoạt" value="1"/>
-                        <el-option label="Chưa kích hoạt" value="0"/>
+                    <el-select class="ml-[18px]" v-model="filterSearch.categorySelect" placeholder="Chọn danh mục" 
+                        multiple multiple-limit="2" clearable @change="fetchData">
+                        <el-option
+                            v-for="item in this.$page.props.categories"
+                            :key="item.slug"
+                            :label="item.name"
+                            :value="item.slug"
+                        />
                     </el-select>
                     <el-input class="mx-[20px] max-w-[300px]" v-model="filterSearch.search"
-                                   placeholder="Nhập từ khóa" clearable @keyup.enter="fetchData()"/>
+                        placeholder="Nhập từ khóa" clearable @keyup.enter="fetchData()"/>
                 </div>
                 <DataTable :fields="fields" :items="tableData" enable-select-box @row-selected="handleSelectionChange">
+                    <template #title="{ row }">
+                        <div class="text-left cursor-pointer hover:text-[blue]" @click="editPost(row)">
+                            {{row.title}}
+                        </div>
+                    </template>
+                    <template #slug="{ row }">
+                        <div class="text-left hover:text-[blue]">
+                            <Link :href="route('post', row.slug)">{{row.slug}}</Link>
+                        </div>
+                    </template>
+                    <template #content="{ row }">
+                        <div class="text-left post-content" v-html="row.content"></div>
+                    </template>
                     <template #image="{ row }">
-                        <img :src="row.image" alt="">
+                        <img :src="row.image" alt="" class="object-cover h-[140px] w-[100%]">
+                    </template>
+                    <template #created_at="{ row }">
+                        {{ row.created_at }}
+                        <div class="mx-[6px]">({{ row.creator }})</div>
+                    </template>
+                    <template #updated_at="{ row }">
+                        {{ row.updated_at }}
+                        <div class="mx-[6px]">({{ row.updater }})</div>
                     </template>
                 </DataTable>
                 <div v-if="tableData.length != 0" class="flex justify-end mt-[32px] mr-[16px]">
@@ -42,6 +67,7 @@
                       paginate-background/>
                 </div>
             </div>
+            <EditPostForm ref="editPostForm" @change-post="fetchData"/>
         </template>
     </AppLayoutAdmin>
 </template>
@@ -50,6 +76,9 @@ import AppLayoutAdmin from '@/Layouts/AppLayoutAdmin.vue'
 import { Link } from '@inertiajs/vue3'
 import DataTable from '@/Components/UI/DataTable.vue'
 import Paginate from "@/Components/UI/Paginate.vue"
+import ShowPostForm from './Dialog/ShowPost.vue'
+import EditPostForm from './Dialog/EditPost.vue'
+import AddPostForm from './Dialog/AddPost.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import axios from 'axios'
 
@@ -58,26 +87,27 @@ export default{
         AppLayoutAdmin,
         Link,
         Paginate,
-        DataTable
+        DataTable,
+        ShowPostForm,
+        EditPostForm
     },
     data() {
         return {
             tab: 'tab-0',
             fields: [
-                { key: 'title', label: 'Tiêu đề', align: 'center' },
-                { key: 'slug', label: 'Slug', align: 'center' },
+                { key: 'title', label: 'Tiêu đề', align: 'center', width: 220 },
+                { key: 'categoryName', label: 'Chủ đề', align: 'center', width: 180 },
                 // { key: 'description', label: 'Mô tả', align: 'center', width: 180 },
                 { key: 'content', label: 'Nội dung', align: 'center' },
                 { key: 'image', label: 'Hình ảnh', align: 'center', width: 180 },
                 { key: 'count_view', label: 'View', align: 'center', width: 70 },
                 { key: 'created_at', label: 'Ngày tạo', align: 'center', width: 140 },
                 { key: 'updated_at', label: 'Ngày cập nhật', align: 'center', width: 140 },
-                // { key: 'status', label: 'Trạng thái', align: 'center', width: 180 },
             ],
-            options: [10, 20, 30],
+            options: [6, 12, 24, 32],
             filterSearch: {
-                limit: 10,
-                isApproved: "2",
+                limit: 6,
+                categorySelect: [],
                 search: '',
                 page: 1
             },
@@ -108,10 +138,10 @@ export default{
             this.tab = tab
             this.clearFilter()
             if(this.tab == 'tab-0') {
-                this.filterSearch.type = 'Reader'
+                this.filterSearch.isApproved = true
             }
             else {
-                this.filterSearch.type = 'Creator'
+                this.filterSearch.isApproved = false
             }
             this.fetchData()
         },
@@ -122,37 +152,8 @@ export default{
         handleSelectionChange(value) {
             this.selectedValue = value
         },
-        changeStatus(row) {
-            const pagram = {
-                ...{ 'id': row.id }
-            }
-            axios.get(route('admin.categories.change-status', pagram))
-        },
-        editCategory(row) {
-            alert('thay doi nhe')
-        },
-        deleteSelection(row) {
-            ElMessageBox.confirm(
-                `Bạn có muốn xóa tài khoản ${row.email} không?`,
-                'Warning',
-                {
-                    confirmButtonText: 'Xác nhận',
-                    cancelButtonText: 'Hủy bỏ',
-                    type: 'warning',
-                    draggable: true,
-                }
-            )
-            .then(() => {
-                axios.delete(route('admin.users.destroy', row.id))
-                    .then(response => {
-                        this.fetchData()
-                        ElMessage({
-                            type: 'success',
-                            message: 'Delete completed',
-                        })
-                    })
-            })
-            .catch(() => {})
+        editPost(row) {
+            this.$refs.editPostForm.open(row)
         },
         deleteSelections() {
             if(this.selectedValue.length == 0){
@@ -195,6 +196,15 @@ export default{
     }
     .cell .el-checkbox{
         height: 30px !important;
+    }
+    .post-content {
+        height: 160px;
+        max-height: 160px;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 7;
+        line-clamp: 7;
+        -webkit-box-orient: vertical;
     }
 </style>
   
