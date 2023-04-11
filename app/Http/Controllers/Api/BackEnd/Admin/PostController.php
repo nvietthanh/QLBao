@@ -14,7 +14,9 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
-        $posts = Post::orderBy('created_at', 'desc')
+        $posts = Post::filter($request->all())
+            ->where('is_approved', $request->isApproved ?? 1)
+            ->orderBy('created_at', 'desc')
             ->paginate($request->limit ?? 10);
 
         return AdminPostResource::collection($posts);
@@ -41,7 +43,9 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $post = Post::find($id);
+
+        return AdminPostResource::make($post);
     }
 
     /**
