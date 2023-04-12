@@ -35,6 +35,9 @@
                     </el-select>
                     <el-input class="mx-[20px] max-w-[300px]" v-model="filterSearch.search"
                         placeholder="Nhập từ khóa" clearable @keyup.enter="fetchData()"/>
+                    <div class="text-[14px] px-[24px] py-[4px] rounded-[4px] bg-[red] text-white cursor-pointer" @click="deletePosts">
+                        Xóa bài
+                    </div>
                 </div>
                 <DataTable :fields="fields" :items="tableData" enable-select-box @row-selected="handleSelectionChange">
                     <template #title="{ row }">
@@ -61,6 +64,9 @@
                         {{ row.updated_at }}
                         <div class="mx-[6px]">({{ row.updater }})</div>
                     </template>
+                    <template #options="{ row }">
+                        <div class="mx-[6px] text-[22px] cursor-pointer" @click="showPost(row)"><i class="bi bi-eye-fill"></i></div>
+                    </template>
                 </DataTable>
                 <div v-if="tableData.length != 0" class="flex justify-end mt-[32px] mr-[16px]">
                     <Paginate @page-change="handleCurrentPage" :paginate="paginate" :current-page="filterSearch.page || 1"
@@ -68,6 +74,7 @@
                 </div>
             </div>
             <EditPostForm ref="editPostForm" @change-post="fetchData"/>
+            <ShowPostForm ref="showPostForm" @change-post="fetchData"/>
         </template>
     </AppLayoutAdmin>
 </template>
@@ -95,14 +102,15 @@ export default{
         return {
             tab: 'tab-0',
             fields: [
-                { key: 'title', label: 'Tiêu đề', align: 'center', width: 220 },
-                { key: 'categoryName', label: 'Chủ đề', align: 'center', width: 180 },
+                { key: 'title', label: 'Tiêu đề', align: 'center', width: 200 },
+                { key: 'categoryName', label: 'Chủ đề', align: 'center', width: 130 },
                 // { key: 'description', label: 'Mô tả', align: 'center', width: 180 },
                 { key: 'content', label: 'Nội dung', align: 'center' },
                 { key: 'image', label: 'Hình ảnh', align: 'center', width: 180 },
                 { key: 'count_view', label: 'View', align: 'center', width: 70 },
                 { key: 'created_at', label: 'Ngày tạo', align: 'center', width: 140 },
                 { key: 'updated_at', label: 'Ngày cập nhật', align: 'center', width: 140 },
+                { key: 'options', label: '', align: 'center', width: 80 },
             ],
             options: [6, 12, 24, 32],
             filterSearch: {
@@ -155,16 +163,19 @@ export default{
         editPost(row) {
             this.$refs.editPostForm.open(row)
         },
-        deleteSelections() {
-            if(this.selectedValue.length == 0){
+        showPost(row) {
+            this.$refs.showPostForm.open(row)
+        },
+        deletePosts() {
+            if(this.selectedValue.length == 0) {
                 ElMessage({
                     type: 'warning',
-                    message: 'Chọn tài khoản người dùng muốn xóa',
+                    message: 'Vui lòng chọn bài viết muốn xóa',
                 })
             }
-            else{
+            else {
                 ElMessageBox.confirm(
-                    `Bạn có muốn xóa các tài khoản đã chọn không?`,
+                    `Bạn có muốn xóa các bài viết vừa chọn không?`,
                     'Warning',
                     {
                         confirmButtonText: 'Xác nhận',
@@ -174,13 +185,15 @@ export default{
                     }
                 )
                 .then(() => {
-                    const pagram = { ...{'accounts' : this.selectedValue} }
-                    axios.post(route('admin.users.delete-accounts'), pagram)
+                    const pagram = { ...{
+                        'posts': this.selectedValue
+                    } }
+                    axios.post(route('admin.posts.delete-posts'), pagram)
                         .then(response => {
                             this.fetchData()
                             ElMessage({
                                 type: 'success',
-                                message: 'Delete completed',
+                                message: 'Xóa bài viết thành công',
                             })
                         })
                 })

@@ -19,8 +19,8 @@ return new class extends Migration
             $table->unsignedBigInteger('updater_id')->nullable();
             $table->timestamps();
 
-            $table->foreign('creator_id')->references('id')->on('accounts')->onDelete('set null');
-            $table->foreign('updater_id')->references('id')->on('accounts')->onDelete('set null');
+            $table->foreign('creator_id')->references('id')->on('accounts')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('updater_id')->references('id')->on('accounts')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

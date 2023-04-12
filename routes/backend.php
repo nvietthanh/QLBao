@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\BackEnd\Admin\CategoryController;
+use App\Http\Controllers\Api\BackEnd\Admin\HagtagController;
 use App\Http\Controllers\Api\BackEnd\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Api\BackEnd\Admin\UserController;
 use App\Http\Controllers\Api\BackEnd\CommentController;
@@ -78,10 +79,17 @@ Route::middleware(['auth:accounts'])->prefix('user')->group(function () {
 Route::middleware('is_admin')->prefix('admin')->name('admin.')->group(function () {
     Route::apiResource('users', UserController::class);
     Route::get('/change-status-user', [UserController::class, 'changeStatus'])->name('users.change-status');
-    Route::post('/delete-selected-account', [UserController::class, 'deleteAccounts'])->name('users.delete-accounts');
+    Route::post('/delete-selected-accounts', [UserController::class, 'deleteAccounts'])->name('users.delete-accounts');
 
     Route::apiResource('categories', CategoryController::class);
     Route::get('/change-status-category', [CategoryController::class, 'changeStatus'])->name('categories.change-status');
 
     Route::apiResource('/posts', AdminPostController::class);
+    Route::post('/posts/{id}', [AdminPostController::class, 'update'])->name('posts.update');
+    Route::get('/change-status-post/{id}', [AdminPostController::class, 'changeStatus'])->name('posts.change-status');
+    Route::post('/delete-select-posts', [AdminPostController::class, 'deletePosts'])->name('posts.delete-posts');
+
+    Route::apiResource('/hagtags', HagtagController::class);
+    Route::post('/hagtags/{id}', [HagtagController::class, 'update'])->name('hagtags.update');
+    Route::post('/delete-select-hagtags', [HagtagController::class, 'deleteHagtags'])->name('hagtags.delete-hagtags');
 });

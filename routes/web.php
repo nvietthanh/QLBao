@@ -59,7 +59,7 @@ Route::get('/category/{category}', [HomeController::class, 'category'])->name('l
 Route::get('/post/{slugPost}', [HomeController::class, 'post'])->name('post');
 Route::get('/creator/id={id}', [HomeController::class, 'creator'])->name('creator');
 Route::get('/hagtag/{slug}', [HomeController::class, 'listPostHagtag'])->name('list-post-hagtag');
-Route::get('/dieu-khoan-su-dung', [HomeController::class, 'teamOfUse'])->name('termofuse');
+Route::get('/dieu-khoan-su-dung', [HomeController::class, 'termOfUse'])->name('termofuse');
 
 Route::middleware(['auth:accounts'])->prefix('user')->name('user.')->group(function () {
     Route::get('my-profile', [UserController::class, 'myProfile'])->name('my-profile');

@@ -54,6 +54,15 @@
                     {{ errors.content[0] }}
                 </div>
             </div>
+            <div class="mt-[18px]">
+                <div class="text-[16px] font-bold text-[#000]">Chủ đề được phân loại</div>
+                <el-select v-model="dataForm.categorySlug" class="mt-[2px] max-w-[250px]" placeholder="Chọn chủ đề">
+                    <el-option v-for="category in this.$page.props.categories"
+                        :label="category.name"
+                        :value="category.slug"
+                    />
+                </el-select>
+            </div>
         </div>
         <template #footer>
             <div class="pb-[12px] pt-[8px]">
@@ -113,7 +122,6 @@ export default {
                 .then(response => {
                     this.dataForm = response.data.data
                     this.$refs['content'].editorData = response.data.data.content
-                    console.log(this.dataForm)
                 })
                 .catch(errors => {})
             await axios.get(route('list-hagtag'))
@@ -156,7 +164,8 @@ export default {
             pagram.append('image', this.dataForm.image ?? '')
             pagram.append('content', this.$refs['content'].editorData ?? '')
             pagram.append('hagtags', this.dataForm.hagtags ?? '')
-            await axios.post(route('creator.posts.update', this.dataForm.id), pagram)
+            pagram.append('categorySlug', this.dataForm.categorySlug ?? '')
+            await axios.post(route('admin.posts.update', this.dataForm.id), pagram)
                 .then(response => {
                     if(response.data.status == 'false'){
                         ElMessage({

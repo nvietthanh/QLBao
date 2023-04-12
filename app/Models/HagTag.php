@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class HagTag extends Model
 {
     use HasFactory;
+    use Filterable;
 
     protected $table = 'hagtags';
 
@@ -17,16 +19,6 @@ class HagTag extends Model
         'created_at',
         'updated_at'
     ];
-
-    public function creator()
-    {
-        return $this->belongsTo(Account::class, 'creator_id', 'id');
-    }
-
-    public function updater()
-    {
-        return $this->belongsTo(Account::class, 'updater_id', 'id');
-    }
 
     public function hastagHasPost()
     {

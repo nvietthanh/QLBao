@@ -15,12 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
-            $table->unsignedBigInteger('creator_id');
-            $table->unsignedBigInteger('updater_id');
             $table->timestamps();
-
-            $table->foreign('creator_id')->references('id')->on('accounts')->onUpdate('cascade')->onDelete('cascade');;
-            $table->foreign('updater_id')->references('id')->on('accounts')->onUpdate('cascade')->onDelete('cascade');;
         });
     }
 

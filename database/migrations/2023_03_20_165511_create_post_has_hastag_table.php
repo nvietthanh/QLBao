@@ -16,8 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('post_id')->nullable();
             $table->dateTime('created_at')->nullable();
 
-            $table->foreign('hagtag_id')->references('id')->on('hagtags')->onDelete('set null');
-            $table->foreign('post_id')->references('id')->on('posts')->onDelete('set null');
+            $table->foreign('hagtag_id')->references('id')->on('hagtags')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('post_id')->references('id')->on('posts')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

@@ -17,7 +17,7 @@ class Post extends Model
         'description',
         'content',
         'image',
-        'is_confirm',
+        'is_approved',
         'category_id',
         'creator_id',
         'updater_id'

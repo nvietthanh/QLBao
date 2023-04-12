@@ -25,9 +25,9 @@ return new class extends Migration
             $table->unsignedBigInteger('updater_id')->nullable();
             $table->timestamps();
 
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
-            $table->foreign('creator_id')->references('id')->on('accounts')->onDelete('set null');
-            $table->foreign('updater_id')->references('id')->on('accounts')->onDelete('set null');
+            $table->foreign('category_id')->references('id')->on('categories')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('creator_id')->references('id')->on('accounts')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('updater_id')->references('id')->on('accounts')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

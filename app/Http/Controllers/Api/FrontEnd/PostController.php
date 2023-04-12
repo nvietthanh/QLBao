@@ -24,8 +24,13 @@ class PostController extends Controller
 
     public function getListPostCategory($category)
     {
-        $categoryId = Category::where('slug', $category)->first()->id;
-        $listPostCategory = Post::where('category_id', $categoryId)
+        $category = Category::where('slug', $category)->first();
+
+        if(!$category){
+            abort(404);
+        }
+
+        $listPostCategory = Post::where('category_id', $category->id)
             ->where('is_approved', 1)
             ->orderBy('created_at', 'desc')->paginate(10);
 

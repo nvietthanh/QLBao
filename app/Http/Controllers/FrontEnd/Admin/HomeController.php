@@ -25,7 +25,7 @@ class HomeController extends Controller
 
     public function listHagtag()
     {
-        return Inertia::render('Admin/Category/ListPost');
+        return Inertia::render('Admin/Hagtag/ListHagtag');
     }
 
     public function listPost()
@@ -35,6 +35,6 @@ class HomeController extends Controller
 
     public function listReport()
     {
-        return 1;
+        return Inertia::render('Admin/Report/ListReport');
     }
 }

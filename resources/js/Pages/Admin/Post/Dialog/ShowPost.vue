@@ -31,6 +31,14 @@
                 <div v-html="dataForm.content" class="mt-[12px] text-[16px] mb-[18px]"></div>
             </div>
         </div>
+        <template #footer v-if="!dataForm.is_approved">
+            <div class="float-right mr-[32px] pb-[32px]">
+                <div class="w-[120px] h-[38px] text-center leading-[38px] rounded-[4px] bg-[#198754] text-white
+                 text-[16px] cursor-pointer active:scale-[0.95]" @click="approvePost(dataForm.id)">
+                    Xác nhận
+                </div>
+            </div>
+        </template>
     </el-dialog>
 </template>
 
@@ -38,6 +46,7 @@
 import axios from 'axios';
 import { Link } from '@inertiajs/vue3'
 import moment from "moment";
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 export default {
     components:{
@@ -61,6 +70,31 @@ export default {
         open(data) {
             this.dialogVisible = true;
             this.dataForm = data
+        },
+        approvePost(id) {
+            ElMessageBox.confirm(
+                `Bạn có muốn xác nhận bài viết đã chọn không?`,
+                'Warning',
+                {
+                    confirmButtonText: 'Xác nhận',
+                    cancelButtonText: 'Hủy bỏ',
+                    type: 'warning',
+                    draggable: true,
+                }
+            )
+            .then(() => {
+                axios.get(route('admin.posts.change-status', id))
+                    .then(response => {
+                        this.dialogVisible = false
+                        this.$emit('change-post')
+                        ElMessage({
+                            type: 'success',
+                            message: 'Delete completed',
+                        })
+                    })
+                    .catch(() => {})
+            })
+            .catch(() => {})
         }
     },
 }

@@ -1,8 +1,8 @@
 <template>
-    <AppLayoutAdmin :currentTab="'tab-2'">
+    <AppLayoutAdmin :currentTab="'tab-3'">
         <template v-slot:main-full>
             <div class="mt-[12px] flex text-[18px] font-bold uppercase">
-                Danh sách chủ đề
+                Danh sách hagtag
             </div>
             <div class="my-[18px]">
                 <div class="mb-[18px] flex items-center">
@@ -14,24 +14,19 @@
                             :value="item"
                         />
                     </el-select>
-                    <el-select v-model="filterSearch.isApproved" class="max-w-[140px] ml-[20px]" @change="fetchData()">
-                        <el-option label="Tất cả" value="2"/>
-                        <el-option label="Đã kích hoạt" value="1"/>
-                        <el-option label="Chưa kích hoạt" value="0"/>
-                    </el-select>
                     <el-input class="mx-[20px] max-w-[300px]" v-model="filterSearch.search"
                                    placeholder="Nhập từ khóa" clearable @keyup.enter="fetchData()"/>
+                    <div class="bg-[blue] text-[14px] py-[5px] px-[18px] text-white rounded-[4px] cursor-pointer" @click="addHagtag">
+                        Thêm mới
+                    </div>
+                    <div class="ml-[24px] bg-[red] text-[14px] py-[5px] px-[24px] text-white rounded-[4px] cursor-pointer"
+                     @click="deleteSelections">
+                        Xóa
+                    </div>
                 </div>
                 <DataTable :fields="fields" :items="tableData" enable-select-box @row-selected="handleSelectionChange">
-                    <template class="flex justify-center" #status ="{ row }">
-                        <div class="h-[36px] flex justify-center items-center">
-                            <el-switch v-model="row.status"  @click="changeStatus(row)"/>
-                            <span class="ml-[6px] text-[13px]" v-if="row.status">Activated</span>
-                            <span class="ml-[6px] text-[13px]" v-else>Deactivated</span>
-                        </div>
-                    </template>
                     <template #options="{ row }">
-                        <span class="px-[8px] py-[8px] text-[20px] cursor-pointer" @click="editCategory(row)">
+                        <span class="px-[8px] py-[8px] text-[20px] cursor-pointer" @click="editHagtag(row)">
                             <i class="bi bi-pencil-fill"></i>
                         </span>
                         <span class="px-[8px] py-[8px] text-[20px] cursor-pointer" @click="deleteSelection(row)">
@@ -44,6 +39,8 @@
                       paginate-background/>
                 </div>
             </div>
+            <AddHagtagForm ref="addHagtagForm" @change-hagtag="fetchData()"/>
+            <EditHagtagForm ref="editHagtagForm" @change-hagtag="fetchData()"/>
         </template>
     </AppLayoutAdmin>
 </template>
@@ -52,6 +49,8 @@ import AppLayoutAdmin from '@/Layouts/AppLayoutAdmin.vue'
 import { Link } from '@inertiajs/vue3'
 import DataTable from '@/Components/UI/DataTable.vue'
 import Paginate from "@/Components/UI/Paginate.vue"
+import AddHagtagForm from './Dialog/AddHagtag.vue'
+import EditHagtagForm from './Dialog/EditHagtag.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import axios from 'axios'
 
@@ -60,7 +59,9 @@ export default{
         AppLayoutAdmin,
         Link,
         Paginate,
-        DataTable
+        DataTable,
+        AddHagtagForm,
+        EditHagtagForm
     },
     data() {
         return {
@@ -75,7 +76,6 @@ export default{
             options: [10, 20, 30],
             filterSearch: {
                 limit: 10,
-                isApproved: "2",
                 search: '',
                 page: 1
             },
@@ -90,7 +90,6 @@ export default{
     methods: {
         clearFilter() {
             this.filterSearch.page = 1
-            this.filterSearch.isApproved = "2"
             this.filterSearch.search = ""
             this.filterSearch.limit = 10
             this.paginate = []
@@ -98,20 +97,9 @@ export default{
         },
         async fetchData() {
             const pagram = { ...this.filterSearch }
-            const response = await axios.get(route('admin.categories.index', pagram))
+            const response = await axios.get(route('admin.hagtags.index', pagram))
             this.tableData = response.data.data
             this.paginate = response.data.meta
-        },
-        changeTab(tab) {
-            this.tab = tab
-            this.clearFilter()
-            if(this.tab == 'tab-0') {
-                this.filterSearch.type = 'Reader'
-            }
-            else {
-                this.filterSearch.type = 'Creator'
-            }
-            this.fetchData()
         },
         handleCurrentPage(value) {
             this.filterSearch.page = value
@@ -120,18 +108,15 @@ export default{
         handleSelectionChange(value) {
             this.selectedValue = value
         },
-        changeStatus(row) {
-            const pagram = {
-                ...{ 'id': row.id }
-            }
-            axios.get(route('admin.categories.change-status', pagram))
+        addHagtag() {
+            this.$refs.addHagtagForm.open()
         },
-        editCategory(row) {
-            alert('thay doi nhe')
+        editHagtag(row) {
+            this.$refs.editHagtagForm.open(row)
         },
         deleteSelection(row) {
             ElMessageBox.confirm(
-                `Bạn có muốn xóa chủ đề ${row.name} không?`,
+                `Bạn có muốn xóa hagtag ${row.name} không?`,
                 'Warning',
                 {
                     confirmButtonText: 'Xác nhận',
@@ -141,12 +126,12 @@ export default{
                 }
             )
             .then(() => {
-                axios.delete(route('admin.categories.destroy', row.id))
+                axios.delete(route('admin.hagtags.destroy', row.id))
                     .then(response => {
                         this.fetchData()
                         ElMessage({
                             type: 'success',
-                            message: 'Xóa chủ đề thành công',
+                            message: 'Xóa hagtag thành công',
                         })
                     })
             })
@@ -156,12 +141,12 @@ export default{
             if(this.selectedValue.length == 0){
                 ElMessage({
                     type: 'warning',
-                    message: 'Chọn tài khoản người dùng muốn xóa',
+                    message: 'Chọn hagtag muốn xóa',
                 })
             }
             else{
                 ElMessageBox.confirm(
-                    `Bạn có muốn xóa các tài khoản đã chọn không?`,
+                    `Bạn có muốn xóa các hagtag đã chọn không?`,
                     'Warning',
                     {
                         confirmButtonText: 'Xác nhận',
@@ -171,13 +156,13 @@ export default{
                     }
                 )
                 .then(() => {
-                    const pagram = { ...{'accounts' : this.selectedValue} }
-                    axios.post(route('admin.users.delete-accounts'), pagram)
+                    const pagram = { ...{'hagtags' : this.selectedValue} }
+                    axios.post(route('admin.hagtags.delete-hagtags'), pagram)
                         .then(response => {
                             this.fetchData()
                             ElMessage({
                                 type: 'success',
-                                message: 'Delete completed',
+                                message: 'Xoá hagtag thành công',
                             })
                         })
                 })
