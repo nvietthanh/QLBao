@@ -18,8 +18,6 @@ class HagtagSeeder extends Seeder
             [
                 'name' => 'Mới nhất',
                 'slug' => Str::remove('-', Str::slug('Mới nhất')),
-                'creator_id' => 2,
-                'updater_id' => 2,
                 'created_at' => now(),
                 'updated_at' => now()
             ]
@@ -28,8 +26,6 @@ class HagtagSeeder extends Seeder
         HagTag::create([
             'name' => 'Năng lượng tích cực',
             'slug' => Str::remove('-', Str::slug('Năng lượng tích cực')),
-            'creator_id' => 1,
-            'updater_id' => 1,
             'created_at' => now(),
             'updated_at' => now()
         ]);

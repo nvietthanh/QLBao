@@ -26,6 +26,7 @@ class AdminPostResource extends JsonResource
             'hagtags' => $this->getHagtags(),
             'categoryName' => $this->category->name,
             'categorySlug' => $this->category->slug,
+            'is_approved' => $this->is_approved,
             'created_at' => Carbon::create($this->created_at)->format('Y-m-d h:i'),
             'updated_at' => Carbon::create($this->updated_at)->format('Y-m-d h:i'),
             'creator' => $this->creator->accountProfile->getFullName(),

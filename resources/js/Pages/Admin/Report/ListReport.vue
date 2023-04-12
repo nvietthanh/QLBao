@@ -1,5 +1,5 @@
 <template>
-    <AppLayoutAdmin :currentTab="'tab-2'">
+    <AppLayoutAdmin :currentTab="'tab-5'">
         <template v-slot:main-full>
             <div class="mt-[12px] flex text-[18px] font-bold uppercase">
                 Danh sách chủ đề

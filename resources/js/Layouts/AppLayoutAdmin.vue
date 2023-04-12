@@ -45,7 +45,8 @@
             <div class="w-[100%] mt-[32px]">                    
                 <div v-for="menu in menus" class="text-[15px]">
                     <Link :href="route(menu.route)">
-                        <div class="px-[12px] py-[12px] hover:bg-[#6f8cdf] flex items-center cursor-pointer border-b-[1px]"
+                        <div class="px-[24px] py-[12px] hover:bg-[#6f8cdf] flex items-center
+                         cursor-pointer border-b-[1px]"
                           :class="{ 'bg-[#6f8cdf]' : menu.tab == currentTab }">
                             <div v-html="menu.icon" class="text-[18px] w-[24px]"></div>
                             <div class="ml-[8px]">{{ menu.name }}</div>
@@ -61,7 +62,7 @@
                 </div>
             </form>
         </div>
-        <div class="mt-[57px] min-h-[630px] p-[12px]" :class="{ 'px-[28px]' : !isOpenMenu, 'ml-[260px]' : isOpenMenu}">
+        <div class="mt-[57px] min-h-[630px] py-[12px] px-[24px]" :class="{ 'px-[28px]' : !isOpenMenu, 'ml-[260px]' : isOpenMenu}">
             <slot name="main-full"/>
         </div>
     </main>
@@ -114,8 +115,8 @@ export default {
                     tab: 'tab-2'
                 },
                 {
-                    icon: '<i class="bi bi-book"></i>',
-                    name: 'Quản lý Hagtag',
+                    icon: '<i class="bi bi-tag-fill"></i>',
+                    name: 'Quản lý hagtag',
                     route: 'admin.list-hagtag',
                     tab: 'tab-3'
                 },

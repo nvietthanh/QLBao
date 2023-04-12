@@ -2,10 +2,16 @@
 
 namespace App\Http\Controllers\Api\BackEnd\Admin;
 
+use App\Exceptions\FailException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AdminPostRequest;
 use App\Http\Resources\AdminPostResource;
+use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -59,9 +65,70 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(AdminPostRequest $request, string $id)
     {
-        //
+        $request->validated();
+        $hagtags = $request->hagtags ? explode(",", $request->hagtags ) : '';
+
+        DB::beginTransaction();
+        try {
+            $post = Post::where('id', $id)
+                    ->where('is_approved', 0)
+                    ->first();
+            
+            if(!$post) {
+                throw new FailException('Không thể cập nhật bài viết');
+            }
+
+            $path = $request->file('image') ? Storage::putFile('public/posts', $request->file('image')) : '';
+
+            $post->update(
+                array_merge($request->only(['title', 'description', 'content']),
+                [
+                    'slug' =>  Str::slug($request->title),
+                    'category_id' => Category::where('slug', $request->categorySlug)->first()->id,
+                    'updated_at' => now()
+                ])
+            );
+            
+            if($request->file('image')) {
+                $post->update([
+                    'image' => $path ? Storage::url($path) : '',
+                ]);
+            }
+
+            $post->postHasHagtag()->detach();
+            if($hagtags) {
+                foreach($hagtags as $hagtag) {
+                    $post->postHasHagtag()->attach([
+                        $hagtag => ['created_at' => now()]
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            return response()->json($post);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'status' => false,
+                'msg' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function changeStatus($id)
+    {
+        $post = Post::find($id);
+
+        if($post) {
+            $post->update([
+                'is_approved' => 1
+            ]);
+        }
+
+        return response()->json(200);
     }
 
     /**
@@ -73,6 +140,21 @@ class PostController extends Controller
 
         if($post) {
             $post->delete();
+        }
+
+        return response()->json(200);
+    }
+
+    public function deletePosts(Request $request)
+    {
+        $posts = $request->posts;
+
+        foreach($posts as $item) {
+            $post = Post::find($item['id']);
+            
+            if($post) {
+                $post->delete();
+            }
         }
 
         return response()->json(200);

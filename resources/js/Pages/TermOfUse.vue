@@ -1,6 +1,6 @@
 <template>
     <AppLayout :current-tab="'main-full'">
-        <template v-slot:main-admin>
+        <template v-slot:main-full>
             <div class="main mx-auto mb-[24px] w-[940px] bg-[#fff] border-[2px]">
                 <div class= "my-[24px] mx-[24px] border-[2px] px-[24px] py-[24px] rounded-[5px]">
                     <div class="text-center text-[18px] uppercase font-bold my-[8px]">Điều khoản sử dụng</div>

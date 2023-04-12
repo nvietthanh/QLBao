@@ -24,7 +24,7 @@
                         </div>
                     </div>
                     <div v-html="dataForm.content" class="mt-[12px] text-[16px] mb-[18px]"></div>
-                    <div class="mt-[42px]">
+                    <div class="mt-[42px]" v-if="dataForm.hagtagNames.length > 0">
                         <span class="text-[16px] font-bold">Hagtag: </span>
                         <template v-for="hagtag in dataForm.hagtagNames">
                             <span class="mr-[8px] text-[16px] text-[#17a2b8]">

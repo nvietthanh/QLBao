@@ -68,7 +68,7 @@ class CategoryController extends Controller
         $category = Category::find($id);
         
         if(!$category) {
-            throw new FailException('Không thể thay đổi trạng thái chủ đề');
+            abort(404);
         }
 
         $category->update([
@@ -84,6 +84,14 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $category = Category::find($id);
+        
+        if(!$category) {
+            abort(404);
+        }
+
+        $category->delete();
+        
+        return response()->json(200);
     }
 }
