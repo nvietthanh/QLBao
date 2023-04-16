@@ -3,7 +3,7 @@
         <div class="scroll-wrapper"></div>
         <el-table :data="items" :border="true" style="width: 100%" @selection-change="handleSelectionChange" @row-click="rowClick"
             :empty-text="textIsEmpty" @sort-change="sortChange" :sortable="false">
-            <el-table-column v-if="enableSelectBox" align="center" type="selection" fixed width="55" />
+            <el-table-column v-if="enableSelectBox" align="center" type="selection" fixed width="45" />
             <el-table-column v-for="(field, index) in fields" :key="index" :fixed="field.fixed" :prop="field.key"
                 :label="field.label" :align="field.align || `left`" :width="field.width || 'auto'"
                 :minWidth="field.minWidth || 'auto'" :type="field.type" :sortable="field.sortable">

@@ -129,7 +129,7 @@ export default {
                 {
                     icon: '<i class="bi bi-flag"></i>',
                     name: 'Quản lý báo cáo vi phạm',
-                    route: 'admin.list-report',
+                    route: 'admin.list-report-account',
                     tab: 'tab-5'
                 },
                 
