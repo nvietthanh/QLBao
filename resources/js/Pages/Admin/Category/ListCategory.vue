@@ -102,17 +102,6 @@ export default{
             this.tableData = response.data.data
             this.paginate = response.data.meta
         },
-        changeTab(tab) {
-            this.tab = tab
-            this.clearFilter()
-            if(this.tab == 'tab-0') {
-                this.filterSearch.type = 'Reader'
-            }
-            else {
-                this.filterSearch.type = 'Creator'
-            }
-            this.fetchData()
-        },
         handleCurrentPage(value) {
             this.filterSearch.page = value
             this.fetchData()
@@ -121,10 +110,7 @@ export default{
             this.selectedValue = value
         },
         changeStatus(row) {
-            const pagram = {
-                ...{ 'id': row.id }
-            }
-            axios.get(route('admin.categories.change-status', pagram))
+            axios.get(route('admin.categories.change-status', row.id))
         },
         editCategory(row) {
             alert('thay doi nhe')

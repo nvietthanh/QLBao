@@ -100,5 +100,7 @@ Route::middleware([
 
     Route::get('/posts', [AdminHomeController::class, 'listPost'])->name('list-post');
 
-    Route::get('/reports', [AdminHomeController::class, 'listReport'])->name('list-report');
+    Route::get('/report/accounts', [AdminHomeController::class, 'listReportAccount'])->name('list-report-account');
+
+    Route::get('/report/posts', [AdminHomeController::class, 'listReportPost'])->name('list-report-post');
 });

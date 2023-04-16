@@ -25,5 +25,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CategorySeeder::class);
         $this->call(UserSeeder::class);
         $this->call(HagtagSeeder::class);
+        $this->call(ReportSeeder::class);
     }
 }

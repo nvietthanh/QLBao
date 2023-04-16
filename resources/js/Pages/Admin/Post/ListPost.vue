@@ -85,7 +85,6 @@ import DataTable from '@/Components/UI/DataTable.vue'
 import Paginate from "@/Components/UI/Paginate.vue"
 import ShowPostForm from './Dialog/ShowPost.vue'
 import EditPostForm from './Dialog/EditPost.vue'
-import AddPostForm from './Dialog/AddPost.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import axios from 'axios'
 

@@ -3,13 +3,15 @@
 use App\Http\Controllers\Api\BackEnd\Admin\CategoryController;
 use App\Http\Controllers\Api\BackEnd\Admin\HagtagController;
 use App\Http\Controllers\Api\BackEnd\Admin\PostController as AdminPostController;
+use App\Http\Controllers\Api\BackEnd\Admin\ReportAccountController;
+use App\Http\Controllers\Api\BackEnd\Admin\ReportPostController;
 use App\Http\Controllers\Api\BackEnd\Admin\UserController;
 use App\Http\Controllers\Api\BackEnd\CommentController;
 use App\Http\Controllers\Api\BackEnd\Creator\PostController;
 use App\Http\Controllers\Api\BackEnd\FollowController;
 use App\Http\Controllers\Api\BackEnd\HomeController;
 use App\Http\Controllers\Api\BackEnd\ProfileController;
-use App\Http\Controllers\Api\FrontEnd\CreatorController;
+use App\Http\Controllers\Api\FrontEnd\CreatorController; 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -78,7 +80,7 @@ Route::middleware(['auth:accounts'])->prefix('user')->group(function () {
 // admin
 Route::middleware('is_admin')->prefix('admin')->name('admin.')->group(function () {
     Route::apiResource('users', UserController::class);
-    Route::get('/change-status-user', [UserController::class, 'changeStatus'])->name('users.change-status');
+    Route::get('/change-status-user/{id}', [UserController::class, 'changeStatus'])->name('users.change-status');
     Route::post('/delete-selected-accounts', [UserController::class, 'deleteAccounts'])->name('users.delete-accounts');
 
     Route::apiResource('categories', CategoryController::class);
@@ -92,4 +94,13 @@ Route::middleware('is_admin')->prefix('admin')->name('admin.')->group(function (
     Route::apiResource('/hagtags', HagtagController::class);
     Route::post('/hagtags/{id}', [HagtagController::class, 'update'])->name('hagtags.update');
     Route::post('/delete-select-hagtags', [HagtagController::class, 'deleteHagtags'])->name('hagtags.delete-hagtags');
+
+    Route::get('/report-posts', [ReportPostController::class, 'index'])->name('report-posts.index');
+    Route::get('/report-posts/{id}', [ReportPostController::class, 'showReport'])->name('report-posts.show-report');
+    Route::post('/delete-report-posts', [ReportPostController::class, 'deletePosts'])->name('report-posts.delete-posts');
+    Route::get('/report-posts/show-post/{id}', [ReportPostController::class, 'showPost'])->name('report-posts.show-post');
+
+    Route::get('/report-accounts', [ReportAccountController::class, 'index'])->name('report-accounts.index');
+    Route::get('/report-accounts/{id}', [ReportAccountController::class, 'showReport'])->name('report-accounts.show-report');
+    Route::post('/delete-report-accounts', [ReportAccountController::class, 'deleteAccounts'])->name('report-accounts.delete-accounts');
 });

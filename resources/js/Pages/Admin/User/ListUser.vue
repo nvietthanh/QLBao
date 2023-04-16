@@ -39,9 +39,14 @@
                 <DataTable :fields="fields" :items="tableData" enable-select-box @row-selected="handleSelectionChange">
                     <template class="flex justify-center" #status ="{ row }">
                         <div class="h-[36px] flex justify-center items-center">
-                            <el-switch v-model="row.status"  @click="changeStatus(row)"/>
-                            <span class="ml-[6px] text-[13px]" v-if="row.status">Activated</span>
-                            <span class="ml-[6px] text-[13px]" v-else>Deactivated</span>
+                            <el-switch v-model="row.status"
+                              style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+                              inline-prompt
+                              active-text="Activated"
+                              inactive-text="Deactivated"
+                              @click="changeStatus(row)"/>
+                            <!-- <span class="ml-[6px] text-[13px]" v-if="row.status">Activated</span>
+                            <span class="ml-[6px] text-[13px]" v-else>Deactivated</span> -->
                         </div>
                     </template>
                     <template #options="{ row }">
@@ -135,10 +140,7 @@ export default{
             this.selectedValue = value
         },
         changeStatus(row) {
-            const pagram = {
-                ...{ 'id': row.id }
-            }
-            axios.get(route('admin.users.change-status', pagram))
+            axios.get(route('admin.users.change-status', row.id))
         },
         deleteSelection(row) {
             ElMessageBox.confirm(

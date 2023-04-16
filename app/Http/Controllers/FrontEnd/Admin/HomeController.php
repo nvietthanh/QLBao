@@ -33,8 +33,13 @@ class HomeController extends Controller
         return Inertia::render('Admin/Post/ListPost');
     }
 
-    public function listReport()
+    public function listReportAccount()
     {
-        return Inertia::render('Admin/Report/ListReport');
+        return Inertia::render('Admin/Report/ListReportAccount');
+    }
+
+    public function listReportPost()
+    {
+        return Inertia::render('Admin/Report/ListReportPost');
     }
 }
