@@ -66,7 +66,7 @@
                         <img :src="row.image" alt="">
                     </template>
                     <template #account_report_email="{ row }">
-                        <div class="text-left cursor-pointer hover:text-[blue]">
+                        <div class="text-left">
                             {{row.account_report_email}}
                         </div>
                     </template>

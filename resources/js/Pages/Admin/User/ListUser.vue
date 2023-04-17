@@ -44,13 +44,15 @@
                               inline-prompt
                               active-text="Activated"
                               inactive-text="Deactivated"
-                              @click="changeStatus(row)"/>
-                            <!-- <span class="ml-[6px] text-[13px]" v-if="row.status">Activated</span>
-                            <span class="ml-[6px] text-[13px]" v-else>Deactivated</span> -->
+                              disabled
+                            />
                         </div>
                     </template>
                     <template #options="{ row }">
-                        <span class="px-[16px] py-[8px] text-[20px] cursor-pointer" @click="deleteSelection(row)">
+                        <span class="px-[6px] py-[8px] text-[20px] cursor-pointer" @click="changeStatus(row)">
+                            <i class="bi bi-gear-fill"></i>
+                        </span>
+                        <span class="px-[6px] py-[8px] text-[20px] cursor-pointer" @click="deleteSelection(row)">
                             <i class="bi bi-trash3-fill"></i>
                         </span>
                     </template>
@@ -60,6 +62,7 @@
                       paginate-background/>
                 </div>
             </div>
+            <ShowChangeStatustForm ref="showChangeStatusForm" @change-account="fetchData()"/>
         </template>
     </AppLayoutAdmin>
 </template>
@@ -70,24 +73,26 @@ import DataTable from '@/Components/UI/DataTable.vue'
 import Paginate from "@/Components/UI/Paginate.vue"
 import { ElMessage, ElMessageBox } from 'element-plus'
 import axios from 'axios'
+import ShowChangeStatustForm from './Dialog/ChangeStatusForm.vue'
 
 export default{
     components:{
         AppLayoutAdmin,
         Link,
         Paginate,
-        DataTable
+        DataTable,
+        ShowChangeStatustForm
     },
     data() {
         return {
             tab: 'tab-0',
             fields: [
-                { key: 'code', label: 'Code', align: 'center', width: 140 },
+                { key: 'code', label: 'Code', align: 'center', width: 120 },
                 { key: 'name', label: 'Họ tên', align: 'center' },
                 { key: 'email', label: 'Email', align: 'center' },
                 { key: 'created_at', label: 'Ngày tạo', align: 'center', width: 180 },
-                { key: 'updated_at', label: 'Ngày cập nhật', align: 'center', width: 160 },
                 { key: 'status', label: 'Trạng thái', align: 'center', width: 150 },
+                { key: 'status_expires_at', label: 'Thời gian mở khóa', align: 'center', width: 160 },
                 { key: 'options', label: 'Tùy chỉnh', align: 'center', width: 130 },
             ],
             options: [10, 20, 30],
@@ -117,7 +122,7 @@ export default{
         },
         async fetchData() {
             const pagram = { ...this.filterSearch }
-            const response = await axios.get(route('admin.users.index', pagram))
+            const response = await axios.get(route('admin.accounts.index', pagram))
             this.tableData = response.data.data
             this.paginate = response.data.meta
         },
@@ -140,7 +145,11 @@ export default{
             this.selectedValue = value
         },
         changeStatus(row) {
-            axios.get(route('admin.users.change-status', row.id))
+            this.$refs.showChangeStatusForm.open(row)
+            // axios.get(route('admin.accounts.change-status', row.id))
+            //     .then(response => {
+            //         this.fetchData()
+            //     })
         },
         deleteSelection(row) {
             ElMessageBox.confirm(
@@ -154,7 +163,7 @@ export default{
                 }
             )
             .then(() => {
-                axios.delete(route('admin.users.destroy', row.id))
+                axios.delete(route('admin.accounts.destroy', row.id))
                     .then(response => {
                         this.fetchData()
                         ElMessage({
@@ -185,7 +194,7 @@ export default{
                 )
                 .then(() => {
                     const pagram = { ...{'accounts' : this.selectedValue} }
-                    axios.post(route('admin.users.delete-accounts'), pagram)
+                    axios.post(route('admin.accounts.delete-accounts'), pagram)
                         .then(response => {
                             this.fetchData()
                             ElMessage({

@@ -23,7 +23,16 @@
                     </div>
                 </div>
                 <div class="mt-[18px]">
-                    <img :src="dataForm.image" alt="" class="w-[100%] min-h-[300px]">
+                    <el-image
+                        style="width: 100%; height: 100%;"
+                        :src="dataForm.image"
+                        :zoom-rate="1.2"
+                        preview-teleported="true"
+                        hide-on-click-modal="true"
+                        :preview-src-list="[dataForm.image]"
+                        :initial-index="1"
+                        fit="cover"
+                    />
                     <div class="text-[14px] text-center mt-[8px]">
                         {{ dataForm.description }}
                     </div>
@@ -36,6 +45,14 @@
                 <div class="w-[120px] h-[38px] text-center leading-[38px] rounded-[4px] bg-[#198754] text-white
                  text-[16px] cursor-pointer active:scale-[0.95]" @click="approvePost(dataForm.id)">
                     Xác nhận
+                </div>
+            </div>
+        </template>
+        <template #footer v-else>
+            <div class="float-right mr-[32px] pb-[32px]">
+                <div class="w-[120px] h-[38px] text-center leading-[38px] rounded-[4px] bg-[#198754] text-white
+                 text-[16px] cursor-pointer active:scale-[0.95]" @click="unApprovePost(dataForm.id)">
+                    Hủy xác nhận
                 </div>
             </div>
         </template>
@@ -83,13 +100,38 @@ export default {
                 }
             )
             .then(() => {
-                axios.get(route('admin.posts.change-status', id))
+                axios.get(route('admin.posts.change-approved', id))
                     .then(response => {
                         this.dialogVisible = false
                         this.$emit('change-post')
                         ElMessage({
                             type: 'success',
-                            message: 'Delete completed',
+                            message: 'Xác nhận bài viết thành công',
+                        })
+                    })
+                    .catch(() => {})
+            })
+            .catch(() => {})
+        },
+        unApprovePost(id) {
+            ElMessageBox.confirm(
+                `Bạn có muốn hủy xác nhận bài viết đã chọn không?`,
+                'Warning',
+                {
+                    confirmButtonText: 'Xác nhận',
+                    cancelButtonText: 'Hủy bỏ',
+                    type: 'warning',
+                    draggable: true,
+                }
+            )
+            .then(() => {
+                axios.get(route('admin.posts.change-approved', id))
+                    .then(response => {
+                        this.dialogVisible = false
+                        this.$emit('change-post')
+                        ElMessage({
+                            type: 'success',
+                            message: 'Hủy xác nhận bài viết thành công',
                         })
                     })
                     .catch(() => {})

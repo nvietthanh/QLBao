@@ -1,11 +1,11 @@
 <?php
 
+use App\Http\Controllers\Api\BackEnd\Admin\AccountController;
 use App\Http\Controllers\Api\BackEnd\Admin\CategoryController;
 use App\Http\Controllers\Api\BackEnd\Admin\HagtagController;
 use App\Http\Controllers\Api\BackEnd\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Api\BackEnd\Admin\ReportAccountController;
 use App\Http\Controllers\Api\BackEnd\Admin\ReportPostController;
-use App\Http\Controllers\Api\BackEnd\Admin\UserController;
 use App\Http\Controllers\Api\BackEnd\CommentController;
 use App\Http\Controllers\Api\BackEnd\Creator\PostController;
 use App\Http\Controllers\Api\BackEnd\FollowController;
@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Route;
 // });
 
 
-Route::middleware(['auth:accounts', 'is_creator'])->prefix('creator')->name('creator.')->group(function () {
+Route::middleware(['is_approved', 'auth:accounts', 'is_creator'])->prefix('creator')->name('creator.')->group(function () {
     Route::apiResource('posts', PostController::class);
     Route::post('/posts/{id}', [PostController::class, 'update'])
         ->name('posts.update');
@@ -40,13 +40,17 @@ Route::middleware(['auth:accounts', 'is_creator'])->prefix('creator')->name('cre
 
 
 // Get comment
-Route::get('/get-comments', [CommentController::class, 'getComments'])->name('get-comments');
-Route::get('/get-post/{slugPost}', [HomeController::class, 'getPost'])->name('post.get-post');
+Route::middleware('is_approved')->get('/get-comments', [CommentController::class, 'getComments'])->name('get-comments');
+Route::middleware('is_approved')->get('/get-post/{slugPost}', [HomeController::class, 'getPost'])->name('post.get-post');
 
 // Infor cretor
 Route::get('/get-infor-user/{id}', [CreatorController::class, 'getInfor'])->name('cretor.get-infor');
 
-Route::middleware(['auth:accounts'])->prefix('user')->group(function () {
+Route::middleware([
+    'is_approved',
+    'auth:accounts'
+])
+->prefix('user')->group(function () {
     Route::apiResource('profiles', ProfileController::class);
     Route::post('/profiles/{id}', [ProfileController::class, 'update'])->name('profiles.update');
 
@@ -79,16 +83,18 @@ Route::middleware(['auth:accounts'])->prefix('user')->group(function () {
 
 // admin
 Route::middleware('is_admin')->prefix('admin')->name('admin.')->group(function () {
-    Route::apiResource('users', UserController::class);
-    Route::get('/change-status-user/{id}', [UserController::class, 'changeStatus'])->name('users.change-status');
-    Route::post('/delete-selected-accounts', [UserController::class, 'deleteAccounts'])->name('users.delete-accounts');
+    Route::apiResource('accounts', AccountController::class);
+    Route::post('/change-status-account/{id}', [AccountController::class, 'changeStatus'])->name('accounts.change-status');
+    Route::get('/get-status-account/{id}', [AccountController::class, 'getStatus'])->name('accounts.get-status');
+    Route::post('/delete-selected-accounts', [AccountController::class, 'deleteAccounts'])->name('accounts.delete-accounts');
 
     Route::apiResource('categories', CategoryController::class);
     Route::get('/change-status-category', [CategoryController::class, 'changeStatus'])->name('categories.change-status');
 
     Route::apiResource('/posts', AdminPostController::class);
     Route::post('/posts/{id}', [AdminPostController::class, 'update'])->name('posts.update');
-    Route::get('/change-status-post/{id}', [AdminPostController::class, 'changeStatus'])->name('posts.change-status');
+    Route::get('/change-approved-post/{id}', [AdminPostController::class, 'changeApproved'])->name('posts.change-approved');
+    Route::post('/change-status-post/{id}', [AdminPostController::class, 'changestatus'])->name('posts.change-status');
     Route::post('/delete-select-posts', [AdminPostController::class, 'deletePosts'])->name('posts.delete-posts');
 
     Route::apiResource('/hagtags', HagtagController::class);

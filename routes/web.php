@@ -25,13 +25,10 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('test', function() {
-    return Account::find(1)->following;
-});
-
 Route::post('login', [LoginController::class, 'login'])->name('guest.login');
 Route::get('logout', [LoginController::class, 'logout'])->name('guest.logout');
-Route::post('change-password', [LoginController::class, 'changePassword'])->name('guest.change-password');
+Route::middleware('is_approved')->post('change-password', [LoginController::class, 'changePassword'])
+    ->name('guest.change-password');
 Route::get('send-otp-forgot-password', [ForgotPasswordController::class, 'forgotPassword'])
     ->name('guest.forgot-password');
 Route::post('check-otp-forgot-password', [ForgotPasswordController::class, 'checkOtp'])
@@ -41,27 +38,25 @@ Route::post('change-forgot-password', [ForgotPasswordController::class, 'changeF
 Route::post('resgister', [ResgisterController::class, 'resgister'])
     ->name('guest.resgister');
 
-
-Route::prefix('admin')->group(function () {
-    Route::get('/', function () {
-        return 1;
-    })->name('dashboard');
-});
-
 Route::get('/home', function () {
     return redirect()->route('home');
 });
 
 // user and creator
 
-Route::get('/', [HomeController::class, 'home'])->name('home');
-Route::get('/category/{category}', [HomeController::class, 'category'])->name('list-category');
-Route::get('/post/{slugPost}', [HomeController::class, 'post'])->name('post');
-Route::get('/creator/id={id}', [HomeController::class, 'creator'])->name('creator');
-Route::get('/hagtag/{slug}', [HomeController::class, 'listPostHagtag'])->name('list-post-hagtag');
-Route::get('/dieu-khoan-su-dung', [HomeController::class, 'termOfUse'])->name('termofuse');
+Route::middleware('is_approved')->group(function () {
+    Route::get('/', [HomeController::class, 'home'])->name('home');
+    Route::get('/category/{category}', [HomeController::class, 'category'])->name('list-category');
+    Route::get('/post/{slugPost}', [HomeController::class, 'post'])->name('post');
+    Route::get('/creator/id={id}', [HomeController::class, 'creator'])->name('creator');
+    Route::get('/hagtag/{slug}', [HomeController::class, 'listPostHagtag'])->name('list-post-hagtag');
+    Route::get('/dieu-khoan-su-dung', [HomeController::class, 'termOfUse'])->name('termofuse');
+});
 
-Route::middleware(['auth:accounts'])->prefix('user')->name('user.')->group(function () {
+Route::middleware([
+    'is_approved',
+    'auth:accounts',
+])->prefix('user')->name('user.')->group(function () {
     Route::get('my-profile', [UserController::class, 'myProfile'])->name('my-profile');
     Route::get('follows', [UserController::class, 'lisFollows'])->name('list-follow');
     Route::get('list-reads', [UserController::class, 'listReads'])->name('list-read');
@@ -92,7 +87,7 @@ Route::middleware([
 ])->prefix('admin')->name('admin.')->group(function (){
     Route::get('/dashboard', [AdminHomeController::class, 'home'])->name('dashboard');
 
-    Route::get('/users', [AdminHomeController::class, 'listUser'])->name('list-user');
+    Route::get('/accounts', [AdminHomeController::class, 'listUser'])->name('list-account');
 
     Route::get('/categories', [AdminHomeController::class, 'listCategory'])->name('list-category');
 

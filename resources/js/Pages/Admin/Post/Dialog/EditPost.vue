@@ -34,8 +34,31 @@
             <div class="mt-[18px] w-[100%]">
                 <div class="text-[16px] font-bold text-[#000]">Hình ảnh <span class="text-[red]">*</span></div>
                 <div class="w-[280px] mt-[8px]">
-                    <img v-if="imageSelected" :src="imageSelected" alt="" class="rounded-[4px]">
-                    <img v-else :src="dataForm.image" alt="" class="rounded-[4px]">
+                    <template v-if="imageSelected">
+                        <el-image
+                            style="width: 100%; height: 100%;"
+                            :src="imageSelected"
+                            :zoom-rate="1.2"
+                            preview-teleported="true"
+                            hide-on-click-modal="true"
+                            :preview-src-list="[imageSelected]"
+                            :initial-index="1"
+                            fit="cover"
+                        />
+                    </template>
+                    <!-- <img v-else :src="dataForm.image" alt="" class="rounded-[4px]"> -->
+                    <template v-else>
+                        <el-image
+                            style="width: 100%; height: 100%;"
+                            :src="dataForm.image"
+                            :zoom-rate="1.2"
+                            preview-teleported="true"
+                            hide-on-click-modal="true"
+                            :preview-src-list="[dataForm.image]"
+                            :initial-index="1"
+                            fit="cover"
+                        />
+                    </template>
                 </div>
                 <div class="cursor-pointer flex justify-center items-center w-[180px] rounded-[20px]
                   bg-[#007bff] px-[10px] py-[4px] h-[32px] text-[14px] text-white mt-[8px]"
@@ -167,7 +190,7 @@ export default {
             pagram.append('categorySlug', this.dataForm.categorySlug ?? '')
             await axios.post(route('admin.posts.update', this.dataForm.id), pagram)
                 .then(response => {
-                    if(response.data.status == 'false'){
+                    if(response.data.status == false){
                         ElMessage({
                             showClose: true,
                             message: response.data.msg,

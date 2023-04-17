@@ -48,7 +48,7 @@ class HandleInertiaRequests extends Middleware
                 [
                     'code' => $account->code
                 ]
-                );
+            );
         }
 
         $user = auth()->user();

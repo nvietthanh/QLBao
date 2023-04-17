@@ -21,7 +21,8 @@ class Account extends Authenticatable
         'creator_id',
         'updater_id',
         'userable_type',
-        'status'
+        'status',
+        'status_expires_at'
     ];
 
     public function accountProfile()

@@ -180,31 +180,33 @@
                     </div> -->
                 </div>
                 <div v-for="(hagtag, index) in listHagtagPopular" class="mt-[15px]">
-                    <div class="border-l-[5px] pl-[12px] border-l-[red] font-bold text-[red]">
-                        <Link :href="route('list-post-hagtag', hagtag.slug)">
-                            {{ hagtag.name }}
-                        </Link>
-                    </div>
-                    <div v-for="post in listPosts[index]" class="mt-[2px]">
-                        <div class="post-item flex py-[18px] border-b-[2px]">
-                            <Link :href="route('post', post.slug)">
-                                <img :src="post.image" :alt="post.description" class="post-image min-w-[220px] w-[220px] h-[150px]">
+                    <template v-if="1 > 0">
+                        <div class="border-l-[5px] pl-[12px] border-l-[red] font-bold text-[red]">
+                            <Link :href="route('list-post-hagtag', hagtag.slug)">
+                                {{ hagtag.name }}
                             </Link>
-                            <div class="ml-[12px]">
+                        </div>
+                        <div v-for="post in listPosts[index]" class="mt-[2px]">
+                            <div class="post-item flex py-[18px] border-b-[2px]">
                                 <Link :href="route('post', post.slug)">
-                                    <div class="post-title text-[16px] font-bold">{{ post.title }}</div>
+                                    <img :src="post.image" :alt="post.description" class="post-image min-w-[220px] w-[220px] h-[150px] object-cover">
                                 </Link>
-                                <div class="mt-[12px] flex items-end">
-                                    <Link :href="route('list-category', post.categorySlug)">
-                                        <div class="text-[15px] font-bold text-[#076db6]">
-                                            {{ post.categoryName }}
-                                        </div>
+                                <div class="ml-[12px]">
+                                    <Link :href="route('post', post.slug)">
+                                        <div class="post-title text-[16px] font-bold">{{ post.title }}</div>
                                     </Link>
-                                    <div class="text-[13px] mx-[16px]">{{ convertTime(post.created_at) }}</div>
+                                    <div class="mt-[12px] flex items-end">
+                                        <Link :href="route('list-category', post.categorySlug)">
+                                            <div class="text-[15px] font-bold text-[#076db6]">
+                                                {{ post.categoryName }}
+                                            </div>
+                                        </Link>
+                                        <div class="text-[13px] mx-[16px]">{{ convertTime(post.created_at) }}</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </template>
                 </div>
             </div>
         </template>
@@ -243,7 +245,7 @@ export default{
                 .catch(errors => {})
 
             const pagram = { ...this.listHagtagPopular }
-            await axios.get(route('post.get-list-hagtag-popular', pagram))
+            await axios.post(route('post.get-list-hagtag-popular'), pagram)
                 .then(response => {
                     this.listPosts = response.data
                 })

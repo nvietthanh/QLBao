@@ -54,7 +54,19 @@
                         <div class="text-left post-content" v-html="row.content"></div>
                     </template>
                     <template #image="{ row }">
-                        <img :src="row.image" alt="" class="object-cover h-[140px] w-[100%]">
+                        <img :src="row.image" alt="" class="object-cover h-[120px] w-[100%]">
+                    </template>
+                    <template #status="{ row }">
+                        <div class="h-[36px] flex justify-center items-center">
+                            <el-switch v-model="row.status"
+                              style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+                              inline-prompt
+                              active-text="Activated"
+                              inactive-text="Deactivated"
+                              size="default"
+                              @click="changeStatus(row)"
+                            />
+                        </div>
                     </template>
                     <template #created_at="{ row }">
                         {{ row.created_at }}
@@ -105,11 +117,11 @@ export default{
                 { key: 'categoryName', label: 'Chủ đề', align: 'center', width: 130 },
                 // { key: 'description', label: 'Mô tả', align: 'center', width: 180 },
                 { key: 'content', label: 'Nội dung', align: 'center' },
-                { key: 'image', label: 'Hình ảnh', align: 'center', width: 180 },
-                { key: 'count_view', label: 'View', align: 'center', width: 70 },
+                { key: 'image', label: 'Hình ảnh', align: 'center', width: 160 },
+                { key: 'status', label: 'Trạng thái', align: 'center', width: 100 },
                 { key: 'created_at', label: 'Ngày tạo', align: 'center', width: 140 },
                 { key: 'updated_at', label: 'Ngày cập nhật', align: 'center', width: 140 },
-                { key: 'options', label: '', align: 'center', width: 80 },
+                { key: 'options', label: '', align: 'center', width: 70 },
             ],
             options: [6, 12, 24, 32],
             filterSearch: {
@@ -164,6 +176,12 @@ export default{
         },
         showPost(row) {
             this.$refs.showPostForm.open(row)
+        },
+        changeStatus(row) {
+            axios.get(route('admin.posts.change-status', row.id))
+                .then(response => {
+                    this.fetchData()
+                })
         },
         deletePosts() {
             if(this.selectedValue.length == 0) {

@@ -1,5 +1,5 @@
 <template>
-    <header class="fixed top-0 left-0 right-0 h-[56px] leading-[56px] bg-[#fff] border-b-[2px] border-b-[#ced4da] z-50">
+    <header class="fixed top-0 left-0 right-0 h-[56px] leading-[56px] bg-[#fff] border-b-[2px] border-b-[#ced4da]">
         <div class="mr-[18px] flex justify-between">
             <div>
                 <div class="flex justify-between items-center text-[16px] mx-[12px]">
@@ -105,7 +105,7 @@ export default {
                 {
                     icon: '<i class="bi bi-people-fill"></i>',
                     name: 'Quản lý người dùng',
-                    route: 'admin.list-user',
+                    route: 'admin.list-account',
                     tab: 'tab-1'
                 },
                 {

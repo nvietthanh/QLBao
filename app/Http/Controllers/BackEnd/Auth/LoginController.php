@@ -5,6 +5,7 @@ namespace App\Http\Controllers\BackEnd\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChangePasswordRequest;
 use App\Models\Account;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
@@ -30,6 +31,7 @@ class LoginController extends Controller
             $errors = [
                 'email' => 'Email không tồn tại trong hệ thống'
             ];
+
             return response()->json(['errors' => $errors], 422);
         }
         else {
@@ -37,8 +39,17 @@ class LoginController extends Controller
                 $errors = [
                     'password' => 'Mật khẩu không chính xác'
                 ];
+
                 return response()->json(['errors' => $errors], 422);
             }
+        }
+
+        if (!$user->status) {
+            $errors = [
+                'email' => 'Tài khoản đã bị khóa đến '. Carbon::parse($user->status_expires_at)->format('Y-m-d H:i')
+            ];
+
+            return response()->json(['errors' => $errors], 422);
         }
         // $regex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/';
 
