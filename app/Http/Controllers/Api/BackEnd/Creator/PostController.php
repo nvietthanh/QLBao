@@ -24,6 +24,7 @@ class PostController extends Controller
 
         $posts = Post::filter($request->all())
             ->where('creator_id', auth('accounts')->user()->id)
+            ->where('status', 1)
             ->where('is_approved', $isApproved)
             ->orderBy('created_at', 'desc')
             ->paginate($request->limit ?? '10');

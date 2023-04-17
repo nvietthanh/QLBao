@@ -19,6 +19,7 @@ class ReportPostResource extends JsonResource
             'id' => $this->id,
             'content' => $this->content,
             'image' => $this->image,
+            'post_id' => $this->post->id,
             'post_slug' => $this->post->slug,
             'post_title' => $this->post->title,
             'post_creator' => $this->post->creator->accountProfile->getFullName(),

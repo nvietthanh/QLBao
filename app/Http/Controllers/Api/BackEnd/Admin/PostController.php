@@ -73,7 +73,6 @@ class PostController extends Controller
         DB::beginTransaction();
         try {
             $post = Post::where('id', $id)
-                    ->where('is_approved', 0)
                     ->first();
             
             if(!$post) {
@@ -108,7 +107,7 @@ class PostController extends Controller
 
             DB::commit();
 
-            return response()->json($post);
+            return response()->json(200);
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json([
@@ -118,13 +117,26 @@ class PostController extends Controller
         }
     }
 
-    public function changeStatus($id)
+    public function changeApproved($id)
     {
         $post = Post::find($id);
 
         if($post) {
             $post->update([
-                'is_approved' => 1
+                'is_approved' => !$post->is_approved
+            ]);
+        }
+
+        return response()->json(200);
+    }
+
+    public function changestatus($id)
+    {
+        $post = Post::find($id);
+
+        if($post) {
+            $post->update([
+                'status' => !$post->status
             ]);
         }
 

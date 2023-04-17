@@ -19,11 +19,20 @@
                         {{ dataForm.creator }}
                     </div>
                     <div class="text-[14px]">
-                        {{ moment(String(dataForm.created_at)).format('YYYY/MM/DD hh:mm') }}
+                        {{ dataForm.created_at }}
                     </div>
                 </div>
                 <div class="mt-[18px]">
-                    <img :src="dataForm.image" alt="" class="w-[100%] min-h-[300px]">
+                    <el-image
+                        style="width: 100%; height: 100%;"
+                        :src="dataForm.image"
+                        :zoom-rate="1.2"
+                        preview-teleported="true"
+                        hide-on-click-modal="true"
+                        :preview-src-list="[dataForm.image]"
+                        :initial-index="1"
+                        fit="cover"
+                    />
                     <div class="text-[14px] text-center mt-[8px]">
                         {{ dataForm.description }}
                     </div>
@@ -60,8 +69,9 @@ export default {
     methods: {
         moment,
         async open(row) {
+            console.log(row)
             this.dialogVisible = true;
-            const response = await axios.get(route('admin.report-posts.show-post', row.id))
+            const response = await axios.get(route('admin.report-posts.show-post', row.post_id))
             this.dataForm = response.data.data
         },
     },
@@ -83,6 +93,7 @@ export default {
     background-color: #fff;
     border-bottom: 1px solid #ccc;
     margin-right: 0 !important;
+    z-index: 100;
 }
 #show-post .el-select,
 #show-post .el-date-editor {

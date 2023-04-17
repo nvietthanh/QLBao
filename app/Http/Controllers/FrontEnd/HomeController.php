@@ -30,7 +30,10 @@ class HomeController extends Controller
     public function post($slugPost)
     {
         $post = Post::where('slug', $slugPost)
-                ->where('is_approved', 1)->first();
+                ->where('is_approved', 1)
+                ->where('status', 1)
+                ->first();
+                
         if(!$post) {
             abort(404);
         }

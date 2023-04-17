@@ -51,7 +51,9 @@ class HomeController extends Controller
     public function getListRead(Request $request)
     {
         $currentAccount = auth('accounts')->user();
-        $accountReadPosts = $currentAccount->accountHasReadPosts;
+        $accountReadPosts = $currentAccount->accountHasReadPosts
+                ->where('status', 1)
+                ->where('is_approved', 1);
 
         $readPosts = (new Collection($accountReadPosts))->paginate($request->limit ?? 18);
 
@@ -64,6 +66,8 @@ class HomeController extends Controller
 
         $posts = Post::whereHas('postHasAccountSave', function($query) use ($currentAccount) {
             $query->where('account_id', $currentAccount->id)
+                ->where('status', 1)
+                ->where('is_approved', 1)
                 ->orderBy('created_at', 'desc');
         })->get();
             
@@ -78,6 +82,7 @@ class HomeController extends Controller
     {
         $post = Post::where('id', $id)
             ->where('is_approved', 1)
+            ->where('status', 1)
             ->first();
         $currentAccount = auth('accounts')->user();
         
@@ -107,6 +112,7 @@ class HomeController extends Controller
     {
         $post = Post::where('id', $id)
             ->where('is_approved', 1)
+            ->where('status', 1)
             ->first();
         $currentAccount = auth('accounts')->user();
         
@@ -117,7 +123,7 @@ class HomeController extends Controller
             $savePosts = AccountSavePost::where('account_id', $currentAccount->id)
                 ->where('post_id', $post->id)
                 ->first();
-            
+
             if(!$savePosts) {
                 abort(404);
             }

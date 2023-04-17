@@ -158,7 +158,7 @@ export default {
             pagram.append('hagtags', this.dataForm.hagtags ?? '')
             await axios.post(route('creator.posts.update', this.dataForm.id), pagram)
                 .then(response => {
-                    if(response.data.status == 'false'){
+                    if(response.data.status == false){
                         ElMessage({
                             showClose: true,
                             message: response.data.msg,

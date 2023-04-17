@@ -53,8 +53,7 @@
                               inline-prompt
                               active-text="Activated"
                               inactive-text="Deactivated"
-                              disabled
-                              @click="changeStatus(row)"/>
+                              disabled/>
                         </div>
                     </template>
                     <template #content="{ row }">
@@ -226,7 +225,7 @@ export default{
                 }
             )
             .then(() => {
-                axios.delete(route('admin.posts.destroy', row.account_id))
+                axios.delete(route('admin.posts.destroy', row.post_id))
                     .then(response => {
                         this.fetchData()
                         ElMessage({
@@ -249,7 +248,7 @@ export default{
                 }
             )
             .then(() => {
-                axios.get(route('admin.users.change-status', row.post_id))
+                axios.get(route('admin.posts.change-status', row.post_id))
                     .then(response => {
                         this.fetchData()
                         ElMessage({

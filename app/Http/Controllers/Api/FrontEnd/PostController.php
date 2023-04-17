@@ -17,6 +17,7 @@ class PostController extends Controller
     {
         $newPosts = Post::orderBy('created_at', 'desc')
             ->where('is_approved', 1)
+            ->where('status', 1)
             ->take(10)->get();
 
         return PostResource::collection($newPosts);
@@ -24,7 +25,8 @@ class PostController extends Controller
 
     public function getListPostCategory($category)
     {
-        $category = Category::where('slug', $category)->first();
+        $category = Category::where('slug', $category)
+            ->first();
 
         if(!$category){
             abort(404);
@@ -32,6 +34,7 @@ class PostController extends Controller
 
         $listPostCategory = Post::where('category_id', $category->id)
             ->where('is_approved', 1)
+            ->where('status', 1)
             ->orderBy('created_at', 'desc')->paginate(10);
 
         return PostResource::collection($listPostCategory);
@@ -50,6 +53,7 @@ class PostController extends Controller
         $account = Account::where('code', $id)->first();
         $posts = Post::where('creator_id', $account->id)
             ->where('is_approved', 1)
+            ->where('status', 1)
             ->orderBy('created_at', 'desc')
             ->paginate($request->number_data ? $request->number_data : 12);
 
@@ -60,7 +64,10 @@ class PostController extends Controller
     {
         $hagtag = HagTag::where('slug', $slug)->first();
 
-        $posts = $hagtag->hastagHasPost()->where('is_approved', 1)->get();
+        $posts = $hagtag->hastagHasPost()
+            ->where('is_approved', 1)
+            ->where('status', 1)
+            ->get();
 
         $postHagtags = (new Collection($posts))->paginate($request->limit ?? 15);
 
@@ -71,6 +78,7 @@ class PostController extends Controller
     {
         $posts = Post::where('is_popular', 1)
                     ->Where('is_approved', 1)
+                    ->where('status', 1)
                     ->take(7)->get();
         
         return PostResource::collection($posts);
@@ -85,7 +93,9 @@ class PostController extends Controller
             $hastag = HagTag::where('slug', $item['slug'])->first();
 
             $posts[] = PostResource::collection(
-                $hastag->hastagHasPost()->where('is_approved', 1)->take(7)->get()
+                $hastag->hastagHasPost()->where('is_approved', 1)
+                    ->where('status', 1)
+                    ->take(7)->get()
             );
         }
 
@@ -98,6 +108,7 @@ class PostController extends Controller
 
         $posts = Post::where('title', 'like', '%'. $search .'%')
             ->where('is_approved', 1)
+            ->where('status', 1)
             ->orderBy('created_at', 'desc')
             ->take(6)->get();
 

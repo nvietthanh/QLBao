@@ -23,4 +23,9 @@ class ReportAccountFilter extends ModelFilter
             })
             ->orWhere('content', 'like', '%' . $value . '%');
     }
+
+    public function dateRange($value)
+    {
+        $this->whereBetween(DB::raw('DATE(created_at)'), [$value[0], $value[1]]);
+    }
 }

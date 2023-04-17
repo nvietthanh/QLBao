@@ -20,7 +20,8 @@ class Post extends Model
         'is_approved',
         'category_id',
         'creator_id',
-        'updater_id'
+        'updater_id',
+        'status'
     ];
 
     public function category()

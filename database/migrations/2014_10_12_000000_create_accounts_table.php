@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('token_set_password')->nullable();
             $table->string('userable_type')->nullable();
             $table->boolean('status')->default(1);
+            $table->dateTime('status_expires_at')->nullable();
             $table->unsignedBigInteger('creator_id')->nullable();
             $table->unsignedBigInteger('updater_id')->nullable();
             $table->timestamps();
