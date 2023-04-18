@@ -78,6 +78,10 @@ Route::middleware([
     Route::get('/save-post/{id}', [HomeController::class, 'savePost'])->name('save-post');
     Route::get('/unsave-post/{id}', [HomeController::class, 'unsavePost'])->name('unsave-post');
     Route::get('/unsave-all-post', [HomeController::class, 'unsaveAllPost'])->name('unsave-all-post');
+
+    // report post
+    Route::post('/report-post/{id}', [HomeController::class, 'reportPost'])->name('report-post');
+
 });
 
 
@@ -94,7 +98,7 @@ Route::middleware('is_admin')->prefix('admin')->name('admin.')->group(function (
     Route::apiResource('/posts', AdminPostController::class);
     Route::post('/posts/{id}', [AdminPostController::class, 'update'])->name('posts.update');
     Route::get('/change-approved-post/{id}', [AdminPostController::class, 'changeApproved'])->name('posts.change-approved');
-    Route::post('/change-status-post/{id}', [AdminPostController::class, 'changestatus'])->name('posts.change-status');
+    Route::get('/change-status-post/{id}', [AdminPostController::class, 'changestatus'])->name('posts.change-status');
     Route::post('/delete-select-posts', [AdminPostController::class, 'deletePosts'])->name('posts.delete-posts');
 
     Route::apiResource('/hagtags', HagtagController::class);

@@ -19,7 +19,7 @@
                         {{ dataForm.creator }}
                     </div>
                     <div class="text-[14px]">
-                        {{ moment(String(dataForm.created_at)).format('YYYY/MM/DD hh:mm') }}
+                        {{ dataForm.created_at }}
                     </div>
                 </div>
                 <div class="mt-[18px]">
@@ -157,6 +157,7 @@ export default {
     background-color: #fff;
     border-bottom: 1px solid #ccc;
     margin-right: 0 !important;
+    z-index: 100;
 }
 #show-post .el-select,
 #show-post .el-date-editor {

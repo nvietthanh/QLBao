@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -21,7 +22,7 @@ class CommentResource extends JsonResource
             'creator' => $this->account->accountProfile->getFullName(),
             'creator_code' => $this->account->code,
             'creator_image' => $this->account->accountProfile->image,
-            'created_at' => $this->created_at,
+            'created_at' => Carbon::create($this->created_at)->format('Y-m-d H:i'),
             'is_like_comment' => $this->whereHas('commentsHasLikeAccounts', function($query) use ($account_id) {
                     $query->where('account_id', $account_id)
                         ->where('comment_id', $this->id);

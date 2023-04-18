@@ -21,10 +21,9 @@ class AccountResource extends JsonResource
             'name' => $this->accountProfile->first_name  . ' ' . $this->accountProfile->last_name,
             'email' => $this->email,
             'status' => $this->status ? true : false,
-            'created_at' => Carbon::create($this->created_at)->format('Y-m-d h:i'),
-            'updated_at' => Carbon::create($this->updated_at)->format('Y-m-d h:i'),
-            'status_expires_at' => $this->status_expires_at ? 
-                Carbon::create($this->status_expires_at)->format('Y-m-d h:i:s') : ''
+            'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i'),
+            'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d H:i'),
+            'status_expires_at' => $this->status_expires_at
         ];
     }
 }

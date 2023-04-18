@@ -103,6 +103,7 @@
                 </div>
             </div>
             <ShowReportForm ref="showReportForm" />
+            <ShowChangeStatustForm ref="showChangeStatusForm" @change-account="fetchData()"/>
         </template>
     </AppLayoutAdmin>
 </template>
@@ -112,6 +113,7 @@ import { Link } from '@inertiajs/vue3'
 import DataTable from '@/Components/UI/DataTable.vue'
 import Paginate from "@/Components/UI/Paginate.vue"
 import ShowReportForm from './DialogAccount/ShowReport.vue'
+import ShowChangeStatustForm from './DialogAccount/ChangeStatusForm.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import axios from 'axios'
 
@@ -121,7 +123,8 @@ export default{
         Link,
         Paginate,
         DataTable,
-        ShowReportForm
+        ShowReportForm,
+        ShowChangeStatustForm
     },
     data() {
         return {
@@ -231,27 +234,7 @@ export default{
             .catch(() => {})
         },
         changeStatusAccount(row) {
-            ElMessageBox.confirm(
-                `Bạn có muốn thay đổi trạng thái tài khoản ${row.account_email} không?`,
-                'Warning',
-                {
-                    confirmButtonText: 'Xác nhận',
-                    cancelButtonText: 'Hủy bỏ',
-                    type: 'warning',
-                    draggable: true,
-                }
-            )
-            .then(() => {
-                axios.get(route('admin.users.change-status', row.account_id))
-                    .then(response => {
-                        this.fetchData()
-                        ElMessage({
-                            type: 'success',
-                            message: 'Thay đổi trạng thái tài khoản thành công',
-                        })
-                    })
-            })
-            .catch(() => {})
+            this.$refs.showChangeStatusForm.open(row)
         },
         openReport(row) {
             this.$refs.showReportForm.open(row)

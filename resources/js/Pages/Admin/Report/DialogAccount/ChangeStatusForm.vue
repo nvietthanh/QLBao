@@ -92,7 +92,7 @@ export default {
         moment,
         async open(row) {
             this.dialogVisible = true;
-            const response = await axios.get(route('admin.accounts.get-status', row.id))
+            const response = await axios.get(route('admin.accounts.get-status', row.account_id))
             this.dataForm = response.data.data
         },
         async changeStatusAccount() {

@@ -155,6 +155,9 @@ export default {
     display: none;
     transition: linear all 1s;
 }
+header {
+    z-index: 1000;
+}
 header,
 #slide{
     -moz-user-select: none !important;
