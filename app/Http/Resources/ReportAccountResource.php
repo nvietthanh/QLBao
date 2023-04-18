@@ -25,8 +25,8 @@ class ReportAccountResource extends JsonResource
             'account_name' => $this->account->accountProfile->getFullName(),
             'account_report_name' => $this->accountReport->accountProfile->getFullName(),
             'account_report_email' => $this->accountReport->email,
-            'created_at' => Carbon::create($this->created_at)->format('Y-m-d h:i'),
-            'updated_at' => Carbon::create($this->updated_at)->format('Y-m-d h:i'),
+            'created_at' => Carbon::create($this->created_at)->format('Y-m-d H:i'),
+            'updated_at' => Carbon::create($this->updated_at)->format('Y-m-d H:i'),
         ];
     }
 }

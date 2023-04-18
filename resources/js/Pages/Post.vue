@@ -202,7 +202,8 @@
                 </div>
             </div>
 
-            <LoginForm ref="loginForm" @login="login"></LoginForm>
+            <LoginForm ref="loginForm" @login="login"/>
+            <ShowFormReport ref="showFormReport"/>
         </template>
     </AppLayout>
 </template>
@@ -212,12 +213,14 @@ import { Link } from '@inertiajs/vue3'
 import moment from "moment";
 import { ElMessage } from 'element-plus'
 import LoginForm from '../Components/Auth/Login.vue';
+import ShowFormReport from '../Components/Post/ShowFormReport.vue';
 
 export default{
     components:{
         AppLayout,
         Link,
         LoginForm,  
+        ShowFormReport
     },
     data() {
         return {
@@ -379,7 +382,7 @@ export default{
         },
         reportPost() {
             if(this.$page.props.auth.account) {
-
+                this.$refs.showFormReport.open(this.dataForm.id)
             }
             else {
                 this.$refs.loginForm.open()

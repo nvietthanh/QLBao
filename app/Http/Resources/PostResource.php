@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Models\AccountSavePost;
 use App\Models\HagTag;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -30,8 +31,8 @@ class PostResource extends JsonResource
             'hagtags' => $this->getHagtags(),
             'hagtagNames' => $this->getHagtagNames(),
             'creatorCode' => $this->creator->code,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'created_at' => Carbon::create($this->created_at)->format('Y-m-d H:i'),
+            'updated_at' => Carbon::create($this->updated_at)->format('Y-m-d H:i'),
         ];
     }
 
