@@ -43,16 +43,19 @@
                         </div>
                         <div class="mt-[6px]">
                             <span class="text-[16px] font-bold">Hình ảnh kèm theo:</span>
-                            <div class="mt-[12px] grid grid-cols-2 gap-2">
-                                <el-image
-                                    :src="dataForm.image"
-                                    :zoom-rate="1.2"
-                                    preview-teleported="true"
-                                    hide-on-click-modal="true"
-                                    :preview-src-list="[dataForm.image]"
-                                    :initial-index="1"
-                                    fit="cover"
-                                />
+                            <div class="mt-[12px] grid grid-cols-3 gap-3">
+                                <template v-for="image in dataForm.image">
+                                    <el-image
+                                        class="h-[180px]"
+                                        :src="image"
+                                        :zoom-rate="1.2"
+                                        preview-teleported="true"
+                                        hide-on-click-modal="true"
+                                        :preview-src-list="dataForm.image"
+                                        :initial-index="1"
+                                        fit="cover"
+                                    />
+                                </template>
                             </div>
                         </div>
                     </div>

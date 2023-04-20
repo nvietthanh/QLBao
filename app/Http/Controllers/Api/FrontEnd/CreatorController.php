@@ -21,6 +21,7 @@ class CreatorController extends Controller
         $creators = Account::where('userable_type', 'Creator')
             ->where('code', '<>', $id)
             ->orderBy('created_at', 'desc')
+            ->take(10)
             ->get();
 
         return CreatorReasource::collection($creators);

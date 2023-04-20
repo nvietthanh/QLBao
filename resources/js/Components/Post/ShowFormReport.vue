@@ -1,13 +1,13 @@
 <template>
-    <el-dialog v-model="dialogVisible" id="show-report-account" class="bg-[#f4f1f8] max-h-[90%] overflow-scroll" width="560px" 
-     style="margin-top: 3% !important;" :show-close="true">
+    <el-dialog v-model="dialogVisible" id="show-report-account" class="bg-[#f4f1f8] max-h-[90%] overflow-scroll" width="600px" 
+     style="margin-top: 2% !important;" :show-close="true">
         <template #header>
             <div class="text-center font-bold text-[18px]">
                 Báo cáo vi phạm
             </div>
         </template>
         <div class="flex mt-[38px]">
-            <div class="py-[12px] px-[18px]">
+            <div class="py-[12px] px-[32px]">
                 <div>
                     <div class="text-[16px] font-bold">Hãy chọn vấn đề:</div>
                     <div class="py-[12px]">
@@ -17,6 +17,12 @@
                         <el-checkbox class="w-[100%] mb-[8px]" v-model="dataForm.content" label="Khủng bố" size="large" border />
                         <el-checkbox class="w-[100%] mb-[8px]" v-model="dataForm.content" label="Thông tin sai sự thật" size="large" border />
                         <el-checkbox class="w-[100%] mb-[8px]" v-model="dataForm.content" label="Quấy rối" size="large" border />
+                        <el-checkbox class="w-[100%] mb-[8px]" v-model="isDefault" label="Khác" size="large" border />
+                        <div v-if="isDefault" class="flex items-top mt-[4px]">
+                            <span class="ml-[12px] mt-[8px] w-[210px]">Nhập nội dung khác:</span>
+                            <el-input v-model="dataForm.defaultContent" type="textarea" :autosize="{ minRows: 3, maxRows: 5 }"
+                             placeholder="Nhập nội dung" />
+                        </div>
                     </div>
                     <div class="text-[16px] font-bold">Thêm hình ảnh bổ sung:</div>
                     <div class="py-[12px]">
@@ -58,7 +64,6 @@ import { Link } from '@inertiajs/vue3'
 import moment from "moment";
 import { Delete, Download, Plus, ZoomIn } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { forEach } from 'lodash';
 
 export default {
     components:{
@@ -68,11 +73,13 @@ export default {
     data() {
         return {
             dialogVisible: false,
+            isDefault: false,
             dialogVisiblePreview: false,
             dialogImageUrl: '',
             postId: '',
             dataForm: {
                 images: [],
+                defaultContent: '',
                 content: []
             }
         }
@@ -80,12 +87,21 @@ export default {
     watch: {
         dialogVisible(value) {
             if(value == false) {
-                this.dataForm = {}
+                this.clearData()
             }
         }
     },
     methods: {
         moment,
+        clearData() {
+            this.dataForm.images = []
+            this.dataForm.defaultContent = ''
+            this.dataForm.content = []
+            this.isDefault = false
+            this.dialogVisiblePreview = false
+            this.postId = ''
+            this.dialogImageUrl = ''
+        },
         async open(id) {
             this.dialogVisible = true
             this.postId = id
@@ -95,39 +111,30 @@ export default {
             this.dialogVisiblePreview = true
         },
         async sendReport() {
-            const pagram = new FormData()
-            pagram.append('content', this.dataForm.content)
-            for(let image of this.dataForm.images) {
-                pagram.append('images[]', image)
-            }
-            // const pagram = { ...this.dataForm }
-            await axios.post(route('report-post', this.postId), pagram)
-                .then(response => {
-                    this.dialogVisible = false
-                    ElMessage({
-                        type: 'success',
-                        message: `Báo cáo vi phạm thành công`,
-                    })
+            if(this.dataForm.content.length == 0 && !this.dataForm.defaultContent) {
+                ElMessage({
+                    type: 'warning',
+                    message: `Vui lòng chọn nội dung báo cáo vi phạm`,
                 })
-                .catch(() => {})
-            // if(this.dataForm.content.length == 0) {
-            //     ElMessage({
-            //         type: 'warning',
-            //         message: `Vui lòng chọn nội dung báo cáo vi phạm`,
-            //     })
-            // }
-            // else {
-            //     const pagram = { ...this.dataForm }
-            //     await axios.post(route('report-post', this.postId), pagram)
-            //         .then(response => {
-            //             this.dialogVisible = false
-            //             ElMessage({
-            //                 type: 'success',
-            //                 message: `Báo cáo vi phạm thành công`,
-            //             })
-            //         })
-            //         .catch(() => {})
-            // }
+            }
+            else {
+                const pagram = new FormData()
+                this.dataForm.content.push(this.dataForm.defaultContent)
+                pagram.append('content', this.dataForm.content)
+                for(let image of this.dataForm.images) {
+                    pagram.append('images[]', image.raw)
+                }
+                await axios.post(route('report-post', this.postId), pagram)
+                    .then(response => {
+                        this.dialogVisible = false
+                        this.clearData()
+                        ElMessage({
+                            type: 'success',
+                            message: `Báo cáo vi phạm thành công`,
+                        })
+                    })
+                    .catch(() => {})
+            }
         }
     },
 }
@@ -147,7 +154,7 @@ export default {
 }
 #show-report-account > .el-dialog__header {
     position: fixed;
-    width: 560px;
+    width: 600px;
     background-color: #fff;
     border-bottom: 1px solid #ccc;
     margin-right: 0 !important;

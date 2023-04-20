@@ -133,7 +133,6 @@ class HomeController extends Controller
             }
             else {
                 $savePosts->delete();
-                
                 return response()->json(true);
             }
         }
@@ -163,23 +162,35 @@ class HomeController extends Controller
         }
     }
 
-    public function reportPost(ReportPostRequest $request)
+    public function reportPost(ReportPostRequest $request, $id)
     {
         $request->validated();
-        $contents = $request->content;
-        $content = str_replace(',', '. </br>', $contents);
+        
+        $post = Post::find($id);
+        
+        if(!$post) {
+            abort(404);
+        }
+        else {
+            $contents = $request->content;
+            $content = str_replace(',', '. </br>', $contents);
+            $paths = [];
 
-        $paths = [];
+            if($request->file('images')) {
+                foreach($request->file('images') as $image) {
+                    $path = Storage::putFile('public/posts', $image);
+                    array_push($paths, Storage::url($path));
+                }
+            }
 
-        // foreach($contents as $item) {
-        //     $content .= $item . '. </br>' ;
-        // }
-        // $path = Storage::putFile('public/posts', $request->image);
-            
-        dd(UploadedFile::createFromBase($request->images[0]));
+            ReportPost::create([
+                'content' => $content,
+                'image' => $paths ? json_encode($paths) : '',
+                'account_report_id' => auth('accounts')->user()->id,
+                'post_id' => $id
+            ]);
 
-        // ReportPost::create([
-        //     'content'
-        // ])
+            return response()->json(true);
+        }
     }
 }

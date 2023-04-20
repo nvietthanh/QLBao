@@ -13,9 +13,17 @@ class ReportPost extends Model
 
     protected $fillable = [
         'content',
+        'image',
         'account_report_id',
         'post_id'
     ];
+    
+    public function getImageAttribute($value) {
+        if($value) {
+            return json_decode($value);
+        }
+        return [];
+    }
 
     public function post()
     {

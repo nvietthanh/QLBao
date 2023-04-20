@@ -37,7 +37,7 @@
                             placeholder="Nhập từ khóa" clearable @keyup.enter="fetchData()"/>
                     <div class="text-[14px] ml-[24px] text-center w-[120px] py-[6px] rounded-[4px] bg-[red] text-white cursor-pointer"
                      @click="deleteSelections">
-                        Xóa tài khoản
+                        Xóa báo cáo
                     </div>
                 </div>
                 <DataTable :fields="fields" :items="tableData" enable-select-box @row-selected="handleSelectionChange">
@@ -47,9 +47,7 @@
                         </div>
                     </template>
                     <template #content="{ row }">
-                        <div class="text-left">
-                            {{row.content}}
-                        </div>
+                        <div v-html="row.content" class="text-left"></div>
                     </template>
                     <template #account_status="{ row }">
                         <div class="h-[36px] flex justify-center items-center">
@@ -63,7 +61,8 @@
                         </div>
                     </template>
                     <template #image="{ row }">
-                        <img :src="row.image" alt="">
+                        <img v-if="row.image[0]" :src="row.image[0]" class="h-[110px] w-[100%] object-cover">
+                        <div v-else>No image</div>
                     </template>
                     <template #account_report_email="{ row }">
                         <div class="text-left">

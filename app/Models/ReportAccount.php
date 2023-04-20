@@ -13,9 +13,17 @@ class ReportAccount extends Model
 
     protected $fillable = [
         'content',
+        'image',
         'account_report_id',
         'account_id'
     ];
+
+    public function getImageAttribute($value) {
+        if($value) {
+            return json_decode($value);
+        }
+        return [];
+    }
 
     public function accountReport()
     {

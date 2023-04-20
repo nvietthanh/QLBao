@@ -20,7 +20,7 @@ class ReportSeeder extends Seeder
                 'account_report_id' => rand(1, 40),
                 'account_id' => rand(1, 40),
                 'content' => $faker->paragraph,
-                'image' => fake()->imageUrl(),
+                'image' => json_encode([fake()->imageUrl()]),
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
@@ -31,7 +31,7 @@ class ReportSeeder extends Seeder
                 'post_id' => rand(1, 40),
                 'account_report_id' => rand(1, 40),
                 'content' => $faker->paragraph,
-                'image' => fake()->imageUrl(),
+                'image' => json_encode([fake()->imageUrl()]),
                 'created_at' => now(),
                 'updated_at' => now()
             ]);

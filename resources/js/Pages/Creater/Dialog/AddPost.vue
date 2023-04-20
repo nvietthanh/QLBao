@@ -152,6 +152,7 @@ export default {
         },
         addPost() {
             const pagram = new FormData()
+            console.log(this.dataForm.image)
             pagram.append('title', this.dataForm.title ?? '')
             pagram.append('description', this.dataForm.description ?? '')
             pagram.append('image', this.dataForm.image ?? '')
