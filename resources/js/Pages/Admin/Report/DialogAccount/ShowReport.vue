@@ -43,8 +43,9 @@
                         </div>
                         <div class="mt-[6px]">
                             <span class="text-[16px] font-bold">Hình ảnh kèm theo:</span>
-                            <div class="mt-[12px] grid grid-cols-2 gap-2">
+                            <div class="mt-[12px] grid grid-cols-3 gap-3">
                                 <el-image
+                                    class="h-[180px]"
                                     :src="dataForm.image"
                                     :zoom-rate="1.2"
                                     preview-teleported="true"

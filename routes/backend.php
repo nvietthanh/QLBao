@@ -43,7 +43,7 @@ Route::middleware(['is_approved', 'auth:accounts', 'is_creator'])->prefix('creat
 Route::middleware('is_approved')->get('/get-comments', [CommentController::class, 'getComments'])->name('get-comments');
 Route::middleware('is_approved')->get('/get-post/{slugPost}', [HomeController::class, 'getPost'])->name('post.get-post');
 
-// Infor cretor
+// Infor creator
 Route::get('/get-infor-user/{id}', [CreatorController::class, 'getInfor'])->name('cretor.get-infor');
 
 Route::middleware([
@@ -54,16 +54,19 @@ Route::middleware([
     Route::apiResource('profiles', ProfileController::class);
     Route::post('/profiles/{id}', [ProfileController::class, 'update'])->name('profiles.update');
 
-    // user create comment
+    // create comment
     Route::post('/comment/{id}', [CommentController::class, 'createComment'])->name('create-comment');
-
+    Route::post('/comment-child/{id}', [CommentController::class, 'createCommentChild'])->name('create-comment-child');
     // like comment
     Route::get('/like-comments/{id}', [CommentController::class, 'likeComment'])->name('like-comment');
     Route::get('/unlike-comments/{id}', [CommentController::class, 'unlikeComment'])->name('unlike-comment');
+    // delete comment
+    Route::get('/delete-comment/{id}', [CommentController::class, 'deleteComment'])->name('delete-comment');
+    // update comment
+    Route::post('/update-comment/{id}', [CommentController::class, 'updateComment'])->name('update-comment');
 
     // list follow
     Route::get('/list-follows', [FollowController::class, 'listFollow'])->name('list-follows');
-
     // follow account
     Route::get('/follow-account/{code}', [FollowController::class, 'follow'])->name('follow-account');
     Route::get('/unfollow-account/{code}', [FollowController::class, 'unfollow'])->name('unfollow-account');

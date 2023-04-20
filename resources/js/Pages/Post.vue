@@ -67,40 +67,151 @@
                         <div class="flex border-b-[1px] px-[4px]">
                             <div class="mr-[24px] text-[15px] font-bold cursor-pointer"
                               @click="changeTabComment('tab-0')"
-                             :class="{ 'active-comment' : filters.tabComment == 'tab-0'}">Quan tâm nhất</div>
+                             :class="{ 'active-comment' : filters.tabComment == 'tab-0'}">Mới nhất</div>
                             <div class="text-[15px] font-bold cursor-pointer"
                               @click="changeTabComment('tab-1')"
-                             :class="{ 'active-comment' : filters.tabComment == 'tab-1'}">Mới nhất</div>
+                             :class="{ 'active-comment' : filters.tabComment == 'tab-1'}">Quan tâm nhất</div>
                         </div>
-                        <div class="mt-[18px] mx-[8px]">
+                        <div class="mt-[18px] mb-[52px] mx-[8px]">
                             <template v-if="comments.length > 0" v-for="comment in comments">
-                                <div class="flex mb-[18px]">
-                                    <Link :href="route('home')">
-                                        <img v-if="comment.creator_image" :src="comment.creator_image" alt="" class="w-[36px] min-w-[36px] h-[36px] rounded-[50%]">
-                                        <div v-else class="bg-[#5c6bc0] w-[36px] h-[36px] border-[1px] rounded-[50%]
+                                <div class="relative flex mb-[20px]" 
+                                 :class="{ 'comment-active mb-[200px]' : idOpenFormComment == comment.id }">
+                                    <Link :href="route('creator', comment.commentator_code)">
+                                        <img v-if="comment.commentator_image" :src="comment.commentator_image" alt="" 
+                                            class="w-[46px] min-w-[46px] h-[46px] rounded-[50%]">
+                                        <div v-else class="bg-[#5c6bc0] w-[46px] h-[46px] border-[1px] rounded-[50%]
                                                 flex justify-center items-center">
                                             <span class="text-[#fff] text-[14px]">{{
-                                                comment.creator[0] }}</span>
+                                                comment.commentator[0] }}</span>
                                         </div>
                                     </Link>
-                                    <div class="ml-[12px] mt-[-4px]">
+                                    <div class="relative ml-[12px] mt-[-4px] pr-[52px]">
                                         <span class="font-bold text-[16px]">
-                                            <Link :href="route('home')">
-                                                <span v-if="dataForm.creatorCode == comment.creator_code">Tác giả: </span>
-                                                <span v-else>{{ comment.creator }}: </span>
+                                            <Link :href="route('creator', comment.commentator_code)">
+                                                <span v-if="dataForm.creatorCode == comment.commentator_code">Tác giả: </span>
+                                                <span v-else>{{ comment.commentator }}: </span>
                                             </Link>
                                         </span>
-                                        <span class="text-[15px] whitespace-pre-line">{{ comment.content }}</span>
-                                        <div class="mt-[8px] text-[14px] text-[#9F9F9F]">
-                                            <span class="cursor-pointer">
-                                                <i class="bi bi-heart-fill hover:text-[red]" 
+                                        <span class="text-[15px] whitespace-pre-line" v-html="comment.content"></span>
+                                        <div class="mt-[4px] text-[14px] text-[#9F9F9F] flex items-center">
+                                            <span class="cursor-pointer flex items-center">
+                                                <i class="bi bi-heart-fill hover:text-[red] text-[18px]" 
                                                   :class="{ 'text-[red]' : comment.is_like_comment }" @click="changeStatusLike(comment)"></i>
-                                                <span v-if="comment.count_like_comment > 0" class="ml-[4px]">{{ comment.count_like_comment }}</span>
+                                                <span v-if="comment.count_like_comment > 0" class="ml-[4px] mb-[2px]">{{ comment.count_like_comment }}</span>
                                             </span>
-                                            <span class="mx-[14px] hover:text-[red] cursor-pointer">
+                                            <span class="mx-[24px] mb-[2px] hover:text-[red] cursor-pointer" @click="openCommentForm(comment.id)">
                                                 Trả lời
                                             </span>
-                                            <span>{{ convertTime(comment.created_at) }}</span>
+                                            <span class="mb-[2px] text-[13px]">{{ convertTime(comment.created_at) }}</span>
+                                        </div>
+                                        <div :id="comment.id" class="mt-[4px] comment-hidden" v-if="comment.count_comment_child != 0">
+                                            <div class="text-[17px] text-[#065fd4] px-[12px] h-[36px] leading-[36px] text-center border-[2px] ml-[-24px]
+                                             border-[#fff] w-[130px] rounded-[18px] cursor-pointer hover:bg-[#f2f8ff] hover:border-[#e9ecef] btn"
+                                             @click="openComment(comment.id)">
+                                                <i class="bi bi-caret-down-fill"></i>
+                                                <span class="ml-[6px] text-[15px]">Phản hồi</span>
+                                            </div>
+                                            <div class="comment-item">
+                                                <div class="flex mt-[8px] relative" v-if="comment.comment_child.length > 0" 
+                                                    v-for="commentChild in comment.comment_child">
+                                                    <Link :href="route('creator', commentChild.commentator_code)">
+                                                        <img v-if="commentChild.commentator_image" :src="commentChild.commentator_image" alt="" 
+                                                            class="w-[36px] min-w-[36px] h-[36px] rounded-[50%]">
+                                                        <div v-else class="bg-[#5c6bc0] w-[36px] h-[36px] border-[1px] rounded-[50%]
+                                                                flex justify-center items-center">
+                                                            <span class="text-[#fff] text-[14px]">
+                                                                {{commentChild.commentator[0] }}
+                                                            </span>
+                                                        </div>
+                                                    </Link>
+                                                    <div class="ml-[12px] mt-[-4px]">
+                                                        <span class="font-bold text-[15px]">
+                                                            <Link :href="route('creator', commentChild.commentator_code)">
+                                                                <span v-if="dataForm.creatorCode == commentChild.commentator_code">Tác giả: </span>
+                                                                <span v-else>{{ commentChild.commentator }}: </span>
+                                                            </Link>
+                                                        </span>
+                                                        <span v-html="commentChild.content" class="text-[15px] whitespace-pre-line"></span>
+                                                        <div class="mt-[4px] text-[14px] text-[#9F9F9F] flex items-center">
+                                                            <span class="cursor-pointer flex items-center">
+                                                                <i class="bi bi-heart-fill hover:text-[red] text-[18px]" 
+                                                                :class="{ 'text-[red]' : commentChild.is_like_comment }" @click="changeStatusLike(commentChild)"></i>
+                                                                <span v-if="commentChild.count_like_comment > 0" class="ml-[4px] mb-[2px]">{{ commentChild.count_like_comment }}</span>
+                                                            </span>
+                                                            <span class="ml-[24px] mb-[2px] text-[13px]">{{ convertTime(commentChild.created_at) }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div v-if="this.$page.props.auth.account && commentChild.commentator_code == this.$page.props.auth.account.code"
+                                                        class="btn absolute top-[-2px] right-[-52px] text-[24px] h-[36px] w-[36px] flex 
+                                                        items-center justify-center text-center cursor-pointer rounded-[50%] hover:bg-[#e9ecef]">
+                                                        <el-dropdown>
+                                                            <span class="text-[24px]">
+                                                                <i class="bi bi-three-dots"></i>
+                                                            </span>
+                                                            <template #dropdown>
+                                                                <el-dropdown-menu>
+                                                                    <el-dropdown-item @click="openEditCommentForm(commentChild)">Chỉnh sửa</el-dropdown-item>
+                                                                    <el-dropdown-item @click="deleteComment(commentChild)">Xóa bình luận</el-dropdown-item>
+                                                                </el-dropdown-menu>
+                                                            </template>
+                                                        </el-dropdown>
+                                                    </div>
+                                                </div>
+                                                <div v-if="comment.is_load_comment_child" class="ml-[48px] text-[15px] mt-[4px] cursor-pointer
+                                                    text-[#065fd4] btn" @click="loadCommentChild(comment)">
+                                                    Đọc thêm
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div v-if="this.$page.props.auth.account && comment.commentator_code == this.$page.props.auth.account.code"
+                                            class="btn absolute top-[-2px] right-0 text-[24px] h-[36px] w-[36px] flex 
+                                            items-center justify-center text-center cursor-pointer rounded-[50%] hover:bg-[#e9ecef]">
+                                            <el-dropdown>
+                                                <span class="text-[24px]">
+                                                    <i class="bi bi-three-dots"></i>
+                                                </span>
+                                                <template #dropdown>
+                                                    <el-dropdown-menu>
+                                                        <el-dropdown-item @click="openEditCommentForm(comment)">Chỉnh sửa</el-dropdown-item>
+                                                        <el-dropdown-item @click="deleteComment(comment)">Xóa bình luận</el-dropdown-item>
+                                                    </el-dropdown-menu>
+                                                </template>
+                                            </el-dropdown>
+                                        </div>
+                                    </div>
+                                    <div v-if="this.$page.props.auth.account" class="comment-form absolute top-[100%] mt-[6px] left-[52px] right-0 bg-[#f8f9fa] z-50 
+                                        border-[1px] p-[18px] rounded-[8px] box-shadow">
+                                        <div class="flex">
+                                            <img v-if="this.$page.props.auth.account.image" :src="this.$page.props.auth.account.image" alt="" 
+                                                class="w-[36px] min-w-[36px] h-[36px] rounded-[50%]">
+                                            <div v-else class="bg-[#5c6bc0] w-[36px] h-[36px] border-[1px] rounded-[50%]
+                                                    flex justify-center items-center">
+                                                <span class="text-[#fff] text-[14px]">{{
+                                                    this.$page.props.auth.account.first_name[0] }}</span>
+                                            </div>
+                                            <div class="ml-[12px] flex-auto">
+                                                <el-input
+                                                    v-model="contentCommentChild"
+                                                    :autosize="{ minRows: 3, maxRows: 3 }"
+                                                    type="textarea"
+                                                    placeholder="Nhập bình luận"
+                                                />
+                                                <div v-if="errors.contentChild" class="mt-[5px] text-[#ff0000] text-[15px]">
+                                                    {{ errors.contentChild }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="flex justify-end mt-[12px] mr-[18px]">
+                                            <div class="btn border-[1px] border-[#adb5bd] px-[32px] py-[8px] bg-[#fff] text-[14px] cursor-pointer 
+                                                rounded-[4px] active:scale-95 mr-[18px]"
+                                                @click="openCommentForm(comment.id)">
+                                                Đóng
+                                            </div>
+                                            <div class="btn border-[1px] px-[16px] py-[8px] bg-[#2877af] text-white text-[14px] cursor-pointer 
+                                                rounded-[4px] active:scale-95"
+                                                @click="sendCommentChild(comment.id)">
+                                                Gửi bình luận
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -204,6 +315,7 @@
 
             <LoginForm ref="loginForm" @login="login"/>
             <ShowFormReport ref="showFormReport"/>
+            <EditFormComment ref="editFormComment" @change-update="fetchDataComment"/>
         </template>
     </AppLayout>
 </template>
@@ -211,16 +323,19 @@
 import AppLayout from '../Layouts/AppLayout.vue';
 import { Link } from '@inertiajs/vue3'
 import moment from "moment";
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import LoginForm from '../Components/Auth/Login.vue';
 import ShowFormReport from '../Components/Post/ShowFormReport.vue';
+import EditFormComment from '../Components/Post/EditFormComment.vue';
+import axios from 'axios';
 
 export default{
     components:{
         AppLayout,
         Link,
         LoginForm,  
-        ShowFormReport
+        ShowFormReport,
+        EditFormComment
     },
     data() {
         return {
@@ -245,9 +360,12 @@ export default{
                 hagtags: [],
                 hagtagNames: [],
             },
+            idOpenFormComment: '',
             contentComment: '',
+            contentCommentChild: '',
             comments: [],
-            pageComment: 2,
+            comment: {},
+            pageComment: 6,
             totalcomment: 0,
             nextComment: false,
             errors: []
@@ -267,10 +385,17 @@ export default{
         async fetchDataComment() {
             const responseComment = await axios.get(route('get-comments', {
                 id: this.dataForm.id,
-                page_number: this.pageComment
+                page_number: this.pageComment,
+                comment_id: this.comment ? this.comment.id : '',
+                page_number_child: this.comment ? Number(this.comment.page_number_comment_child) + 6 : ''
             }))
             this.comments = responseComment.data.data
-            this.totalcomment = responseComment.data.meta.total
+
+            this.totalcomment = 0
+            responseComment.data.data.forEach(element => {
+                this.totalcomment += 1 + element.count_comment_child
+            });
+
             if(responseComment.data.meta.last_page == responseComment.data.meta.current_page) {
                 this.nextComment = false
             }
@@ -324,7 +449,7 @@ export default{
                     .catch(errors => {
                         this.errors = errors.response.data.errors
                     })
-                }
+            }
             else {
                 this.$refs.loginForm.open()
             }
@@ -387,12 +512,92 @@ export default{
             else {
                 this.$refs.loginForm.open()
             }
+        },
+        openCommentForm(row) {
+            if(this.$page.props.auth.account) {
+                if (row == this.idOpenFormComment) {
+                    this.contentCommentChild = ''
+                    this.errors = []
+                    this.idOpenFormComment = ''
+                }
+                else {
+                    this.contentCommentChild = ''
+                    this.idOpenFormComment = row
+                }
+            }
+            else {
+                this.$refs.loginForm.open()
+            }
+        },
+        sendCommentChild(id) {
+            if(this.contentCommentChild) {
+                const pagram = {
+                    ...{
+                        'content': this.contentCommentChild
+                    }
+                }
+                axios.post(route('create-comment-child', id), pagram)
+                    .then(response => {
+                        ElMessage({
+                            showClose: true,
+                            message: 'Thêm bình luận thành công',
+                            type: 'success',
+                        })
+                        this.contentCommentChild = ''
+                        this.errors = []
+                        this.fetchDataComment()
+                    })
+                    .catch(() => {})
+            }
+            else {
+                this.errors.contentChild = 'Trường nội dung là bắt buộc'
+            }
+        },
+        openComment(id) {
+            document.getElementById(`${id}`).classList.toggle('comment-hidden')
+            document.getElementById(`${id}`).querySelector('i').classList.toggle('bi-caret-up-fill')
+        },
+        loadCommentChild(comment) {
+            this.comment = comment
+            this.fetchDataComment()
+        },
+        openEditCommentForm(comment) {
+            this.$refs.editFormComment.open(comment)
+        },
+        deleteComment(comment) {
+            ElMessageBox.confirm(
+                'Bạn có muốn xóa bình luận vừa chọn không?',
+                'Warning',
+                {
+                    confirmButtonText: 'Xác nhận',
+                    cancelButtonText: 'Hủy bỏ',
+                    type: 'warning',
+                })
+                .then(() => {
+                    axios.get(route('delete-comment', comment.id))
+                        .then(() => {
+                            this.fetchData()
+                            ElMessage({
+                                type: 'success',
+                                message: 'Xóa bình luận thành công',
+                            })
+                        })
+                        .catch(error => {
+                            ElMessage({
+                                type: 'error',
+                                message: error.message,
+                            })
+                        })
+                })
         }
     }
 }
 
 </script>
 <style scoped>
+.comment-hidden .comment-item{
+    display: none;
+}
 main .main {
     background-color: #fff;
     padding: 12px;
@@ -421,5 +626,10 @@ main .main .creator {
     border-left: 2px solid rgba(0, 0, 0, 0.55);
     border-right: 2px solid rgba(0, 0, 0, 0.55);
 }
+.comment-form {
+    display: none;
+}
+.comment-active .comment-form {
+    display: block;
+}
 </style>
-  
