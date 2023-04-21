@@ -181,109 +181,68 @@
                     <slot name="main-2" />
                 </div>
                 <div v-else class="main-2 w-[310px]">
-                    <div class="bg-[#fff] py-[12px] mb-[24px] rounded-[4px]"
-                        style="box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);">
+                    <div class="bg-[#fff] py-[12px] mb-[24px] rounded-[4px] box-shadow">
                         <div class="border-b-[2px] mt-[4px] mb-[8px]">
                             <div
                                 class="border-l-[5px] border-[#db562b] text-[#db562b] font-bold ml-[8px] pl-[8px] mb-[12px] text-[17px]">
                                 Tin mới nhất
                             </div>
                         </div>
-                        <div v-for="item in listNewPost" class="post-item flex border-b-[2px] mx-[8px] py-[8px] hover:bg-[#e9ecef]">
-                            <Link :href="route('post', item.slug)">
-                            <img :src="item.image" alt="" class="post-image w-[60px] min-w-[60px] h-[60px] rounded-[3px] object-cover">
+                        <div v-for="post in listNewPost" class="post-item flex border-b-[2px] mx-[8px] py-[8px] hover:bg-[#e9ecef]">
+                            <Link :href="route('post', post.slug)">
+                                <img :src="post.image" alt="" class="post-image w-[60px] min-w-[60px] h-[60px] rounded-[3px] object-cover">
                             </Link>
                             <div class="ml-[8px]">
-                                <Link :href="route('post', item.slug)">
-                                <div class="post-new-title text-[15px] mr-[8px]"> {{ item.title }} </div>
+                                <Link :href="route('post', post.slug)">
+                                    <div class="post-new-title text-[15px] mr-[8px]"> {{ post.title }} </div>
                                 </Link>
                                 <div class="flex items-center mt-[6px]">
-                                    <Link :href="route('list-category', item.categorySlug)">
-                                    <div class="text-[#076db6] font-bold text-[13px]"> {{ item.categoryName }}</div>
+                                    <Link :href="route('list-category', post.categorySlug)">
+                                        <div class="text-[#076db6] font-bold text-[13px]"> {{ post.categoryName }}</div>
                                     </Link>
-                                    <div class="text-[12px] ml-[13px]">{{ this.convertTime(item.created_at) }}</div>
+                                    <div class="text-[12px] ml-[13px]">{{ this.convertTime(post.created_at) }}</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="mt-[52px] mb-[22px] bg-[#fff]" style="box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);">
-                        <div class="partner-headline transform-uppercase">Đối tác chính thức</div>
-                        <div class="main">
-                            <div class="flex">
-                                <div class="partner-item">Chào mừng 1</div>
-                                <div class="partner-item">Chào mừng 2</div>
-                                <div class="partner-item">Chào mừng 3</div>
-                                <div class="partner-item">Chào mừng 4</div>
-                                <div class="partner-item">Chào mừng 5</div>
-                                <div class="partner-item">Chào mừng 6</div>
-                            </div>
+                    <div class="mt-[52px] mb-[22px] bg-[#fff] pt-[12px] pb-[8px] box-shadow">
+                        <div class="border-l-[5px] border-[#db562b] text-[#db562b] font-bold 
+                         ml-[8px] pl-[8px] mb-[12px] text-[17px]">
+                            Đối tác hợp tác
+                        </div>
+                        <div class="mt-[12px]">
+                            <el-carousel height="150px">
+                                <el-carousel-item v-for="partner in listPartners">
+                                    <img :src="partner" alt="" class="object-contain">
+                                </el-carousel-item>
+                            </el-carousel>
                         </div>
                     </div>
-                    <div class="bg-[#fff] py-[12px] mt-[52px] rounded-[4px]"
-                        style="box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);">
+                    <div class="bg-[#fff] py-[12px] mt-[52px] rounded-[4px] box-shadow">
                         <div class="border-b-[2px] mt-[4px] mb-[8px]">
                             <div
                                 class="border-l-[5px] border-[#db562b] text-[#db562b] font-bold ml-[8px] pl-[8px] mb-[12px] text-[17px]">
                                 Bài viết bạn có thể quan tâm
                             </div>
                         </div>
-                        <div class="new-item flex border-b-[2px] mx-[8px] py-[8px]">
-                            <Link :href="route('post', 'chao-mung-ban-nhe')">
-                            <img src="\image\cf2a58bd5ff0b6aeefe1.jpg" alt=""
-                                class="w-[60px] min-w-[60px] h-[60px] rounded-[3px]">
-                            </Link>
-                            <div class="ml-[8px]">
-                                <Link :href="route('post', 'chao-mung-ban-nhe')">
-                                <div class="text-[15px]">
-                                    Tổng Bí thư Nguyễn Phú Trọng nhấn mạnh 3 vấn đề cốt yếu của Công an nhân dân
-                                </div>
+                        <template v-for="post in listPostInterested">
+                            <div class="post-item flex border-b-[2px] mx-[8px] py-[8px] hover:bg-[#e9ecef]">
+                                <Link :href="route('post', post.slug)">
+                                    <img :src="post.image" alt="" class="post-image w-[60px] min-w-[60px] h-[60px] rounded-[3px] object-cover">
                                 </Link>
-                                <div class="flex items-center mt-[6px]">
-                                    <Link :href="route('list-category', 'chinh-tri')">
-                                    <div class="text-[#076db6] font-bold text-[13px]">Kinh tế chính trị</div>
+                                <div class="ml-[8px]">
+                                    <Link :href="route('post', post.slug)">
+                                        <div class="post-new-title text-[15px] mr-[8px]"> {{ post.title }} </div>
                                     </Link>
-                                    <div class="text-[12px] ml-[13px]">15 phút trước</div>
+                                    <div class="flex items-center mt-[6px]">
+                                        <Link :href="route('list-category', post.categorySlug)">
+                                            <div class="text-[#076db6] font-bold text-[13px]"> {{ post.categoryName }}</div>
+                                        </Link>
+                                        <div class="text-[12px] ml-[13px]">{{ this.convertTime(post.created_at) }}</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="new-item flex border-b-[2px] mx-[8px] py-[8px]">
-                            <Link :href="route('post', 'chao-mung-ban-nhe')">
-                            <img src="\image\cf2a58bd5ff0b6aeefe1.jpg" alt=""
-                                class="w-[60px] min-w-[60px] h-[60px] rounded-[3px]">
-                            </Link>
-                            <div class="ml-[8px]">
-                                <Link :href="route('post', 'chao-mung-ban-nhe')">
-                                <div class="text-[15px]">
-                                    Tổng Bí thư Nguyễn Phú Trọng nhấn mạnh 3 vấn đề cốt yếu của Công an nhân dân
-                                </div>
-                                </Link>
-                                <div class="flex items-center mt-[6px]">
-                                    <Link :href="route('list-category', 'chinh-tri')">
-                                    <div class="text-[#076db6] font-bold text-[13px]">Kinh tế chính trị</div>
-                                    </Link>
-                                    <div class="text-[12px] ml-[13px]">15 phút trước</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="new-item flex mx-[8px] py-[8px]">
-                            <Link :href="route('post', 'chao-mung-ban-nhe')">
-                            <img src="\image\cf2a58bd5ff0b6aeefe1.jpg" alt=""
-                                class="w-[60px] min-w-[60px] h-[60px] rounded-[3px]">
-                            </Link>
-                            <div class="ml-[8px]">
-                                <Link :href="route('post', 'chao-mung-ban-nhe')">
-                                <div class="text-[15px]">
-                                    Tổng Bí thư Nguyễn Phú Trọng nhấn mạnh 3 vấn đề cốt yếu của Công an nhân dân
-                                </div>
-                                </Link>
-                                <div class="flex items-center mt-[6px]">
-                                    <Link :href="route('list-category', 'chinh-tri')">
-                                    <div class="text-[#076db6] font-bold text-[13px]">Kinh tế chính trị</div>
-                                    </Link>
-                                    <div class="text-[12px] ml-[13px]">15 phút trước</div>
-                                </div>
-                            </div>
-                        </div>
+                        </template>
                     </div>
                 </div>
             </div>
@@ -359,24 +318,26 @@ export default {
             },
             dataSearch: [],
             options: [],
-            listHagTag: [
-                {
-                    name: '',
-                    slug: ''
-                }
-            ],
-            listNewPost: []
+            listHagTag: [],
+            listNewPost: [],
+            listPostInterested: [],
+            listPartners: [
+                '/image/partner/partner-1.png',
+                '/image/partner/partner-2.png',
+                '/image/partner/partner-3.png',
+                '/image/partner/partner-4.png',
+            ]
         }
     },
     mounted() {
-        // window.onscroll = function() {
-        //     if(this.scrollY <= 56) {
-        //         document.querySelector('.header-search').classList.remove('hidden')
-        //     }
-        //     else{
-        //         document.querySelector('.header-search').classList.add('hidden')
-        //     }
-        // }
+        window.onscroll = function() {
+            if(this.scrollY <= 56) {
+                document.querySelector('.header-search').classList.remove('hidden')
+            }
+            else{
+                document.querySelector('.header-search').classList.add('hidden')
+            }
+        }
     },
     created() {
         this.fetchData()
@@ -396,6 +357,10 @@ export default {
             if (this.currentTab != 'main-full' && this.currentTab != 'main-creater') {
                 const responseNewPost = await axios.get(route('post.get-new-all'))
                 this.listNewPost = responseNewPost.data.data
+
+                const responsePostInterested = await axios.get(route('post.get-post-interested'))
+                this.listPostInterested = responsePostInterested.data.data
+
             }
         },
         convertTime(created_at) {

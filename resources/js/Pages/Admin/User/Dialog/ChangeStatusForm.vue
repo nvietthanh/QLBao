@@ -95,6 +95,9 @@ export default {
             const response = await axios.get(route('admin.accounts.get-status', row.id))
             this.dataForm = response.data.data
         },
+        cancel() {
+            this.dialogVisible = false
+        },
         async changeStatusAccount() {
             const pagram = { ...
                 {

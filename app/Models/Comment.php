@@ -13,6 +13,7 @@ class Comment extends Model
         'content',
         'account_id',
         'post_id',
+        'is_change',
         'parent_id',
         'created_at',
         'updated_at'

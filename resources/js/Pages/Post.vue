@@ -85,14 +85,27 @@
                                                 comment.commentator[0] }}</span>
                                         </div>
                                     </Link>
-                                    <div class="relative ml-[12px] mt-[-4px] pr-[52px]">
+                                    <div :id="comment.id" class="relative ml-[12px] mt-[-4px] pr-[52px] comment-load-more comment-hidden">
                                         <span class="font-bold text-[16px]">
                                             <Link :href="route('creator', comment.commentator_code)">
                                                 <span v-if="dataForm.creatorCode == comment.commentator_code">Tác giả: </span>
                                                 <span v-else>{{ comment.commentator }}: </span>
                                             </Link>
                                         </span>
-                                        <span class="text-[15px] whitespace-pre-line" v-html="comment.content"></span>
+                                        <!-- comment content -->
+                                        <span class="text-[15px] whitespace-pre-line">
+                                            <span class="comment-content-cut">
+                                                {{ comment.content.substring(0, 220) }}
+                                                <span v-if="comment.content.length > 220"  class="text-[16px]">...</span>
+                                            </span>
+                                            <span class="comment-content-all">
+                                                {{ comment.content }}
+                                            </span>
+                                            <div v-if="comment.content.length > 220" @click="loadMoreComment(comment.id)"
+                                             class="comment-load-more-btn font-bold text-[#495057] text-[14px] mt-[4px] mb-[6px] cursor-pointer">
+                                                Đọc thêm
+                                            </div>
+                                        </span>
                                         <div class="mt-[4px] text-[14px] text-[#9F9F9F] flex items-center">
                                             <span class="cursor-pointer flex items-center">
                                                 <i class="bi bi-heart-fill hover:text-[red] text-[18px]" 
@@ -104,11 +117,11 @@
                                             </span>
                                             <span class="mb-[2px] text-[13px]">{{ convertTime(comment.created_at) }}</span>
                                         </div>
-                                        <div :id="comment.id" class="mt-[4px] comment-hidden" v-if="comment.count_comment_child != 0">
+                                        <div class="mt-[4px]" v-if="comment.count_comment_child != 0">
                                             <div class="text-[17px] text-[#065fd4] px-[12px] h-[36px] leading-[36px] text-center border-[2px] ml-[-24px]
                                              border-[#fff] w-[130px] rounded-[18px] cursor-pointer hover:bg-[#f2f8ff] hover:border-[#e9ecef] btn"
                                              @click="openComment(comment.id)">
-                                                <i class="bi bi-caret-down-fill"></i>
+                                                <i class="comment-icon bi bi-caret-down-fill"></i>
                                                 <span class="ml-[6px] text-[15px]">Phản hồi</span>
                                             </div>
                                             <div class="comment-item">
@@ -124,14 +137,27 @@
                                                             </span>
                                                         </div>
                                                     </Link>
-                                                    <div class="ml-[12px] mt-[-4px]">
+                                                    <div :id="commentChild.id" class="ml-[12px] mt-[-4px] comment-child-load-more">
                                                         <span class="font-bold text-[15px]">
                                                             <Link :href="route('creator', commentChild.commentator_code)">
                                                                 <span v-if="dataForm.creatorCode == commentChild.commentator_code">Tác giả: </span>
                                                                 <span v-else>{{ commentChild.commentator }}: </span>
                                                             </Link>
                                                         </span>
-                                                        <span v-html="commentChild.content" class="text-[15px] whitespace-pre-line"></span>
+                                                        <span class="text-[15px] whitespace-pre-line">
+                                                            <span class="comment-child-content-cut">
+                                                                {{ commentChild.content.substring(0, 220) }}
+                                                                <span v-if="commentChild.content.length > 220"  class="text-[16px]">...</span>
+                                                            </span>
+                                                            <!-- comment child content -->
+                                                            <span class="comment-child-content-all">
+                                                                {{ commentChild.content }}
+                                                            </span>
+                                                            <div v-if="commentChild.content.length > 220" @click="loadMoreCommentChild(commentChild.id)"
+                                                            class="comment-child-load-more-btn font-bold text-[#495057] text-[14px] mt-[4px] mb-[6px] cursor-pointer">
+                                                                Đọc thêm
+                                                            </div>
+                                                        </span>
                                                         <div class="mt-[4px] text-[14px] text-[#9F9F9F] flex items-center">
                                                             <span class="cursor-pointer flex items-center">
                                                                 <i class="bi bi-heart-fill hover:text-[red] text-[18px]" 
@@ -141,8 +167,7 @@
                                                             <span class="ml-[24px] mb-[2px] text-[13px]">{{ convertTime(commentChild.created_at) }}</span>
                                                         </div>
                                                     </div>
-                                                    <div v-if="this.$page.props.auth.account && commentChild.commentator_code == this.$page.props.auth.account.code"
-                                                        class="btn absolute top-[-2px] right-[-52px] text-[24px] h-[36px] w-[36px] flex 
+                                                    <div class="btn absolute top-[-2px] right-[-52px] text-[24px] h-[36px] w-[36px] flex 
                                                         items-center justify-center text-center cursor-pointer rounded-[50%] hover:bg-[#e9ecef]">
                                                         <el-dropdown>
                                                             <span class="text-[24px]">
@@ -150,8 +175,17 @@
                                                             </span>
                                                             <template #dropdown>
                                                                 <el-dropdown-menu>
-                                                                    <el-dropdown-item @click="openEditCommentForm(commentChild)">Chỉnh sửa</el-dropdown-item>
-                                                                    <el-dropdown-item @click="deleteComment(commentChild)">Xóa bình luận</el-dropdown-item>
+                                                                    <template v-if="this.$page.props.auth.account && commentChild.commentator_code == this.$page.props.auth.account.code">
+                                                                        <el-dropdown-item  @click="openEditCommentForm(commentChild)">
+                                                                            Chỉnh sửa
+                                                                        </el-dropdown-item>
+                                                                        <el-dropdown-item @click="deleteComment(commentChild)">
+                                                                            Xóa bình luận
+                                                                        </el-dropdown-item>
+                                                                    </template>
+                                                                    <el-dropdown-item v-else @click="reportUser(commentChild)">
+                                                                        Báo cáo vi phạm
+                                                                    </el-dropdown-item>
                                                                 </el-dropdown-menu>
                                                             </template>
                                                         </el-dropdown>
@@ -163,8 +197,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div v-if="this.$page.props.auth.account && comment.commentator_code == this.$page.props.auth.account.code"
-                                            class="btn absolute top-[-2px] right-0 text-[24px] h-[36px] w-[36px] flex 
+                                        <div class="btn absolute top-[-2px] right-0 text-[24px] h-[36px] w-[36px] flex 
                                             items-center justify-center text-center cursor-pointer rounded-[50%] hover:bg-[#e9ecef]">
                                             <el-dropdown>
                                                 <span class="text-[24px]">
@@ -172,8 +205,17 @@
                                                 </span>
                                                 <template #dropdown>
                                                     <el-dropdown-menu>
-                                                        <el-dropdown-item @click="openEditCommentForm(comment)">Chỉnh sửa</el-dropdown-item>
-                                                        <el-dropdown-item @click="deleteComment(comment)">Xóa bình luận</el-dropdown-item>
+                                                        <template v-if="this.$page.props.auth.account && comment.commentator_code == this.$page.props.auth.account.code">
+                                                            <el-dropdown-item  @click="openEditCommentForm(comment)">
+                                                                Chỉnh sửa
+                                                            </el-dropdown-item>
+                                                            <el-dropdown-item @click="deleteComment(comment)">
+                                                                Xóa bình luận
+                                                            </el-dropdown-item>
+                                                        </template>
+                                                        <el-dropdown-item v-else @click="reportUser(comment)">
+                                                            Báo cáo vi phạm
+                                                        </el-dropdown-item>
                                                     </el-dropdown-menu>
                                                 </template>
                                             </el-dropdown>
@@ -250,65 +292,33 @@
                 </div>
             </div>
             <div class="main">
-                <div class="py-[12px] px-[12px]">
+                <div class="py-[12px] pt-[12px]">
                     <div class="heading mt-4px uppercase font-bold text-[#db562b]">
                         Bài viết liên quan
                     </div>
-                    <div class="flex mt-[18px]">
-                        <div>
-                            <Link :href="route('post', 'tam-biet-ban-nhe')">
-                                <img src="\image\cf2a58bd5ff0b6aeefe1.jpg" alt="">
-                            </Link>
-                            <div class="mr-[6px]">
-                                <Link :href="route('post', 'tam-biet-ban-nhe')">
-                                    <div class="font-bold text-[15px] mt-[8px]">
-                                        Tổng Bí thư Nguyễn Phú Trọng nhấn mạnh 3 vấn đề cốt yếu
-                                    </div>
-                                    <div class="flex items-center mt-[6px]">
-                                        <Link :href="route('list-category', 'kinh-te')">
-                                            <div class="text-[14px] text-[#076db6] font-bold">Kinh tế</div>
-                                        </Link>
-                                        <div class="text-[12px] ml-[16px]">1 giờ trước</div>
-                                    </div>
+                    <div class="mt-[18px] grid grid-cols-3 gap-3 mb-[18px]">
+                        <template v-for="post in listPostRelates">
+                            <div class="mt-[8px]">
+                                <Link :href="route('post', post.slug)">
+                                    <img :src="post.image" class="h-[200px] object-cover w-[100%] post-image">
                                 </Link>
-                            </div>
-                        </div>
-                        <div class="mx-[12px] pb-[12px]">
-                            <Link :href="route('post', 'tam-biet-ban-nhe')">
-                                <img src="\image\cf2a58bd5ff0b6aeefe1.jpg" alt="">
-                            </Link>
-                            <div class="mr-[6px]">
-                                <Link :href="route('post', 'tam-biet-ban-nhe')">
-                                    <div class="font-bold text-[15px] mt-[8px]">
-                                        Tổng Bí thư Nguyễn Phú Trọng nhấn mạnh 3 vấn đề cốt yếu
-                                    </div>
-                                    <div class="flex items-center mt-[6px]">
-                                        <Link :href="route('list-category', 'kinh-te')">
-                                            <div class="text-[14px] text-[#076db6] font-bold">Kinh tế</div>
+                                <div class="px-[2px]">
+                                    <Link :href="route('post', post.slug)">
+                                        <div class="font-bold text-[15px] mt-[8px]">{{ post.title }}</div>
+                                    </Link>
+                                    <div class="flex items-center mt-[4px]">
+                                        <Link :href="route('list-category', post.categorySlug)">
+                                            <div class="text-[14px] font-bold text-[#076db6]">{{ post.categoryName }}</div>
                                         </Link>
-                                        <div class="text-[12px] ml-[16px]">1 giờ trước</div>
+                                        <div class="ml-[16px] text-[13px] mt-[4px]">{{ convertTime(post.created_at) }}</div>
                                     </div>
-                                </Link>
+                                </div>
                             </div>
-                        </div>
-                        <div>
-                            <Link :href="route('post', 'tam-biet-ban-nhe')">
-                                <img src="\image\cf2a58bd5ff0b6aeefe1.jpg" alt="">
-                            </Link>
-                            <div class="mr-[6px]">
-                                <Link :href="route('post', 'tam-biet-ban-nhe')">
-                                    <div class="font-bold text-[15px] mt-[8px]">
-                                        Tổng Bí thư Nguyễn Phú Trọng nhấn mạnh 3 vấn đề cốt yếu
-                                    </div>
-                                    <div class="flex items-center mt-[6px]">
-                                        <Link :href="route('list-category', 'kinh-te')">
-                                            <div class="text-[14px] text-[#076db6] font-bold">Kinh tế</div>
-                                        </Link>
-                                        <div class="text-[12px] ml-[16px]">1 giờ trước</div>
-                                    </div>
-                                </Link>
-                            </div>
-                        </div>
+                        </template>
+                    </div>
+                    <div v-if="isLoadPost" class="btn mt-[28px] mx-[8px] border-[1px] border-[#adb5bd] py-[8px] 
+                        flex justify-center cursor-pointer text-[15px] active:bg-[#eff1f3]" @click="loadPost">
+                        Xem thêm bài viết
                     </div>
                 </div>
             </div>
@@ -316,6 +326,7 @@
             <LoginForm ref="loginForm" @login="login"/>
             <ShowFormReport ref="showFormReport"/>
             <EditFormComment ref="editFormComment" @change-update="fetchDataComment"/>
+            <ShowFormReportUser ref="showFormReportUser" @change-update="fetchDataComment"/>
         </template>
     </AppLayout>
 </template>
@@ -326,6 +337,7 @@ import moment from "moment";
 import { ElMessage, ElMessageBox } from 'element-plus'
 import LoginForm from '../Components/Auth/Login.vue';
 import ShowFormReport from '../Components/Post/ShowFormReport.vue';
+import ShowFormReportUser from '../Components/Post/ShowFormReportUser.vue';
 import EditFormComment from '../Components/Post/EditFormComment.vue';
 import axios from 'axios';
 
@@ -335,7 +347,8 @@ export default{
         Link,
         LoginForm,  
         ShowFormReport,
-        EditFormComment
+        EditFormComment,
+        ShowFormReportUser
     },
     data() {
         return {
@@ -360,6 +373,7 @@ export default{
                 hagtags: [],
                 hagtagNames: [],
             },
+            listPostRelates: [],
             idOpenFormComment: '',
             contentComment: '',
             contentCommentChild: '',
@@ -368,6 +382,8 @@ export default{
             pageComment: 6,
             totalcomment: 0,
             nextComment: false,
+            isLoadPost: true,
+            number_data: 6,
             errors: []
         }  
     },
@@ -376,11 +392,23 @@ export default{
     },
     methods: {
         moment,
+        async loadPost() {
+            const responseRelates = await axios.get(route('post.get-list-post-relate', 
+                {'id': this.dataForm.id, number_data: this.number_data}))
+
+            this.listPostRelates = responseRelates.data.data
+            if(responseRelates.data.meta.current_page === responseRelates.data.meta.last_page) {
+                this.isLoadPost = false
+            }
+            else{
+                this.number_data += 3
+            }
+        },
         async fetchData() {
             const response = await axios.get(route('post.get-post', this.$page.props.slug))
             this.dataForm = response.data.data
             this.fetchDataComment()
-
+            this.loadPost()
         },
         async fetchDataComment() {
             const responseComment = await axios.get(route('get-comments', {
@@ -553,16 +581,20 @@ export default{
                 this.errors.contentChild = 'Trường nội dung là bắt buộc'
             }
         },
-        openComment(id) {
-            document.getElementById(`${id}`).classList.toggle('comment-hidden')
-            document.getElementById(`${id}`).querySelector('i').classList.toggle('bi-caret-up-fill')
-        },
         loadCommentChild(comment) {
             this.comment = comment
             this.fetchDataComment()
         },
         openEditCommentForm(comment) {
-            this.$refs.editFormComment.open(comment)
+            this.$refs.editFormComment.open(comment.id)
+        },
+        reportUser(comment) {
+            if(this.$page.props.auth.account) {
+                this.$refs.showFormReportUser.open(comment.commentator_code)
+            }
+            else {
+                this.$refs.loginForm.open()
+            }
         },
         deleteComment(comment) {
             ElMessageBox.confirm(
@@ -589,7 +621,32 @@ export default{
                             })
                         })
                 })
+        },
+
+        // js default
+        openComment(id) {
+            document.getElementById(`${id}`).classList.toggle('comment-hidden')
+            document.getElementById(`${id}`).querySelector('.comment-icon').classList.toggle('bi-caret-up-fill')
+        },
+        loadMoreComment(id) {
+            document.getElementById(`${id}`).classList.toggle('comment-load-more')
+            if(document.getElementById(`${id}`).classList.contains('comment-load-more')) {
+                document.getElementById(`${id}`).querySelector('.comment-load-more-btn').textContent = "Đọc thêm"
+            }
+            else{
+                document.getElementById(`${id}`).querySelector('.comment-load-more-btn').textContent = "Ẩn bớt"
+            }
+        },
+        loadMoreCommentChild(id) {
+            document.getElementById(`${id}`).classList.toggle('comment-child-load-more')
+            if(document.getElementById(`${id}`).classList.contains('comment-child-load-more')) {
+                document.getElementById(`${id}`).querySelector('.comment-child-load-more-btn').textContent = "Đọc thêm"
+            }
+            else{
+                document.getElementById(`${id}`).querySelector('.comment-child-load-more-btn').textContent = "Ẩn bớt"
+            }
         }
+
     }
 }
 
@@ -598,9 +655,33 @@ export default{
 .comment-hidden .comment-item{
     display: none;
 }
+.comment-content-cut {
+    display: none;
+}
+.comment-content-all{
+    display: contents;
+}
+.comment-load-more .comment-content-cut {
+    display: contents;
+}
+.comment-load-more .comment-content-all {
+    display: none
+}
+.comment-child-content-cut {
+    display: none;
+}
+.comment-child-content-all{
+    display: contents;
+}
+.comment-child-load-more .comment-child-content-cut {
+    display: contents;
+}
+.comment-child-load-more .comment-child-content-all {
+    display: none
+}
 main .main {
     background-color: #fff;
-    padding: 12px;
+    padding: 12px 12px 48px 12px;
     box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
 }
