@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Api\BackEnd;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ReportAccountRequest;
 use App\Http\Requests\ReportPostRequest;
 use App\Http\Resources\PostResource;
+use App\Models\Account;
 use App\Models\AccountSavePost;
 use App\Models\Post;
+use App\Models\ReportAccount;
 use App\Models\ReportPost;
 use App\Support\Collection;
 use Illuminate\Http\Request;
@@ -171,26 +174,54 @@ class HomeController extends Controller
         if(!$post) {
             abort(404);
         }
-        else {
-            $contents = $request->content;
-            $content = str_replace(',', '. </br>', $contents);
-            $paths = [];
 
-            if($request->file('images')) {
-                foreach($request->file('images') as $image) {
-                    $path = Storage::putFile('public/posts', $image);
-                    array_push($paths, Storage::url($path));
-                }
+        $contents = $request->content;
+        $content = str_replace(',', '. </br>', $contents);
+        $paths = [];
+
+        if($request->file('images')) {
+            foreach($request->file('images') as $image) {
+                $path = Storage::putFile('public/posts', $image);
+                array_push($paths, Storage::url($path));
             }
-
-            ReportPost::create([
-                'content' => $content,
-                'image' => $paths ? json_encode($paths) : '',
-                'account_report_id' => auth('accounts')->user()->id,
-                'post_id' => $id
-            ]);
-
-            return response()->json(true);
         }
+
+        ReportPost::create([
+            'content' => $content,
+            'image' => $paths ? json_encode($paths) : '',
+            'account_report_id' => auth('accounts')->user()->id,
+            'post_id' => $id
+        ]);
+
+        return response()->json(true);
+    }
+
+    public function reportAccount(ReportAccountRequest $request, $code)
+    {
+        $account = Account::where('code', $code)->first();
+
+        if(!$account) {
+            abort(404);
+        }
+
+        $contents = $request->content;
+        $content = str_replace(',', '. </br>', $contents);
+        $paths = [];
+
+        if($request->file('images')) {
+            foreach($request->file('images') as $image) {
+                $path = Storage::putFile('public/posts', $image);
+                array_push($paths, Storage::url($path));
+            }
+        }
+
+        ReportAccount::create([
+            'content' => $content,
+            'image' => $paths ? json_encode($paths) : '',
+            'account_report_id' => auth('accounts')->user()->id,
+            'account_id' => $account->id
+        ]);
+
+        return response()->json(true);
     }
 }

@@ -22,6 +22,30 @@ class CommentController extends Controller
         return CommentResource::collection($comments);
     }
 
+    public function getComment($id)
+    {
+        $comment = Comment::find($id);
+
+        return CommentResource::make($comment);
+    }
+
+    public function updateComment($id, Request $request)
+    {
+        $account_id = auth('accounts')->user();
+        $comment = Comment::where('id', $id)->where('account_id', $account_id)->first();
+
+        if(!$comment) {
+            throw new FailException('Không thể cập nhật bình luận');
+        }
+
+        $comment->update([
+            'content' => $request->content,
+            'is_change' => 1
+        ]);
+
+        return response()->json(200);
+    }
+
     public function createComment(CommentRequest $request, $id)
     {
         $post = Post::where('id', $id)

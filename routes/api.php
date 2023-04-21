@@ -23,7 +23,9 @@ Route::get('/get-new-post', [PostController::class, 'getNewPost'])->name('post.g
 
 // List category
 Route::post('/category/get-all/{category}', [PostController::class, 'getListPostCategory'])->name('category.list-post');
+
 // Route::get('/get-post/{slugPost}', [PostController::class, 'getPost'])->name('post.get-post');
+
 Route::get('/get-list-post-creator/id={id}', [PostController::class, 'getListPostCreator'])->name('post.get-list-post-creator');
 
 Route::post('/get-list-post-hagtag/{slug}', [PostController::class, 'getListPostHagtag'])->name('post.get-list-post-hagtag');
@@ -31,6 +33,8 @@ Route::post('/get-list-post-hagtag/{slug}', [PostController::class, 'getListPost
 Route::get('/get-list-post-popular', [PostController::class, 'getListPostPopular'])->name('post.get-list-post-popular');
 
 Route::post('/get-list-post-hagtag-popular', [PostController::class, 'getListHagtagPopular'])->name('post.get-list-hagtag-popular');
+
+Route::get('/get-list-post-relates', [PostController::class, 'getListPostRelate'])->name('post.get-list-post-relate');
 
 // Infor cretor
 // Route::get('/get-infor-user/{id}', [CreatorController::class, 'getInfor'])->name('cretor.get-infor');

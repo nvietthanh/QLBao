@@ -18,9 +18,45 @@ class PostController extends Controller
         $newPosts = Post::orderBy('created_at', 'desc')
             ->where('is_approved', 1)
             ->where('status', 1)
-            ->take(10)->get();
+            ->take(16)->get();
 
         return PostResource::collection($newPosts);
+    }
+
+    public function getPostInterested()
+    {
+        $currentAccount = auth('accounts')->user();
+
+        $follows = $currentAccount->follows;
+        $followIds = [];
+
+        foreach($follows as $follow) {
+            array_push($followIds, $follow->id);
+        }
+
+        $posts = Post::whereIn('creator_id', $followIds)
+            ->orderBy('created_at', 'desc')->take(16)->get();
+
+        return PostResource::collection($posts);
+    }
+
+    public function getListPostRelate(Request $request)
+    {
+        $id = $request->id;
+        $pageNumber = $request->number_data ?? 6;
+        $post = Post::find($id);
+
+        if(!$post) {
+            abort(404);
+        }
+
+        $creator = Account::find($post->creator_id);
+        $posts = Post::where('creator_id', $creator->id)
+            ->where('id', '<>', $post->id)
+            ->orderBy('created_at', 'desc')
+            ->paginate($pageNumber);
+
+        return PostResource::collection($posts);
     }
 
     public function getListPostCategory($category)
@@ -67,6 +103,7 @@ class PostController extends Controller
         $posts = $hagtag->hastagHasPost()
             ->where('is_approved', 1)
             ->where('status', 1)
+            ->orderBy('created_at', 'desc')
             ->get();
 
         $postHagtags = (new Collection($posts))->paginate($request->limit ?? 15);
@@ -79,7 +116,8 @@ class PostController extends Controller
         $posts = Post::where('is_popular', 1)
                     ->Where('is_approved', 1)
                     ->where('status', 1)
-                    ->take(7)->get();
+                    ->orderBy('created_at', 'desc')
+                    ->take(10)->get();
         
         return PostResource::collection($posts);
     }
@@ -95,7 +133,8 @@ class PostController extends Controller
             $posts[] = PostResource::collection(
                 $hastag->hastagHasPost()->where('is_approved', 1)
                     ->where('status', 1)
-                    ->take(7)->get()
+                    ->orderBy('created_at', 'desc')
+                    ->take(10)->get()
             );
         }
 

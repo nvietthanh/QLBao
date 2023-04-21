@@ -11,7 +11,8 @@ use App\Http\Controllers\Api\BackEnd\Creator\PostController;
 use App\Http\Controllers\Api\BackEnd\FollowController;
 use App\Http\Controllers\Api\BackEnd\HomeController;
 use App\Http\Controllers\Api\BackEnd\ProfileController;
-use App\Http\Controllers\Api\FrontEnd\CreatorController; 
+use App\Http\Controllers\Api\FrontEnd\CreatorController;
+use App\Http\Controllers\Api\FrontEnd\PostController as HomePostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,20 +32,21 @@ use Illuminate\Support\Facades\Route;
 // });
 
 
-Route::middleware(['is_approved', 'auth:accounts', 'is_creator'])->prefix('creator')->name('creator.')->group(function () {
-    Route::apiResource('posts', PostController::class);
-    Route::post('/posts/{id}', [PostController::class, 'update'])
-        ->name('posts.update');
-});
-
-
-
 // Get comment
 Route::middleware('is_approved')->get('/get-comments', [CommentController::class, 'getComments'])->name('get-comments');
 Route::middleware('is_approved')->get('/get-post/{slugPost}', [HomeController::class, 'getPost'])->name('post.get-post');
 
 // Infor creator
 Route::get('/get-infor-user/{id}', [CreatorController::class, 'getInfor'])->name('cretor.get-infor');
+
+Route::Get('/get-new-post-interested', [HomePostController::class, 'getPostInterested'])->name('post.get-post-interested');
+
+// creator
+Route::middleware(['is_approved', 'auth:accounts', 'is_creator'])->prefix('creator')->name('creator.')->group(function () {
+    Route::apiResource('posts', PostController::class);
+    Route::post('/posts/{id}', [PostController::class, 'update'])
+        ->name('posts.update');
+});
 
 Route::middleware([
     'is_approved',
@@ -56,6 +58,10 @@ Route::middleware([
 
     // create comment
     Route::post('/comment/{id}', [CommentController::class, 'createComment'])->name('create-comment');
+    // get comment
+    Route::get('/get-comment/{id}', [CommentController::class, 'getComment'])->name('get-comment');
+    // save comment
+    Route::post('/update-comment/{id}', [CommentController::class, 'updateComment'])->name('update-comment');
     Route::post('/comment-child/{id}', [CommentController::class, 'createCommentChild'])->name('create-comment-child');
     // like comment
     Route::get('/like-comments/{id}', [CommentController::class, 'likeComment'])->name('like-comment');
@@ -85,6 +91,8 @@ Route::middleware([
     // report post
     Route::post('/report-post/{id}', [HomeController::class, 'reportPost'])->name('report-post');
 
+    // report account
+    Route::post('/report-account/{id}', [HomeController::class, 'reportAccount'])->name('report-account');
 });
 
 

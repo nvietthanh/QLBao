@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-model="dialogVisible" id="show-report-post" class="bg-[#f4f1f8] max-h-[90%] overflow-scroll" width="600px" 
+    <el-dialog v-model="dialogVisible" id="show-report-account" class="bg-[#f4f1f8] max-h-[90%] overflow-scroll" width="600px" 
      style="margin-top: 2% !important;" :show-close="true">
         <template #header>
             <div class="text-center font-bold text-[18px]">
@@ -124,7 +124,7 @@ export default {
                 for(let image of this.dataForm.images) {
                     pagram.append('images[]', image.raw)
                 }
-                await axios.post(route('report-post', this.postId), pagram)
+                await axios.post(route('report-account', this.postId), pagram)
                     .then(response => {
                         this.dialogVisible = false
                         this.clearData()
@@ -144,10 +144,10 @@ export default {
 }
 </script>
 <style>
-#show-report-post .el-dialog__headerbtn {
+#show-report-account .el-dialog__headerbtn {
     font-size: 24px !important;
 }
-#show-report-post.el-dialog {
+#show-report-account.el-dialog {
     border-radius: 4px !important;
     position: fixed !important;
     left: 0;
@@ -156,7 +156,7 @@ export default {
 #showImage > .el-dialog__header {
     border-bottom: none !important;
 }
-#show-report-post > .el-dialog__header {
+#show-report-account > .el-dialog__header {
     position: fixed;
     width: 600px;
     background-color: #fff;
@@ -164,14 +164,14 @@ export default {
     margin-right: 0 !important;
     z-index: 100;
 }
-#show-report-post .el-select,
-#show-report-post .el-date-editor {
+#show-report-account .el-select,
+#show-report-account .el-date-editor {
     width: 100% !important;
 }
-#show-report-post .el-input__inner {
+#show-report-account .el-input__inner {
     margin-top: 2px;
 }
-#show-report-post .creator {
+#show-report-account .creator {
     margin: 0 12px;
     padding: 0 12px;
     border-left: 2px solid rgba(0, 0, 0, 0.55);

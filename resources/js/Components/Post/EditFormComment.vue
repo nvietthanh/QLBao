@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-model="dialogVisible" id="show-report-account" class="bg-[#f4f1f8] max-h-[90%] overflow-scroll" width="500px" 
+    <el-dialog v-model="dialogVisible" id="show-edit-comment" class="bg-[#f4f1f8] max-h-[90%] overflow-scroll" width="620px" 
      style="margin-top: 10% !important;" :show-close="true">
         <template #header>
             <div class="text-center font-bold text-[18px]">
@@ -11,7 +11,7 @@
                 <div>
                     <div class="text-[16px] font-bold">Bình luận:</div>
                     <div class="py-[12px] w-[100%]">
-                        <el-input v-model="ga" type="textarea" :autosize="{ minRows: 3, maxRows: 5 }"
+                        <el-input v-model="dataForm.content" type="textarea" :autosize="{ minRows: 4, maxRows: 5 }"
                              placeholder="Nhập nội dung" />
                     </div>
                 </div>
@@ -25,7 +25,7 @@
                         Hủy bỏ
                     </div>
                     <div class="cursor-pointer flex justify-center items-center w-[110px] ml-[18px] rounded-[4px] bg-[#007bff] py-[4px] h-[32px] text-[15px] text-white"
-                        @click="sendReport">
+                        @click="saveComment()">
                         Xác nhận
                     </div>
                 </div>
@@ -49,15 +49,7 @@ export default {
     data() {
         return {
             dialogVisible: false,
-            isDefault: false,
-            dialogVisiblePreview: false,
-            dialogImageUrl: '',
-            postId: '',
-            dataForm: {
-                images: [],
-                defaultContent: '',
-                content: []
-            }
+            dataForm: {}
         }
     },
     watch: {
@@ -70,26 +62,49 @@ export default {
     methods: {
         moment,
         clearData() {
-            this.dataForm.images = []
-            this.dataForm.defaultContent = ''
-            this.dataForm.content = []
-            this.isDefault = false
-            this.dialogVisiblePreview = false
-            this.postId = ''
-            this.dialogImageUrl = ''
+            this.dataForm = {}
         },
         async open(id) {
             this.dialogVisible = true
-            this.postId = id
+            axios.get(route('get-comment', id))
+                .then(response => {
+                    this.dataForm = response.data.data
+                })
         },
+        cancel() {
+            this.dialogVisible = false
+            this.dataForm = {}
+        },
+        saveComment() {
+            const pagram = {
+                ...{
+                    content: this.dataForm.content
+                }
+            }
+            axios.post(route('update-comment', this.dataForm.id), pagram)
+                .then(response => {
+                    this.dialogVisible = false
+                    this.$emit('change-update')
+                    ElMessage({
+                        type: 'success',
+                        message: 'Cập nhật bình luận thành công',
+                    })
+                })
+                .catch(error => {
+                    ElMessage({
+                        type: 'error',
+                        message: error.response.data.message,
+                    })
+                })
+        }
     },
 }
 </script>
 <style>
-#show-report-account .el-dialog__headerbtn {
+#show-edit-comment .el-dialog__headerbtn {
     font-size: 24px !important;
 }
-#show-report-account.el-dialog {
+#show-edit-comment.el-dialog {
     border-radius: 4px !important;
     position: fixed !important;
     left: 0;
@@ -98,22 +113,22 @@ export default {
 #showImage > .el-dialog__header {
     border-bottom: none !important;
 }
-#show-report-account > .el-dialog__header {
+#show-edit-comment > .el-dialog__header {
     position: fixed;
-    width: 500px;
+    width: 620px;
     background-color: #fff;
     border-bottom: 1px solid #ccc;
     margin-right: 0 !important;
     z-index: 100;
 }
-#show-report-account .el-select,
-#show-report-account .el-date-editor {
+#show-edit-comment .el-select,
+#show-edit-comment .el-date-editor {
     width: 100% !important;
 }
-#show-report-account .el-input__inner {
+#show-edit-comment .el-input__inner {
     margin-top: 2px;
 }
-#show-report-account .creator {
+#show-edit-comment .creator {
     margin: 0 12px;
     padding: 0 12px;
     border-left: 2px solid rgba(0, 0, 0, 0.55);
