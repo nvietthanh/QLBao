@@ -63,6 +63,11 @@ class HomeController extends Controller
         return Inertia::render('ListPostHagtag', ['hagtag' => $slug, 'hagtagName' => $hagtag->name]); 
     }
 
+    public function search($search)
+    {
+        return Inertia::render('ListSearch', ['search' => $search]);
+    }
+
     public function termOfUse()
     {
         return Inertia::render('TermOfUse');

@@ -42,4 +42,9 @@ class HomeController extends Controller
     {
         return Inertia::render('Admin/Report/ListReportPost');
     }
+
+    public function termOfUse()
+    {
+        return Inertia::render('Admin/TermOfUse');
+    }
 }

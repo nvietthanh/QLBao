@@ -2,7 +2,7 @@
     <header class="fixed top-0 left-0 right-0 z-1000">
         <div class="header-search">
             <div class="flex items-center h-[62px] bg-[#ffffff] text-white">
-                <div class="main">
+                <div class="mx-auto max-w-[970px] w-[970px]">
                     <div class="row">
                         <div class="col-2 flex items-center cursor-pointer text-black pr-5">
                             <Link :href="route('home')">
@@ -10,7 +10,8 @@
                             </Link>
                         </div>
                         <div class="col-6 mt-1 flex items-center search relative">
-                            <Dropdown align="left" class="right-0 w-[100%] text-[#000]" :contentClasses="[backgroundColor]">
+                            <Dropdown align="left" class="right-0 w-[100%] text-[#000]" :contentClasses="[backgroundColor]"
+                                @click="cleareDataSearch">
                                 <template #trigger>
                                     <el-input v-model="valueSearch.search" placeholder="Nhập nội dung tìm kiếm" clearable
                                         @keyup="searchData()"/>
@@ -23,11 +24,18 @@
                                         <div v-else class="pb-[12px]">
                                             <template  v-for="post in dataSearch">
                                                 <a :href="route('post', post.slug)">
-                                                    <div class="header-title text-[14px] px-[12px] py-[6px] hover:text-[#0d6efd] hover:bg-[#e9ecef]">
+                                                    <div class="header-title text-[14px] px-[12px] py-[6px] hover:text-[#0d6efd]
+                                                         hover:bg-[#e9ecef]">
                                                         {{ post.title }}
                                                     </div>
                                                 </a>
                                             </template>
+                                            <a :href="route('search', valueSearch.search)">
+                                                <div class="header-title text-[14px] px-[12px] py-[6px] hover:text-[#0d6efd] 
+                                                  hover:bg-[#e9ecef] text-[#17a2b8]">
+                                                    Xem thêm kết quả '{{ valueSearch.search }}'
+                                                </div>
+                                            </a>
                                         </div>
                                     </div>
                                 </template>
@@ -98,7 +106,7 @@
                                     </el-dropdown-menu>
                                 </template>
                             </el-dropdown>
-                            <i class="bi bi-phone cursor-pointer mt-[2px]" style="font-size: 1.4rem;"></i>
+                            <!-- <i class="bi bi-phone cursor-pointer mt-[2px]" style="font-size: 1.4rem;"></i> -->
                         </div>
                     </div>
                 </div>
@@ -106,8 +114,8 @@
         </div>
         <div class="header-main">
             <div class="flex items-center bg-[#17a2b8] text-white">
-                <div class="main flex items-center py-[2px]">
-                    <div class="main flex items-center">
+                <div class="max-w-[970px] w-[970px] mx-auto flex justify-between items-center py-[2px]">
+                    <div class="flex items-center">
                         <Link :href="route('home')">
                             <div class="main-item hover:bg-[#22b1c7]" :class="{ 'active-tab': 'home' == currentTab }">
                                 Trang chủ
@@ -211,7 +219,7 @@
                             Đối tác hợp tác
                         </div>
                         <div class="mt-[12px]">
-                            <el-carousel height="150px">
+                            <el-carousel height="150px" :interval="10000">
                                 <el-carousel-item v-for="partner in listPartners">
                                     <img :src="partner" alt="" class="object-contain">
                                 </el-carousel-item>
@@ -250,30 +258,40 @@
     </main>
     <footer>
         <div class="border-t-2 border-zinc-300 bg-[#17a2b8] py-2">
-            <div class="main flex justify-between">
+            <div class="max-w-[970px] mx-auto flex justify-between">
                 <img src="" alt="Logo bao moi">
-                <div class="search">
-                    <el-input v-model="input" placeholder="Nhập nội dung tìm kiếm" clearable />
+                <div class="w-[450px]">
+                    <el-input v-model="searchFooter" placeholder="Nhập nội dung tìm kiếm" clearable @keyup.enter="openPageSearch"/>
                 </div>
             </div>
         </div>
-        <div class="border-t-2 border-zinc-300 py-3">
-            <div class="main flex justify-between">
-                <div class="infor">
+        <div class="border-t-2 border-zinc-300 py-3 mb-[58px]">
+            <div class="max-w-[970px] mx-auto flex justify-between text-[15px]">
+                <div class="flex-1">
                     <div><b>Báo dành cho người Việt</b></div>
                     <div>Đánh giá rất hay trên các nền tảng</div>
                 </div>
-                <div class="infor">
+                <div class="flex-auto max-w-[440px] px-[24px]">
                     <div>Tổng biên tập: Nguyễn Viết Thanh</div>
                     <div>Địa chỉ: Thôn Đồng Trữ, Xã Phú Nghĩa, Huyện Chương Mỹ, TP. Hà Nội </div>
                     <div>Số điện thoại: 0358387102 </div>
                 </div>
-                <div class="infor">
-                    © 1997-2023. Toàn bộ bản quyền thuộc
-                    <Link :href="route('home')">Nguyễn Viết Thanh</Link>
+                <div class="flex-1 text-right">
+                    <div>
+                        © 1997-2023. Toàn bộ bản quyền thuộc quyền sở hữu của lập trình viên
+                        <Link :href="route('home')" class="font-bold hover:underline">Nguyễn Viết Thanh</Link>
+                    </div>
+                    <div class="my-[5px] mt-[18px] hover:underline">
+                        <Link :href="route('termofuse')">Điều khoản sử dụng</Link>
+                    </div>
+                    <div class="my-[5px] hover:underline">
+                        <Link>Chính sách bảo mật</Link>
+                    </div>
+                    <div class="my-[5px] hover:underline">
+                        <Link>Tiêu chuẩn vi phạm cộng đồng</Link>
+                    </div>
                 </div>
             </div>
-
         </div>
     </footer>
 
@@ -326,11 +344,14 @@ export default {
                 '/image/partner/partner-2.png',
                 '/image/partner/partner-3.png',
                 '/image/partner/partner-4.png',
-            ]
+            ],
+            searchFooter: ''
         }
     },
     mounted() {
+        const thisChild = this.$refs.dropdown1
         window.onscroll = function() {
+            thisChild.handleClose()
             if(this.scrollY <= 56) {
                 document.querySelector('.header-search').classList.remove('hidden')
             }
@@ -345,12 +366,23 @@ export default {
     methods: {
         moment,
         async searchData() {
-            const pagram = { ...this.valueSearch }
-            await axios.get(route('search-header', pagram))
-                .then(response => {
-                    this.dataSearch = response.data.data
-                })
-                .catch(() => { })
+            if(this.valueSearch.search) {
+                const pagram = { ...this.valueSearch }
+                await axios.get(route('search-header', pagram))
+                    .then(response => {
+                        this.dataSearch = response.data.data
+                    })
+                    .catch(() => { })
+            }
+            else {
+                this.dataSearch = []
+                this.valueSearch.search = ''
+            }
+        },
+        cleareDataSearch() {
+            if(!this.valueSearch.search) {
+                this.dataSearch = []
+            }
         },
         async fetchData() {
             this.listHagTag = this.$page.props.hagtags
@@ -407,9 +439,6 @@ export default {
         showClick() {
             this.$refs.dropdown1.handleOpen()
         },
-        searchNews() {
-            alert(this.input)
-        },
         redirctPage(url, tab) {
             this.$inertia.visit(route(url))
         },
@@ -439,6 +468,9 @@ export default {
                     })
             })
             .catch(() => {})
+        },
+        openPageSearch() {
+            this.$inertia.visit(route('search', this.searchFooter))
         }
     }
 }
@@ -462,10 +494,6 @@ header {
 }
 header .absolute {
     width: 100%;
-}
-header .main {
-    width: 970px;
-    margin: 0 auto;
 }
 header .header-extend {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
@@ -519,19 +547,6 @@ main .container-fuild {
 main .container-fuild .main-1 {
     margin-right: 16px;
     flex: 2;
-}
-footer .main {
-    width: 970px;
-    margin: 0 auto;
-}
-footer .main .infor {
-    font-size: 0.9rem;
-}
-footer .main .infor:nth-child(2) {
-    padding: 0 24px;
-}
-footer .main .search {
-    width: 450px;
 }
 .post-new-title {
     max-height: 48px;
