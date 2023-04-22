@@ -401,7 +401,7 @@ export default{
                 this.isLoadPost = false
             }
             else{
-                this.number_data += 3
+                this.number_data += 6
             }
         },
         async fetchData() {

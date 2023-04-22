@@ -27,7 +27,23 @@ class PostController extends Controller
     {
         $currentAccount = auth('accounts')->user();
 
-        $follows = $currentAccount->follows;
+        if(!$currentAccount) {
+            $posts = Post::orderBy('created_at', 'desc')
+                ->orderBy('count_view', 'desc')->take(16)->get();
+
+            return PostResource::collection($posts);
+        }
+        else {
+            $follows = $currentAccount ? $currentAccount->follows : null;
+
+            if($follows->count() == 0) {
+                $posts = Post::orderBy('created_at', 'desc')
+                ->orderBy('count_view', 'desc')->take(16)->get();
+
+                return PostResource::collection($posts);
+            }
+        }
+
         $followIds = [];
 
         foreach($follows as $follow) {
@@ -59,7 +75,7 @@ class PostController extends Controller
         return PostResource::collection($posts);
     }
 
-    public function getListPostCategory($category)
+    public function getListPostCategory($category, Request $request)
     {
         $category = Category::where('slug', $category)
             ->first();
@@ -71,7 +87,8 @@ class PostController extends Controller
         $listPostCategory = Post::where('category_id', $category->id)
             ->where('is_approved', 1)
             ->where('status', 1)
-            ->orderBy('created_at', 'desc')->paginate(10);
+            ->orderBy('created_at', 'desc')
+            ->paginate($request->limit ?? 18);
 
         return PostResource::collection($listPostCategory);
     }
@@ -91,7 +108,7 @@ class PostController extends Controller
             ->where('is_approved', 1)
             ->where('status', 1)
             ->orderBy('created_at', 'desc')
-            ->paginate($request->number_data ? $request->number_data : 12);
+            ->paginate($request->number_data ?? 12);
 
         return PostResource::collection($posts);
     }
@@ -149,7 +166,7 @@ class PostController extends Controller
             ->where('is_approved', 1)
             ->where('status', 1)
             ->orderBy('created_at', 'desc')
-            ->take(6)->get();
+            ->paginate($request->limit ?? 7);
 
         return PostResource::collection($posts);
     }

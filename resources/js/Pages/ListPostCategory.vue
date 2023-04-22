@@ -64,7 +64,7 @@ export default{
     data() {
         return {
             filter: {
-                limit: 15,
+                limit: 14,
                 page: 1,
             },
             paginate: [],

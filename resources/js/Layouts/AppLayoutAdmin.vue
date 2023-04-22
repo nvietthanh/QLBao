@@ -29,7 +29,7 @@
                                 </div>
                             </Link>
                             <div class="text-[14px] h-[36px] flex items-center pl-[18px] cursor-pointer hover:bg-[#dee2e6]"
-                              @click="logout">
+                                @click="logout">
                                 <span class="text-[16px]"><i class="bi bi-box-arrow-right"></i></span>
                                 <span class="ml-[8px]">Đăng xuất</span>
                             </div>
@@ -40,18 +40,43 @@
         </div>
     </header>
     <main>
-        <div id="slide" class="fixed top-[56px] bottom-0 w-[260px] border-r-[2px] bg-[#4e73df] text-white py-[12px]"
+        <div id="slide" class="fixed top-[56px] bottom-0 w-[286px] border-r-[2px] bg-[#4e73df] text-white pt-[12px]
+            pb-[58px] max-h-[100%] overflow-y-scroll"
          :class="{ 'slide-menu' : !isOpenMenu }">
-            <div class="w-[100%] mt-[32px]">                    
+            <div class="w-[100%]">                    
                 <div v-for="menu in menus" class="text-[15px]">
-                    <Link :href="route(menu.route)">
-                        <div class="px-[24px] py-[12px] hover:bg-[#6f8cdf] flex items-center
-                         cursor-pointer border-b-[1px]"
-                          :class="{ 'bg-[#6f8cdf]' : menu.tab == currentTab }">
-                            <div v-html="menu.icon" class="text-[18px] w-[24px]"></div>
-                            <div class="ml-[8px]">{{ menu.name }}</div>
+                    <template v-if="menu.route">
+                        <Link :href="route(menu.route)">
+                            <div class="px-[24px] py-[10px] hover:bg-[#6f8cdf] flex items-center
+                            cursor-pointer"
+                            :class="{ 'bg-[#6f8cdf]' : menu.tab == currentTab }">
+                                <div v-html="menu.icon" class="text-[18px] w-[24px]"></div>
+                                <div class="mx-[8px]">{{ menu.name }}</div>
+                            </div>
+                        </Link>
+                    </template>
+                    <template v-else>
+                        <div class="menu" :class="{ 'menu-active' : currentTab == menu.tab }">
+                            <div class="px-[24px] py-[10px] hover:bg-[#6f8cdf] flex items-center cursor-pointer">
+                                <div v-html="menu.icon" class="text-[18px] w-[24px]"></div>
+                                <div class="mx-[8px]">{{ menu.name }}</div>
+                                <span class="text-[12px]">
+                                    <i class="bi bi-chevron-down"></i>
+                                    <i class="bi bi-chevron-up"></i>
+                                </span>
+                            </div>
+                            <div class="menu-childs ml-[32px]">
+                                <div v-for="menuChild in menu.menuChild" class="text-[15px]">
+                                    <Link :href="route(menuChild.route)">
+                                        <div class="px-[24px] py-[12px] hover:bg-[#6f8cdf] flex items-center cursor-pointer"
+                                        :class="{ 'bg-[#6f8cdf]' : menuChild.tab == currentTabChild }">
+                                            {{ menuChild.name }}
+                                        </div>
+                                    </Link>
+                                </div>
+                            </div>
                         </div>
-                    </Link>
+                    </template>
                 </div>
             </div>
             <form method="POST" @click="logout" class="flex justify-center">
@@ -66,7 +91,7 @@
             <slot name="main-full"/>
         </div>
     </main>
-    <footer :class="{ 'ml-[260px]' : isOpenMenu }">
+    <footer :class="{ 'ml-[270px]' : isOpenMenu }">
         <div class="mx-[18px] flex justify-between my-[24px] text-[14px] text-[#6c757d]">
             <div>Copyright © Nguyễn Viết Thanh</div>
             <div>Privacy Policy · Terms & Conditions</div>
@@ -88,6 +113,7 @@ export default {
     props: {
         title: String,
         currentTab: { type: String, required: true },
+        currentTabChild: { type: String, required: true },
         backgroundColor: {
             type: String,
             default: "bg-[#fff]",
@@ -132,7 +158,29 @@ export default {
                     route: 'admin.list-report-account',
                     tab: 'tab-5'
                 },
-                
+                {
+                    icon: '<i class="bi bi-fullscreen"></i>',
+                    name: 'Trang chủ',
+                    route: '',
+                    tab: 'tab-6',
+                    menuChild: [
+                        {
+                            name: 'Điều khoản sử dụng',
+                            route: 'admin.term-of-use',
+                            tab: 'tab-1'
+                        },
+                        {
+                            name: 'Chính sách bảo mật',
+                            route: 'admin.dashboard',
+                            tab: 'tab-2'
+                        },
+                        {
+                            name: 'Điều khoản sử dụng',
+                            route: 'admin.dashboard',
+                            tab: 'tab-3'
+                        },
+                    ]
+                }
             ],
             isOpenMenu: true,
         }
@@ -167,5 +215,43 @@ header,
     -moz-user-select: none!important;
     -ms-user-select: none!important;
     user-select: none!important;
+}
+
+#slide::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+#slide::-webkit-scrollbar-track {
+    background: #fff;
+}
+
+/* Handle */
+#slide::-webkit-scrollbar-thumb {
+    background: #ced4da;
+    border-radius: 10px;
+}
+
+.menu:hover .menu-childs,
+.menu-active .menu-childs {
+    display: block;
+    transition: all 3s linear;
+}
+.menu-childs {
+    display: none;
+}
+.bi-chevron-down {
+    display: none;
+}
+.bi-chevron-up {
+    display: contents;
+}
+.menu:hover .bi-chevron-up,
+.menu-active .bi-chevron-up {
+    display: none;
+}
+.menu:hover .bi-chevron-down,
+.menu-active .bi-chevron-down {
+    display: contents;
 }
 </style>
