@@ -49,6 +49,8 @@ Route::middleware('is_approved')->group(function () {
     Route::get('/creator/id={id}', [HomeController::class, 'creator'])->name('creator');
     Route::get('/hagtag/{slug}', [HomeController::class, 'listPostHagtag'])->name('list-post-hagtag');
     Route::get('/dieu-khoan-su-dung', [HomeController::class, 'termOfUse'])->name('termofuse');
+    Route::get('/chinh-sach-bao-mat', [HomeController::class, 'privatePolicy'])->name('private-policy');
+    Route::get('/lien-he', [HomeController::class, 'aboutUs'])->name('about-us');    
 });
 
 Route::middleware([
@@ -98,4 +100,8 @@ Route::middleware([
     Route::get('/report/posts', [AdminHomeController::class, 'listReportPost'])->name('list-report-post');
 
     Route::get('/term-of-use', [AdminHomeController::class, 'termOfUse'])->name('term-of-use');
+
+    Route::get('/private-policy', [AdminHomeController::class, 'privatePolicy'])->name('private-policy');
+
+    Route::get('/about-us', [AdminHomeController::class, 'AboutUs'])->name('about-us');
 });

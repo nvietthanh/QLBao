@@ -2,6 +2,9 @@
 
 // use App\Http\Controllers\Api\BackEnd\CategoryController;
 
+use App\Http\Controllers\Api\BackEnd\Admin\AboutUsController;
+use App\Http\Controllers\Api\BackEnd\Admin\PrivatePolicyController;
+use App\Http\Controllers\Api\BackEnd\Admin\TermOfUseController;
 use App\Http\Controllers\Api\BackEnd\Creator\HagTagController;
 use App\Http\Controllers\Api\FrontEnd\PostController;
 use App\Http\Controllers\Api\FrontEnd\CreatorController;
@@ -47,3 +50,10 @@ Route::get('/search-header', [PostController::class, 'searchHeader'])->name('sea
 
 // List Hagtag
 Route::get('/list-hagtag', [HagTagController::class, 'getAllHagTag'])->name('list-hagtag');
+
+// Page
+Route::get('/get-term-of-use', [TermOfUseController::class, 'index'])->name('get-term-of-use');
+Route::get('/get-private-policy', [PrivatePolicyController::class, 'index'])->name('get-private-policy');
+Route::get('/get-about-us', [AboutUsController::class, 'index'])->name('get-about-us');
+Route::post('/send-contact', [AboutUsController::class, 'send'])->name('send-contact');
+

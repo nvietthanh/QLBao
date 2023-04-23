@@ -5,15 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AccountSavePost extends Model
+class Page extends Model
 {
     use HasFactory;
 
-    protected $table = 'account_save_post';
-
     protected $fillable = [
-        'account_id',
-        'post_id',
+        'type',
+        'title',
+        'description',
+        'content',
+        'images',
         'created_at',
         'updated_at'
     ];

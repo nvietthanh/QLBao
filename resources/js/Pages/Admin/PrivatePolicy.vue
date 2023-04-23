@@ -1,8 +1,8 @@
 <template>
-    <AppLayoutAdmin :currentTab="'tab-6'" :currentTabChild="'tab-1'">
+    <AppLayoutAdmin :currentTab="'tab-6'" :currentTabChild="'tab-2'">
         <template v-slot:main-full>
             <div class="mt-[12px] flex text-[18px] font-bold uppercase">
-                Điều khoản sử dụng
+                Chính sách bảo mật
             </div>
             <div class="my-[24px]">
                 <div class="mb-[12px]">
@@ -27,7 +27,7 @@
                         Hủy bỏ
                     </div>
                     <div class="cursor-pointer flex justify-center items-center w-[110px] ml-[18px] rounded-[4px] bg-[#007bff]
-                      py-[4px] h-[32px] text-[15px] text-white" @click="updateTermOfUse">
+                      py-[4px] h-[32px] text-[15px] text-white" @click="updatePrivatePolicy">
                         Xác nhận
                     </div>
                 </div>
@@ -62,16 +62,16 @@ export default{
     },
     methods: {
         fetchData() {
-            axios.get(route('admin.get-term-of-use'))
+            axios.get(route('admin.get-private-policy'))
                 .then(response => {
                     this.dataForm.title = response.data.title
                     this.$refs['content'].editorData = response.data.content
                 })
         },
-        updateTermOfUse() {
+        updatePrivatePolicy() {
             this.errors = []
             ElMessageBox.confirm(
-                    `Bạn có muốn cập nhật điểu khoản sử dụng không?`,
+                    `Bạn có muốn cập nhật chính sách bảo mật không?`,
                     'Warning',
                     {
                         confirmButtonText: 'Xác nhận',
@@ -84,12 +84,12 @@ export default{
                     const pagram = new FormData()
                     pagram.append('title', this.dataForm.title ?? '')
                     pagram.append('content', this.$refs['content'].editorData ?? '')
-                    axios.post(route('admin.update-term-of-use'), pagram)
+                    axios.post(route('admin.update-private-policy'), pagram)
                         .then(response => {
                             this.fetchData()
                             ElMessage({
                                 type: 'success',
-                                message: 'Cập nhật điểu khoản sử dụng thành công',
+                                message: 'Cập nhật chính sách bảo mật thành công',
                             })
                         })
                         .catch(error => {

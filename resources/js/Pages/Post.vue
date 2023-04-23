@@ -108,7 +108,7 @@
                                         </span>
                                         <div class="mt-[4px] text-[14px] text-[#9F9F9F] flex items-center">
                                             <span class="cursor-pointer flex items-center">
-                                                <i class="bi bi-heart-fill hover:text-[red] text-[18px]" 
+                                                <i class="bi bi-hand-thumbs-up-fill hover:text-[red] text-[18px]" 
                                                   :class="{ 'text-[red]' : comment.is_like_comment }" @click="changeStatusLike(comment)"></i>
                                                 <span v-if="comment.count_like_comment > 0" class="ml-[4px] mb-[2px]">{{ comment.count_like_comment }}</span>
                                             </span>
@@ -160,7 +160,7 @@
                                                         </span>
                                                         <div class="mt-[4px] text-[14px] text-[#9F9F9F] flex items-center">
                                                             <span class="cursor-pointer flex items-center">
-                                                                <i class="bi bi-heart-fill hover:text-[red] text-[18px]" 
+                                                                <i class="bi bi-hand-thumbs-up-fill hover:text-[red] text-[18px]" 
                                                                 :class="{ 'text-[red]' : commentChild.is_like_comment }" @click="changeStatusLike(commentChild)"></i>
                                                                 <span v-if="commentChild.count_like_comment > 0" class="ml-[4px] mb-[2px]">{{ commentChild.count_like_comment }}</span>
                                                             </span>
