@@ -44,7 +44,7 @@
             pb-[58px] max-h-[100%] overflow-y-scroll"
          :class="{ 'slide-menu' : !isOpenMenu }">
             <div class="w-[100%]">                    
-                <div v-for="menu in menus" class="text-[15px]">
+                <div v-for="menu in menus" class="text-[15px]" :id="menu.tab">
                     <template v-if="menu.route">
                         <Link :href="route(menu.route)">
                             <div class="px-[24px] py-[10px] hover:bg-[#6f8cdf] flex items-center
@@ -57,7 +57,8 @@
                     </template>
                     <template v-else>
                         <div class="menu" :class="{ 'menu-active' : currentTab == menu.tab }">
-                            <div class="px-[24px] py-[10px] hover:bg-[#6f8cdf] flex items-center cursor-pointer">
+                            <div class="px-[24px] py-[10px] hover:bg-[#6f8cdf] flex items-center cursor-pointer"
+                              @click="openMenuChild(menu.tab)">
                                 <div v-html="menu.icon" class="text-[18px] w-[24px]"></div>
                                 <div class="mx-[8px]">{{ menu.name }}</div>
                                 <span class="text-[12px]">
@@ -87,11 +88,11 @@
                 </div>
             </form>
         </div>
-        <div class="mt-[57px] min-h-[630px] py-[12px] px-[24px]" :class="{ 'px-[28px]' : !isOpenMenu, 'ml-[260px]' : isOpenMenu}">
+        <div class="mt-[57px] min-h-[630px] py-[12px] px-[24px]" :class="{ 'px-[28px]' : !isOpenMenu, 'ml-[280px]' : isOpenMenu}">
             <slot name="main-full"/>
         </div>
     </main>
-    <footer :class="{ 'ml-[270px]' : isOpenMenu }">
+    <footer :class="{ 'ml-[280px]' : isOpenMenu }">
         <div class="mx-[18px] flex justify-between my-[24px] text-[14px] text-[#6c757d]">
             <div>Copyright © Nguyễn Viết Thanh</div>
             <div>Privacy Policy · Terms & Conditions</div>
@@ -165,19 +166,19 @@ export default {
                     tab: 'tab-6',
                     menuChild: [
                         {
+                            name: 'Liên hệ',
+                            route: 'admin.about-us',
+                            tab: 'tab-3'
+                        },
+                        {
                             name: 'Điều khoản sử dụng',
                             route: 'admin.term-of-use',
                             tab: 'tab-1'
                         },
                         {
                             name: 'Chính sách bảo mật',
-                            route: 'admin.dashboard',
+                            route: 'admin.private-policy',
                             tab: 'tab-2'
-                        },
-                        {
-                            name: 'Điều khoản sử dụng',
-                            route: 'admin.dashboard',
-                            tab: 'tab-3'
                         },
                     ]
                 }
@@ -193,6 +194,9 @@ export default {
         },
         logout() {
             Inertia.get(route("admin.logout"));
+        },
+        openMenuChild(menu) {
+            document.getElementById(menu).querySelector('.menu').classList.toggle('menu-active')
         }
     }
 }
@@ -232,7 +236,7 @@ header,
     border-radius: 10px;
 }
 
-.menu:hover .menu-childs,
+/* .menu:hover .menu-childs, */
 .menu-active .menu-childs {
     display: block;
     transition: all 3s linear;
@@ -246,11 +250,11 @@ header,
 .bi-chevron-up {
     display: contents;
 }
-.menu:hover .bi-chevron-up,
+/* .menu:hover .bi-chevron-up, */
 .menu-active .bi-chevron-up {
     display: none;
 }
-.menu:hover .bi-chevron-down,
+/* .menu:hover .bi-chevron-down, */
 .menu-active .bi-chevron-down {
     display: contents;
 }

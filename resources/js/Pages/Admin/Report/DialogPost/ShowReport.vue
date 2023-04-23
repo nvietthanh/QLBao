@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-model="dialogVisible" id="show-report-account" class="bg-[#f4f1f8] h-[90%] overflow-scroll" width="820px" 
+    <el-dialog v-model="dialogVisible" id="show-report-post" class="bg-[#f4f1f8] h-[90%] overflow-scroll" width="820px" 
      style="margin-top: 34px !important;" :show-close="true">
         <template #header>
             <div class="text-center font-bold text-[18px]">
@@ -98,16 +98,16 @@ export default {
 }
 </script>
 <style>
-#show-report-account .el-dialog__headerbtn {
+#show-report-post .el-dialog__headerbtn {
     font-size: 24px !important;
 }
-#show-report-account.el-dialog {
+#show-report-post.el-dialog {
     border-radius: 4px !important;
     position: fixed !important;
     left: 0;
     right: 0;
 }
-#show-report-account .el-dialog__header {
+#show-report-post .el-dialog__header {
     position: fixed;
     width: 820px;
     background-color: #fff;
@@ -115,14 +115,14 @@ export default {
     margin-right: 0 !important;
     z-index: 100;
 }
-#show-report-account .el-select,
-#show-report-account .el-date-editor {
+#show-report-post .el-select,
+#show-report-post .el-date-editor {
     width: 100% !important;
 }
-#show-report-account .el-input__inner {
+#show-report-post .el-input__inner {
     margin-top: 2px;
 }
-#show-report-account .creator {
+#show-report-post .creator {
     margin: 0 12px;
     padding: 0 12px;
     border-left: 2px solid rgba(0, 0, 0, 0.55);

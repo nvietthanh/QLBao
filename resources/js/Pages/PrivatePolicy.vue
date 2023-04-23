@@ -3,7 +3,7 @@
         <template v-slot:main-full>
             <div class="main mx-auto mb-[24px] w-[940px] bg-[#fff] border-[2px]">
                 <div class= "my-[24px] mx-[24px] border-[2px] px-[48px] py-[24px] rounded-[5px]">
-                    <div class="text-center text-[18px] uppercase font-bold my-[8px]">Điều khoản sử dụng</div>
+                    <div class="text-center text-[18px] uppercase font-bold my-[8px]">Chính sách bảo mật</div>
                     <div class="text-[15px] mt-[20px]">
                         <div v-html="dataForm.title" class="text-[18px] my-[8px] font-bold"></div>
                         <div v-html="dataForm.content"></div>
@@ -40,7 +40,7 @@ export default{
             this.filters.tabComment = tab
         },
         fetchData() {
-            axios.get(route('get-term-of-use'))
+            axios.get(route('get-private-policy'))
                 .then(response => {
                     this.dataForm = response.data
                 })

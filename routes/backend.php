@@ -1,11 +1,14 @@
 <?php
 
+use App\Http\Controllers\Api\BackEnd\Admin\AboutUsController;
 use App\Http\Controllers\Api\BackEnd\Admin\AccountController;
 use App\Http\Controllers\Api\BackEnd\Admin\CategoryController;
 use App\Http\Controllers\Api\BackEnd\Admin\HagtagController;
 use App\Http\Controllers\Api\BackEnd\Admin\PostController as AdminPostController;
+use App\Http\Controllers\Api\BackEnd\Admin\PrivatePolicyController;
 use App\Http\Controllers\Api\BackEnd\Admin\ReportAccountController;
 use App\Http\Controllers\Api\BackEnd\Admin\ReportPostController;
+use App\Http\Controllers\Api\BackEnd\Admin\TermOfUseController;
 use App\Http\Controllers\Api\BackEnd\CommentController;
 use App\Http\Controllers\Api\BackEnd\Creator\PostController;
 use App\Http\Controllers\Api\BackEnd\FollowController;
@@ -124,4 +127,19 @@ Route::middleware('is_admin')->prefix('admin')->name('admin.')->group(function (
     Route::get('/report-accounts', [ReportAccountController::class, 'index'])->name('report-accounts.index');
     Route::get('/report-accounts/{id}', [ReportAccountController::class, 'showReport'])->name('report-accounts.show-report');
     Route::post('/delete-report-accounts', [ReportAccountController::class, 'deleteAccounts'])->name('report-accounts.delete-accounts');
+
+    
+    Route::get('/get-term-of-use', [TermOfUseController::class, 'index'])->name('get-term-of-use');
+    Route::post('/update-term-of-use', [TermOfUseController::class, 'update'])->name('update-term-of-use');
+
+    Route::get('/get-private-policy', [PrivatePolicyController::class, 'index'])->name('get-private-policy');
+    Route::post('/update-private-policy', [PrivatePolicyController::class, 'update'])->name('update-private-policy');
+
+    Route::get('/get-about-us', [AboutUsController::class, 'index'])->name('get-about-us');
+    Route::post('/update-about-us', [AboutUsController::class, 'update'])->name('update-about-us');
+    Route::get('/get-list-contact', [AboutUsController::class, 'getList'])->name('get-list-about-us');
+    Route::delete('/delete-contact/{id}', [AboutUsController::class, 'deleteContact'])->name('delete-contact');
+    Route::post('/delete-contacts', [AboutUsController::class, 'deleteContacts'])->name('delete-contacts');
+    Route::get('/get-contact/{id}', [AboutUsController::class, 'getContact'])->name('get-contact');
+    Route::post('/send-reply-contact/{id}', [AboutUsController::class, 'sendEmailContact'])->name('send-reply-contact');
 });

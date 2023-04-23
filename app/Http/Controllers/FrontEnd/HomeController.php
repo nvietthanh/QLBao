@@ -72,4 +72,14 @@ class HomeController extends Controller
     {
         return Inertia::render('TermOfUse');
     }
+
+    public function privatePolicy()
+    {
+        return Inertia::render('PrivatePolicy');
+    }
+
+    public function aboutUs()
+    {
+        return Inertia::render('AboutUs');
+    }
 }

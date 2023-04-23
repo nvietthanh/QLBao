@@ -281,11 +281,14 @@
                         © 1997-2023. Toàn bộ bản quyền thuộc quyền sở hữu của lập trình viên
                         <Link :href="route('home')" class="font-bold hover:underline">Nguyễn Viết Thanh</Link>
                     </div>
-                    <div class="my-[5px] mt-[18px] hover:underline">
+                    <div class="my-[5px] mt-[12px] hover:underline">
+                        <Link :href="route('about-us')">Liên hệ</Link>
+                    </div>
+                    <div class="my-[5px] hover:underline">
                         <Link :href="route('termofuse')">Điều khoản sử dụng</Link>
                     </div>
                     <div class="my-[5px] hover:underline">
-                        <Link>Chính sách bảo mật</Link>
+                        <Link :href="route('private-policy')">Chính sách bảo mật</Link>
                     </div>
                     <div class="my-[5px] hover:underline">
                         <Link>Tiêu chuẩn vi phạm cộng đồng</Link>

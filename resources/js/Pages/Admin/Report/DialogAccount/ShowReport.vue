@@ -107,7 +107,7 @@ export default {
 }
 #show-report-account .el-dialog__header {
     position: fixed;
-    width: 820px;
+    min-width: 820px;
     background-color: #fff;
     border-bottom: 1px solid #ccc;
     margin-right: 0 !important;
