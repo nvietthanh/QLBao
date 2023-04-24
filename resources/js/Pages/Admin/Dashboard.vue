@@ -57,12 +57,9 @@ export default{
     },
     data() {
         return {
-            currentTab: 'kinh-te',
             filters: {
                 dateRange: ''
             },
-            comment: '',
-
             chartData: {
                 labels: [
                     "January",
