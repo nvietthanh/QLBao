@@ -3,6 +3,7 @@
 namespace App\ModelFilters;
 
 use App\Models\Account;
+use Carbon\Carbon;
 use EloquentFilter\ModelFilter;
 use Illuminate\Support\Facades\DB;
 
@@ -26,6 +27,9 @@ class ReportPostFilter extends ModelFilter
     
     public function dateRange($value)
     {
-        $this->whereBetween(DB::raw('DATE(created_at)'), [$value[0], $value[1]]);
+        $startDate = Carbon::parse($value[0]);
+        $endDate = Carbon::parse($value[1]);
+
+        $this->whereBetween(DB::raw('DATE(created_at)'), [$startDate, $endDate]);
     }
 }

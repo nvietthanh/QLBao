@@ -96,8 +96,10 @@ Route::middleware([
     Route::get('/posts', [AdminHomeController::class, 'listPost'])->name('list-post');
 
     Route::get('/report/accounts', [AdminHomeController::class, 'listReportAccount'])->name('list-report-account');
+    Route::get('/report-top/accounts', [AdminHomeController::class, 'listReportAccountTop'])->name('list-report-account-top');    
 
     Route::get('/report/posts', [AdminHomeController::class, 'listReportPost'])->name('list-report-post');
+    Route::get('/report-top/posts', [AdminHomeController::class, 'listReportPostTop'])->name('list-report-post-top');    
 
     Route::get('/term-of-use', [AdminHomeController::class, 'termOfUse'])->name('term-of-use');
 

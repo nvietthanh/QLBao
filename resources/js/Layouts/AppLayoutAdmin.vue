@@ -70,7 +70,7 @@
                                 <div v-for="menuChild in menu.menuChild" class="text-[15px]">
                                     <Link :href="route(menuChild.route)">
                                         <div class="px-[24px] py-[12px] hover:bg-[#6f8cdf] flex items-center cursor-pointer"
-                                        :class="{ 'bg-[#6f8cdf]' : menuChild.tab == currentTabChild }">
+                                        :class="{ 'bg-[#6f8cdf]' : menuChild.tab == currentTabChild && currentTab == menu.tab }">
                                             {{ menuChild.name }}
                                         </div>
                                     </Link>
@@ -156,8 +156,20 @@ export default {
                 {
                     icon: '<i class="bi bi-flag"></i>',
                     name: 'Quản lý báo cáo vi phạm',
-                    route: 'admin.list-report-account',
-                    tab: 'tab-5'
+                    route: '',
+                    tab: 'tab-5',
+                    menuChild: [
+                        {
+                            name: 'Thống kê theo ngày',
+                            route: 'admin.list-report-account',
+                            tab: 'tab-1'
+                        },
+                        {
+                            name: 'Thống kê theo số lượng',
+                            route: 'admin.list-report-account-top',
+                            tab: 'tab-2'
+                        },
+                    ]
                 },
                 {
                     icon: '<i class="bi bi-fullscreen"></i>',
@@ -177,6 +189,11 @@ export default {
                         },
                         {
                             name: 'Chính sách bảo mật',
+                            route: 'admin.private-policy',
+                            tab: 'tab-2'
+                        },
+                        {
+                            name: 'Tiêu chuẩn cộng đồng',
                             route: 'admin.private-policy',
                             tab: 'tab-2'
                         },
