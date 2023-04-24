@@ -123,11 +123,12 @@ Route::middleware('is_admin')->prefix('admin')->name('admin.')->group(function (
     Route::get('/report-posts/{id}', [ReportPostController::class, 'showReport'])->name('report-posts.show-report');
     Route::post('/delete-report-posts', [ReportPostController::class, 'deletePosts'])->name('report-posts.delete-posts');
     Route::get('/report-posts/show-post/{id}', [ReportPostController::class, 'showPost'])->name('report-posts.show-post');
+    Route::get('/report-posts-top', [ReportPostController::class, 'listTop'])->name('report-posts.list-top');
 
     Route::get('/report-accounts', [ReportAccountController::class, 'index'])->name('report-accounts.index');
     Route::get('/report-accounts/{id}', [ReportAccountController::class, 'showReport'])->name('report-accounts.show-report');
     Route::post('/delete-report-accounts', [ReportAccountController::class, 'deleteAccounts'])->name('report-accounts.delete-accounts');
-
+    Route::get('/report-accountsaccounts-top', [ReportAccountController::class, 'listTop'])->name('report-accounts.list-top');
     
     Route::get('/get-term-of-use', [TermOfUseController::class, 'index'])->name('get-term-of-use');
     Route::post('/update-term-of-use', [TermOfUseController::class, 'update'])->name('update-term-of-use');

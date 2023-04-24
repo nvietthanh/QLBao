@@ -61,6 +61,8 @@
                             start-placeholder="Ngày bắt đầu"
                             end-placeholder="Ngày kết thúc"
                             :size="small"
+                            format="DD-MM-YYYY"
+                            value-format="DD-MM-YYYY"
                             class="max-w-[260px] mx-[28px]"
                             @change="fetchDataList()"
                         />

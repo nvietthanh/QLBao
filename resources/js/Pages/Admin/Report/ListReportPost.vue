@@ -1,5 +1,5 @@
 <template>
-    <AppLayoutAdmin :currentTab="'tab-5'">
+    <AppLayoutAdmin :currentTab="'tab-5'" :currentTabChild="'tab-1'">
         <template v-slot:main-full>
             <div class="mt-[12px] flex text-[18px] font-bold uppercase">
                 Danh sách báo cáo vi phạm
@@ -30,6 +30,8 @@
                         start-placeholder="Ngày bắt đầu"
                         end-placeholder="Ngày kết thúc"
                         :size="small"
+                        format="DD-MM-YYYY"
+                        value-format="DD-MM-YYYY"
                         class="max-w-[260px] mx-[28px]"
                         @change="fetchData()"
                     />

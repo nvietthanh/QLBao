@@ -38,9 +38,19 @@ class HomeController extends Controller
         return Inertia::render('Admin/Report/ListReportAccount');
     }
 
+    public function listReportAccountTop()
+    {
+        return Inertia::render('Admin/Report/ListReportAccountTop');
+    }
+
     public function listReportPost()
     {
         return Inertia::render('Admin/Report/ListReportPost');
+    }
+
+    public function listReportPostTop()
+    {
+        return Inertia::render('Admin/Report/ListReportPostTop');
     }
 
     public function termOfUse()

@@ -69,7 +69,6 @@ export default {
     methods: {
         moment,
         async open(row) {
-            console.log(row)
             this.dialogVisible = true;
             const response = await axios.get(route('admin.report-posts.show-post', row.post_id))
             this.dataForm = response.data.data
