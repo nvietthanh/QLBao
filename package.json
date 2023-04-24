@@ -29,8 +29,10 @@
         "@vitejs/plugin-vue": "^4.0.0",
         "bootstrap": "^5.2.3",
         "bootstrap-icons": "^1.10.3",
+        "chart.js": "^4.2.1",
         "element-plus": "^2.2.34",
         "moment": "^2.29.4",
+        "vue-chartjs": "^5.2.0",
         "ziggy-js": "^1.5.0"
     }
 }
