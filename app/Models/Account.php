@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Resources\AccountResource;
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -55,5 +56,31 @@ class Account extends Authenticatable
     {
         return $this->belongsToMany(Account::class, 'follows', 'account_id', 'follower_id')->withPivot('follow_at')
             ->orderByPivot('follow_at', 'desc');
+    }
+
+    public static function getAccountByChart($period, $items, $fieldTime)
+    {
+        $dataPeriod = [];
+        $titleBottomChart = [];
+        $formData = [];
+        foreach ($period as $key => $date) {
+            $totalField = $items
+                ->where($fieldTime, '>=', $date->startOfDay())
+                ->where($fieldTime, '<=', $date->endOfDay());
+            if ($totalField->count() != 0) {
+                $dataPeriod[$key] = $totalField->count();
+            } else {
+                $dataPeriod[$key] = 0;
+            }
+            $formData[] = $totalField;
+        }
+        foreach ($period as $date) {
+            $titleBottomChart[] = $date->format('d') . '/' . $date->format('m') . '/' . $date->format('Y');
+        }
+        return [
+            'dataPeriod' => $dataPeriod,
+            'titleBottomChart' => $titleBottomChart,
+            'formData' => $formData
+        ];
     }
 }

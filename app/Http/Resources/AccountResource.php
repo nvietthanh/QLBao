@@ -21,6 +21,7 @@ class AccountResource extends JsonResource
             'name' => $this->accountProfile->first_name  . ' ' . $this->accountProfile->last_name,
             'email' => $this->email,
             'status' => $this->status ? true : false,
+            'type' => $this->userable_type == 'Reader' ? 'Reader' : 'Creator',
             'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i'),
             'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d H:i'),
             'status_expires_at' => $this->status_expires_at
