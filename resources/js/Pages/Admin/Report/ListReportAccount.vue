@@ -25,6 +25,7 @@
                         />
                     </el-select>
                     <el-date-picker
+                        class="max-w-[260px] mx-[28px]"
                         v-model="filterSearch.dateRange"
                         type="daterange"
                         start-placeholder="Ngày bắt đầu"
@@ -32,7 +33,6 @@
                         :size="small"
                         format="DD-MM-YYYY"
                         value-format="DD-MM-YYYY"
-                        class="max-w-[260px] mx-[28px]"
                         @change="fetchData()"
                     />
                     <el-input class="max-w-[300px]" v-model="filterSearch.search"

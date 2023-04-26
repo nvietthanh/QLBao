@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\BackEnd\HomeController;
 use App\Http\Controllers\Api\BackEnd\ProfileController;
 use App\Http\Controllers\Api\FrontEnd\CreatorController;
 use App\Http\Controllers\Api\FrontEnd\PostController as HomePostController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -101,6 +102,10 @@ Route::middleware([
 
 // admin
 Route::middleware('is_admin')->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/get-chart-account', [DashboardController::class, 'getChartAccount'])->name('get-chart-account');
+    Route::get('/get-chart-post', [DashboardController::class, 'getChartPost'])->name('get-chart-post');
+    Route::get('/get-chart-category', [DashboardController::class, 'getChartCategory'])->name('get-chart-category');
+
     Route::apiResource('accounts', AccountController::class);
     Route::post('/change-status-account/{id}', [AccountController::class, 'changeStatus'])->name('accounts.change-status');
     Route::get('/get-status-account/{id}', [AccountController::class, 'getStatus'])->name('accounts.get-status');
