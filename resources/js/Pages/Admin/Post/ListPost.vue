@@ -34,7 +34,7 @@
                         />
                     </el-select>
                     <el-input class="mx-[20px] max-w-[300px]" v-model="filterSearch.search"
-                        placeholder="Nhập từ khóa" clearable @keyup.enter="fetchData()"/>
+                        placeholder="Nhập từ khóa" clearable @keyup="fetchData()"/>
                     <div class="text-[14px] px-[24px] py-[4px] rounded-[4px] bg-[red] text-white cursor-pointer" @click="deletePosts">
                         Xóa bài
                     </div>
@@ -77,7 +77,14 @@
                         <div class="mx-[6px]">({{ row.updater }})</div>
                     </template>
                     <template #options="{ row }">
-                        <div class="mx-[6px] text-[22px] cursor-pointer" @click="showPost(row)"><i class="bi bi-eye-fill"></i></div>
+                        <div class="flex justify-center">
+                            <template v-if="tab == 'tab-0'">
+                                <Link :href="route('post', row.slug)" class="text-[20px] cursor-pointer mr-[8px]">
+                                    <i class="bi bi-arrow-right-square"></i>
+                                </Link>
+                            </template>
+                            <div class="text-[20px] cursor-pointer" @click="showPost(row)"><i class="bi bi-gear-fill"></i></div>
+                        </div>
                     </template>
                 </DataTable>
                 <div v-if="tableData.length != 0" class="flex justify-end mt-[32px] mr-[16px]">
@@ -121,7 +128,7 @@ export default{
                 { key: 'status', label: 'Trạng thái', align: 'center', width: 100 },
                 { key: 'created_at', label: 'Ngày tạo', align: 'center', width: 140 },
                 { key: 'updated_at', label: 'Ngày cập nhật', align: 'center', width: 140 },
-                { key: 'options', label: '', align: 'center', width: 70 },
+                { key: 'options', label: 'Options', align: 'center', width: 90 },
             ],
             options: [6, 12, 24, 32],
             filterSearch: {

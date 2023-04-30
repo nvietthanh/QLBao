@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Exceptions\FailException;
 use App\Http\Requests\PostRequest;
+use App\Models\Account;
+use App\Models\Category;
 
 class PostController extends Controller
 {
@@ -43,6 +45,12 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    
+    public function validateStore(PostRequest $request)
+    {
+        return response()->json(true);
+    }
+
     public function store(PostRequest $request)
     {
         $request->validated();
@@ -52,13 +60,26 @@ class PostController extends Controller
 
         $path = $request->file('image') ? Storage::putFile('public/posts', $request->file('image')) : '';
 
+        $category = Category::where('slug', $request->category)->first();
+
+        do {
+            $slug = Str::slug($request->title);
+            $isSlug = Post::where('slug', $slug)->first();
+
+            if($isSlug) {
+                $slug .= '-' . (string)rand(1, 10000);
+            }
+        }
+        while(Post::where('slug', $slug)->first());
+
         $post = Post::create(
             array_merge($request->only(['title', 'description', 'content']),
             [
-                'slug' =>  Str::slug($request->title),
-                'category_id' => '1',
+                'slug' =>  $slug,
+                'category_id' => $category->id,
                 'image' => $path ? Storage::url($path) : '',
                 'creator_id' => $currentAccount->id,
+                'updaterable' => Account::class,
                 'updater_id' => $currentAccount->id
             ])
         );
@@ -113,11 +134,21 @@ class PostController extends Controller
 
             $path = $request->file('image') ? Storage::putFile('public/posts', $request->file('image')) : '';
 
+            $slug = Str::slug($request->title);
+
+            while(Post::where('slug', $slug)->where('id', '<>', $id)->first()){
+                $slug .= '-' . (string)rand(1, 10000);
+            }
+
+            $category = Category::where('slug', $request->category)->first();
+
             $post->update(
                 array_merge($request->only(['title', 'description', 'content']),
                 [
-                    'slug' =>  Str::slug($request->title),
+                    'slug' => $slug,
                     'updated_at' => now(),
+                    'category_id' => $category->id,
+                    'updaterable' => Account::class,
                     'updater_id' => $currentAccount->id
                 ])
             );
@@ -154,6 +185,14 @@ class PostController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $post = Post::where('id', $id)->where('is_approved', 0)->first();
+
+        if(!$post) {
+            throw new FailException('Không thể xóa bài viết');
+        }
+
+        $post->delete();
+
+        return response()->json(true);
     }
 }

@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api\BackEnd\Admin;
 
 use App\Exceptions\FailException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -33,9 +35,27 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        //
+        $request->validated();
+
+        do {
+            $slug = Str::slug($request->name);
+            $isSlug = Category::where('slug', $slug)->first();
+
+            if($isSlug) {
+                $slug .= '-' . (string)rand(1, 10000);
+            }
+        }
+        while(Category::where('slug', $slug)->first());
+
+
+        $category = Category::create([
+            'name' => $request->name,
+            'slug' => $slug
+        ]);
+
+        return response()->json($category);
     }
 
     /**
@@ -43,7 +63,9 @@ class CategoryController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $category = Category::find($id);
+
+        return CategoryResource::make($category);
     }
 
     /**
@@ -57,9 +79,26 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(CategoryRequest $request, string $id)
     {
-        //
+        $category = Category::find($id);
+
+        if(!$category) {
+            throw new FailException('Không thể cập nhật chủ đề');
+        }
+
+        $slug = Str::slug($request->name);
+
+        while(Category::where('slug', $slug)->where('id', '<>'. $id)->first()){
+            $slug .= '-' . (string)rand(1, 10000);
+        }
+
+        $category->update([
+            'name' => $request->name,
+            'slug' => $slug
+        ]);
+
+        return response()->json($category);
     }
 
     public function changeStatus(Request $request)

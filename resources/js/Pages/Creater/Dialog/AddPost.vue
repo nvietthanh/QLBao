@@ -53,6 +53,20 @@
                     {{ errors.content[0] }}
                 </div>
             </div>
+            <div class="mt-[18px]" v-if="listCategory.length != 0">
+                <div class="text-[16px] font-bold text-[#000]">Kết quả phân loại</div>
+                <div class="mt-[6px] mx-[12px]">
+                    <el-radio-group v-model="categorySelect" size="large">
+                        <template v-for="category in listCategory">
+                            <el-radio :label="category.slug" size="large" border>
+                                <span class="font-bold">{{ category.name }}</span>
+                                :
+                                <span class="font-bold">{{ category.value }} %</span>
+                            </el-radio>
+                        </template>
+                    </el-radio-group>
+                </div>
+            </div>
         </div>
         <template #footer>
             <div class="pb-[12px] pt-[8px]">
@@ -62,7 +76,11 @@
                         Hủy bỏ
                     </div>
                     <div class="cursor-pointer flex justify-center items-center w-[110px] ml-[18px] rounded-[4px] bg-[#007bff] py-[4px] h-[32px] text-[15px] text-white"
-                        @click="addPost">
+                        @click="findCategory">
+                        Phân loại
+                    </div>
+                    <div class="cursor-pointer flex justify-center items-center w-[110px] ml-[18px] rounded-[4px] bg-[#007bff] py-[4px] h-[32px] text-[15px] text-white"
+                        @click="addPost" v-if="categorySelect">
                         Xác nhận
                     </div>
                 </div>
@@ -76,11 +94,12 @@ import axios from 'axios';
 import { Link } from '@inertiajs/vue3'
 import CkeditorPost from '@/Components/Ckeditor/Ckeditor.vue';
 import { ElMessage } from 'element-plus'
+import { ElLoading } from 'element-plus'
 
 export default {
     components: {
         Link,
-        CkeditorPost
+        CkeditorPost,
     },
     data() {
         return {
@@ -94,6 +113,8 @@ export default {
                 hagtags: [],
             },
             listHagTag: [],
+            listCategory: '',
+            categorySelect: '',
             errors: []
         }
     },
@@ -105,12 +126,14 @@ export default {
         }
     },
     methods: {
-        clearResult() {
+        async clearResult() {
             this.imageSelected = ''
             this.dataForm.title = ''
             this.dataForm.description = ''
             this.dataForm.image = ''
-            this.dataForm.content = ''
+            this.$refs['content'].editorData = ''
+            this.categorySelect = ''
+            this.listCategory = ''
             this.listHagTag = []
             this.errors = []
         },
@@ -150,14 +173,30 @@ export default {
                 console.log('handleUploadContent', err);
             }
         },
+        findCategory() {
+            const loading = ElLoading.service({
+                lock: true,
+                text: 'Đang tiến hành phân loại',
+                background: 'rgba(0, 0, 0, 0.7)',
+            })
+            const pagramCategory = new FormData()
+            const content = this.$refs['content'].editorData.replace(/(<([^>]+)>)/gi, "").replace(/&nbsp;/gi,"")
+            pagramCategory.append('content', content)
+            axios.post('http://127.0.0.1:5000/classify', pagramCategory)
+                .then(response => {
+                    this.listCategory = response.data
+                    loading.close()
+                })
+        },
         addPost() {
+            this.errors = []
             const pagram = new FormData()
-            console.log(this.dataForm.image)
             pagram.append('title', this.dataForm.title ?? '')
             pagram.append('description', this.dataForm.description ?? '')
             pagram.append('image', this.dataForm.image ?? '')
             pagram.append('content', this.$refs['content'].editorData ?? '')
             pagram.append('hagtags', this.dataForm.hagtags ?? '')
+            pagram.append('category', this.categorySelect)
             axios.post(route('creator.posts.store', this.id), pagram)
                 .then(() => {
                     ElMessage({
@@ -169,6 +208,11 @@ export default {
                     this.$emit('change-post')
                 })
                 .catch(errors => {
+                    ElMessage({
+                        showClose: true,
+                        message: 'Vui lòng kiểm tra lại dữ liệu nhập',
+                        type: 'error',
+                    })
                     this.errors = errors.response.data.errors
                 })
         }
@@ -176,6 +220,10 @@ export default {
 }
 </script>
 <style>
+#add-post .el-radio {
+    min-width: 220px;
+    margin-top: 8px;
+}
 #add-post .el-dialog__headerbtn {
     font-size: 24px !important;
 }

@@ -14,22 +14,13 @@
                             :value="item"
                         />
                     </el-select>
-                    <el-select v-model="filterSearch.isApproved" class="max-w-[140px] ml-[20px]" @change="fetchData()">
-                        <el-option label="Tất cả" value="2"/>
-                        <el-option label="Đã kích hoạt" value="1"/>
-                        <el-option label="Chưa kích hoạt" value="0"/>
-                    </el-select>
                     <el-input class="mx-[20px] max-w-[300px]" v-model="filterSearch.search"
-                                   placeholder="Nhập từ khóa" clearable @keyup.enter="fetchData()"/>
+                                   placeholder="Nhập từ khóa" clearable @keyup="fetchData()"/>
+                    <div class="bg-[blue] text-[14px] py-[5px] px-[18px] text-white rounded-[4px] cursor-pointer" @click="addCategory">
+                        Thêm mới
+                    </div>
                 </div>
                 <DataTable :fields="fields" :items="tableData" enable-select-box @row-selected="handleSelectionChange">
-                    <template class="flex justify-center" #status ="{ row }">
-                        <div class="h-[36px] flex justify-center items-center">
-                            <el-switch v-model="row.status"  @click="changeStatus(row)"/>
-                            <span class="ml-[6px] text-[13px]" v-if="row.status">Activated</span>
-                            <span class="ml-[6px] text-[13px]" v-else>Deactivated</span>
-                        </div>
-                    </template>
                     <template #options="{ row }">
                         <span class="px-[8px] py-[8px] text-[20px] cursor-pointer" @click="editCategory(row)">
                             <i class="bi bi-pencil-fill"></i>
@@ -44,6 +35,8 @@
                       paginate-background/>
                 </div>
             </div>
+            <AddCategoryForm ref="addCategoryForm" @change-category="fetchData"/>
+            <EditCategoryForm ref="editCategoryForm" @change-category="fetchData"/>
         </template>
     </AppLayoutAdmin>
 </template>
@@ -52,6 +45,8 @@ import AppLayoutAdmin from '@/Layouts/AppLayoutAdmin.vue'
 import { Link } from '@inertiajs/vue3'
 import DataTable from '@/Components/UI/DataTable.vue'
 import Paginate from "@/Components/UI/Paginate.vue"
+import AddCategoryForm from './Dialog/AddCategory.vue'
+import EditCategoryForm from './Dialog/EditCategory.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import axios from 'axios'
 
@@ -60,7 +55,9 @@ export default{
         AppLayoutAdmin,
         Link,
         Paginate,
-        DataTable
+        DataTable,
+        AddCategoryForm,
+        EditCategoryForm
     },
     data() {
         return {
@@ -74,8 +71,7 @@ export default{
             ],
             options: [10, 20, 30],
             filterSearch: {
-                limit: 10,
-                isApproved: "2",
+                limit: 2,
                 search: '',
                 page: 1
             },
@@ -113,7 +109,10 @@ export default{
             axios.get(route('admin.categories.change-status', row.id))
         },
         editCategory(row) {
-            alert('thay doi nhe')
+            this.$refs.editCategoryForm.open(row)
+        },
+        addCategory() {
+            this.$refs.addCategoryForm.open()
         },
         deleteSelection(row) {
             ElMessageBox.confirm(
@@ -137,38 +136,6 @@ export default{
                     })
             })
             .catch(() => {})
-        },
-        deleteSelections() {
-            if(this.selectedValue.length == 0){
-                ElMessage({
-                    type: 'warning',
-                    message: 'Chọn tài khoản người dùng muốn xóa',
-                })
-            }
-            else{
-                ElMessageBox.confirm(
-                    `Bạn có muốn xóa các tài khoản đã chọn không?`,
-                    'Warning',
-                    {
-                        confirmButtonText: 'Xác nhận',
-                        cancelButtonText: 'Hủy bỏ',
-                        type: 'warning',
-                        draggable: true,
-                    }
-                )
-                .then(() => {
-                    const pagram = { ...{'accounts' : this.selectedValue} }
-                    axios.post(route('admin.users.delete-accounts'), pagram)
-                        .then(response => {
-                            this.fetchData()
-                            ElMessage({
-                                type: 'success',
-                                message: 'Delete completed',
-                            })
-                        })
-                })
-                .catch(() => {})
-            }
         }
     }
 }

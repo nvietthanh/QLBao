@@ -69,6 +69,7 @@ class PostController extends Controller
     {
         $request->validated();
         $hagtags = $request->hagtags ? explode(",", $request->hagtags ) : '';
+        $currentUser = auth('web')->user();
 
         DB::beginTransaction();
         try {
@@ -86,6 +87,8 @@ class PostController extends Controller
                 [
                     'slug' =>  Str::slug($request->title),
                     'category_id' => Category::where('slug', $request->categorySlug)->first()->id,
+                    'updaterable' => User::class,
+                    'updater_id' => $currentUser->id,
                     'updated_at' => now()
                 ])
             );

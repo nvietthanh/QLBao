@@ -48,6 +48,7 @@ Route::Get('/get-new-post-interested', [HomePostController::class, 'getPostInter
 // creator
 Route::middleware(['is_approved', 'auth:accounts', 'is_creator'])->prefix('creator')->name('creator.')->group(function () {
     Route::apiResource('posts', PostController::class);
+    Route::post('/post-valition', [PostController::class, 'validateStore'])->name('posts.validate');
     Route::post('/posts/{id}', [PostController::class, 'update'])
         ->name('posts.update');
 });
@@ -112,6 +113,7 @@ Route::middleware('is_admin')->prefix('admin')->name('admin.')->group(function (
     Route::post('/delete-selected-accounts', [AccountController::class, 'deleteAccounts'])->name('accounts.delete-accounts');
 
     Route::apiResource('categories', CategoryController::class);
+    Route::post('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
     Route::get('/change-status-category', [CategoryController::class, 'changeStatus'])->name('categories.change-status');
 
     Route::apiResource('/posts', AdminPostController::class);
