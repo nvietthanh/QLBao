@@ -56,11 +56,11 @@ class DashboardController extends Controller
         
         $period = CarbonPeriod::create($startDate, $endDate);
 
-        $post_approveds = Post::where('status', 1)
+        $post_approveds = Post::where('is_approved', 1)
                 ->whereBetween(DB::raw('DATE(created_at)'), [$startDate->format('Y/m/d'), $endDate->format('Y/m/d')])
                 ->orderBy('created_at', 'ASC')
                 ->get();
-        $post_unapproved = Post::where('status', 0)
+        $post_unapproved = Post::where('is_approved', 0)
                 ->whereBetween(DB::raw('DATE(created_at)'), [$startDate->format('Y/m/d'), $endDate->format('Y/m/d')])
                 ->orderBy('created_at', 'ASC')
                 ->get();
@@ -68,13 +68,13 @@ class DashboardController extends Controller
         $post_approved = Post::getPostByChart($period, $post_approveds, 'created_at');
         $post_unapproved = Post::getPostByChart($period, $post_unapproved, 'created_at');
 
-        $numberReader = Post::where('status', 1)->count();
-        $numberCreator = Post::where('status', 0)->count();
+        $numberApproved = Post::where('is_approved', 1)->count();
+        $numberUnapproved = Post::where('is_approved', 0)->count();
 
         $count_data = [
-            'sum' => $numberReader + $numberCreator,
-            'post_approved' => $numberReader,
-            'post_unapproved' => $numberCreator,
+            'sum' => $numberApproved + $numberUnapproved,
+            'post_approved' => $numberApproved,
+            'post_unapproved' => $numberUnapproved,
         ];
 
         return [

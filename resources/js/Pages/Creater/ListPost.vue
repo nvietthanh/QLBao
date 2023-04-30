@@ -11,7 +11,7 @@
                             Danh sách bài viết của bạn
                         </div>
                     </div>
-                    <div class="flex mx-[12px] mt-[28px] mb-[24px] text-[15px] font-bold">
+                    <div class="flex mx-[12px] mt-[14px] mb-[24px] text-[15px] font-bold">
                         <div class="w-[130px] border-[2px] text-center py-[6px] rounded-[4px] border-[#dee2e6] cursor-pointer"
                          :class="{ 'bg-[#17a2b8] text-white' : tab == 'tab-0' }"
                          @click="changeTab('tab-0')">
@@ -23,7 +23,7 @@
                            Chưa duyệt
                         </div>
                     </div>
-                    <div class="mt-[18px] mx-[12px] flex justify-between items-center text-[16px]">
+                    <div class="mt-[12px] mx-[12px] flex justify-between items-center text-[16px]">
                         <div class="flex">
                             <div class="flex items-center ">
                                 <el-select v-model="filter.limit" class="max-w-[60px] ml-[8px]" @change="changeSearch">
@@ -44,7 +44,7 @@
                                     />
                                 </el-select>
                                 <el-input class="ml-[20px] min-w-[270px]" v-model="filter.search"
-                                   placeholder="Nhập từ khóa" clearable @keyup.enter="changeSearch"/>
+                                   placeholder="Nhập từ khóa" clearable @keyup="changeSearch"/>
                             </div>
                         </div>
                         <div class="border-[2px] px-[12px] rounded-[4px] cursor-pointer mr-[2px] bg-[#198754] text-[15px] 
@@ -111,6 +111,11 @@
                                       @click="editPost(item)">
                                         <i class="bi bi-pen mb-[4px]"></i>
                                     </div>
+                                    <div v-if="!filter.is_approved" class="post-icon absolute top-[8px] left-[6px] h-[28px] w-[28px] text-center pt-[4px]
+                                      cursor-pointer bg-[#fff] rounded-[50%] box-shadow text-[17px] active:scale-95 hover:bg-[#ced4da]" 
+                                      @click="deletePost(item)">
+                                        <i class="bi bi-trash"></i>
+                                    </div>
                                 </div>
                             </div>
                         </template>
@@ -135,6 +140,7 @@ import { Link } from '@inertiajs/vue3'
 import ShowPostForm from './Dialog/ShowPost.vue'
 import AddPostForm from './Dialog/AddPost.vue'
 import EditPostForm from './Dialog/EditPost.vue'
+import { ElMessage } from 'element-plus'
 import moment from "moment";
 
 export default{
@@ -205,6 +211,24 @@ export default{
             this.filter.paginate = []
             this.postsData = []
             this.fetchData()
+        },
+        deletePost(post) {
+            axios.delete(route('creator.posts.destroy', post.id))
+                .then(response => {
+                    this.fetchData()
+                    ElMessage({
+                        showClose: true,
+                        message: 'Xóa bài viết thành công',
+                        type: 'success',
+                    })
+                })
+                .catch(error => {
+                    ElMessage({
+                        showClose: true,
+                        message: error.response.data.message,
+                        type: 'error',
+                    })
+                })
         },
         convertTime(created_at) {
             const now = moment()

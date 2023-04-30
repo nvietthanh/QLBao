@@ -21,6 +21,7 @@ class Post extends Model
         'category_id',
         'creator_id',
         'updater_id',
+        'updaterable',
         'status'
     ];
 
@@ -34,9 +35,9 @@ class Post extends Model
         return $this->belongsTo(Account::class, 'creator_id', 'id');
     }
 
-    public function updater()
+    public function updaterable()
     {
-        return $this->belongsTo(Account::class, 'updater_id', 'id');
+        return $this->morphTo();
     }
 
     public function comments()

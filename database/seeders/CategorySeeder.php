@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Account;
 use App\Models\Category;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -31,6 +32,7 @@ class CategorySeeder extends Seeder
                 'is_popular' => rand(0, 1),
                 'is_approved' => 1,
                 'creator_id' => $id,
+                'updaterable' => Account::class,
                 'updater_id' => $id,
             ]);
         }   
@@ -51,6 +53,7 @@ class CategorySeeder extends Seeder
                 'is_popular' => rand(0, 1),
                 'is_approved' => 1,
                 'creator_id' => $id,
+                'updaterable' => Account::class,
                 'updater_id' => $id,
             ]);
         }
@@ -71,6 +74,7 @@ class CategorySeeder extends Seeder
                 'is_popular' => rand(0, 1),
                 'is_approved' => 1,
                 'creator_id' => $id,
+                'updaterable' => Account::class,
                 'updater_id' => $id,
             ]);
         }
@@ -91,6 +95,7 @@ class CategorySeeder extends Seeder
                 'is_popular' => rand(0, 1),
                 'is_approved' => 1,
                 'creator_id' => $id,
+                'updaterable' => Account::class,
                 'updater_id' => $id,
             ]);
         }
@@ -111,6 +116,7 @@ class CategorySeeder extends Seeder
                 'is_popular' => rand(0, 1),
                 'is_approved' => 1,
                 'creator_id' => $id,
+                'updaterable' => Account::class,
                 'updater_id' => $id,
             ]);
         }
@@ -131,6 +137,7 @@ class CategorySeeder extends Seeder
                 'is_popular' => rand(0, 1),
                 'is_approved' => 1,
                 'creator_id' => $id,
+                'updaterable' => Account::class,
                 'updater_id' => $id,
             ]);
         }

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->boolean('is_approved')->default(0);
             $table->unsignedBigInteger('category_id')->nullable();
             $table->unsignedBigInteger('creator_id')->nullable();
+            $table->string('updaterable')->nullable();
             $table->unsignedBigInteger('updater_id')->nullable();
             $table->timestamps();
 

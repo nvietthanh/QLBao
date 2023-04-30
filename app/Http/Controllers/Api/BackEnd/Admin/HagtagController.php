@@ -52,7 +52,9 @@ class HagtagController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $hagtag = HagTag::find($id);
+        
+        return HagTagResource::make($hagtag);
     }
 
     /**

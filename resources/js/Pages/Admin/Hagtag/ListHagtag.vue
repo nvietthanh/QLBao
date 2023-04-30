@@ -15,7 +15,7 @@
                         />
                     </el-select>
                     <el-input class="mx-[20px] max-w-[300px]" v-model="filterSearch.search"
-                                   placeholder="Nhập từ khóa" clearable @keyup.enter="fetchData()"/>
+                                   placeholder="Nhập từ khóa" clearable @keyup="fetchData()"/>
                     <div class="bg-[blue] text-[14px] py-[5px] px-[18px] text-white rounded-[4px] cursor-pointer" @click="addHagtag">
                         Thêm mới
                     </div>

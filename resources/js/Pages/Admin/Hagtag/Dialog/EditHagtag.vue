@@ -51,22 +51,13 @@ export default {
             errors: []
         }
     },
-    watch: {
-        dialogVisible(value) {
-            if(value == false) {
-                this.clearResult()
-            }
-        }
-    },
     methods: {
-        clearResult() {
-            this.imageSelected = ''
-            this.dataForm.name = ''
-            this.errors = []
-        },
         open(row) {
             this.dialogVisible = true
-            this.dataForm = row
+            axios.get(route('admin.hagtags.show', row.id))
+                .then(response => {
+                    this.dataForm = response.data.data
+                })
         },
         cancel() {
             this.dialogVisible = false;

@@ -17,8 +17,10 @@
                         </Link>
                         <div class="text-[14px]">{{ convertTime(dataForm.created_at) }}</div>
                     </div>
-                    <div class="mt-[18px]">
-                        <!-- <img :src="dataForm.image" alt="" class="w-[100%] min-h-[400px]"> -->
+                    <div class="mt-[8px]">
+                        <div class="text-[16px] mb-[12px]">
+                            {{ dataForm.description }}
+                        </div>
                         <el-image
                             style="width: 100%; height: 100%;"
                             :src="dataForm.image"
@@ -29,7 +31,7 @@
                             :initial-index="1"
                             fit="cover"
                         />
-                        <div class="text-[14px] text-center mt-[8px]">
+                        <div class="text-[14px] text-center italic">
                             {{ dataForm.description }}
                         </div>
                     </div>
