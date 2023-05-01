@@ -29,6 +29,7 @@ class PostController extends Controller
 
         if(!$currentAccount) {
             $posts = Post::orderBy('created_at', 'desc')
+                ->where('is_approved', 1)
                 ->orderBy('count_view', 'desc')->take(16)->get();
 
             return PostResource::collection($posts);
@@ -38,7 +39,8 @@ class PostController extends Controller
 
             if($follows->count() == 0) {
                 $posts = Post::orderBy('created_at', 'desc')
-                ->orderBy('count_view', 'desc')->take(16)->get();
+                    ->where('is_approved', 1)
+                    ->orderBy('count_view', 'desc')->take(16)->get();
 
                 return PostResource::collection($posts);
             }

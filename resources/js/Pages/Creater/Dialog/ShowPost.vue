@@ -7,7 +7,7 @@
             </div>
         </template>
         <div class="flex mt-[38px]">
-            <div class="py-[12px] px-[12px]">
+            <div class="py-[12px] px-[12px] w-[100%]">
                 <div class="text-[22px] font-bold">
                     {{ dataForm.title }}
                 </div>
@@ -20,6 +20,10 @@
                     </div>
                     <div class="text-[14px]">
                         {{ moment(String(dataForm.created_at)).format('YYYY/MM/DD hh:mm') }}
+                    </div>
+                    <div class="ml-[24px] text-[18px] flex items-center" v-if="dataForm.is_approved">
+                        <i class="bi bi-eye-fill"></i>
+                        <span class="ml-[4px] text-[15px] font-bold">{{ count_view }}</span>
                     </div>
                 </div>
                 <div class="mt-[18px]">
@@ -46,7 +50,8 @@ export default {
     data() {
         return {
             dialogVisible: false,
-            dataForm: {}
+            dataForm: {},
+            count_view: 0
         }
     },
     watch: {
@@ -61,6 +66,12 @@ export default {
         open(data) {
             this.dialogVisible = true;
             this.dataForm = data
+            if(this.dataForm.is_approved) {
+                axios.get(route('creator.posts.get-count-view', data.id))
+                    .then(response => {
+                        this.count_view = response.data.count_view
+                    })
+            }
         }
     },
 }

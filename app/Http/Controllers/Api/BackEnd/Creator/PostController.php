@@ -14,6 +14,7 @@ use App\Exceptions\FailException;
 use App\Http\Requests\PostRequest;
 use App\Models\Account;
 use App\Models\Category;
+use App\Models\Notice;
 
 class PostController extends Controller
 {
@@ -73,7 +74,7 @@ class PostController extends Controller
         while(Post::where('slug', $slug)->first());
 
         $post = Post::create(
-            array_merge($request->only(['title', 'description', 'content']),
+            array_merge($request->only(['title', 'description', 'content', 'is_notice']),
             [
                 'slug' =>  $slug,
                 'category_id' => $category->id,
@@ -90,6 +91,16 @@ class PostController extends Controller
                     $hagtag => ['created_at' => now()]
                 ]);
             }
+        }
+        
+        if($post->is_notice) {
+            Notice::create([
+                'content' => 'có bài viết mới',
+                'status' => 0,
+                'post_id' => $post->id,
+                'creator_id' => auth('accounts')->user()->id,
+                'updater_id' => auth('accounts')->user()->id
+            ]);
         }
 
         return response()->json($post);
@@ -143,7 +154,7 @@ class PostController extends Controller
             $category = Category::where('slug', $request->category)->first();
 
             $post->update(
-                array_merge($request->only(['title', 'description', 'content']),
+                array_merge($request->only(['title', 'description', 'content', 'is_notice']),
                 [
                     'slug' => $slug,
                     'updated_at' => now(),
@@ -160,10 +171,32 @@ class PostController extends Controller
             }
 
             $post->postHasHagtag()->detach();
+
             if($hagtags) {
                 foreach($hagtags as $hagtag) {
                     $post->postHasHagtag()->attach([
                         $hagtag => ['created_at' => now()]
+                    ]);
+                }
+            }
+
+            if(!$post->is_notice) {
+                $notice = Notice::where('post_id', $post->id)->first();
+                
+                if($notice) {
+                    $notice->delete();
+                }
+            }
+            else {
+                $notice = Notice::where('post_id', $post->id)->first();
+
+                if(!$notice) {
+                    Notice::create([
+                        'content' => 'có bài viết mới',
+                        'status' => 0,
+                        'post_id' => $post->id,
+                        'creator_id' => auth('accounts')->user()->id,
+                        'updater_id' => auth('accounts')->user()->id
                     ]);
                 }
             }
@@ -194,5 +227,16 @@ class PostController extends Controller
         $post->delete();
 
         return response()->json(true);
+    }
+
+    public function getViewCount($id)
+    {
+        $post = Post::where('id', $id)->where('is_approved', 1)->first();
+        
+        if(!$post) {
+            throw new FailException('Không tìm thấy bài viết');
+        }
+
+        return $post->only(['count_view']);
     }
 }

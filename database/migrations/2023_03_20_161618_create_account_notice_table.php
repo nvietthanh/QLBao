@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('account_notice', function (Blueprint $table) {
             $table->foreignId('account_id')->constrained('accounts')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('notice_id')->constrained('notices')->onUpdate('cascade')->onDelete('cascade');
-            $table->dateTime('read_at')->nullable();
+            $table->timestamp('read_at')->nullable();
         });
     }
 

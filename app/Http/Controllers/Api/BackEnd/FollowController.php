@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\BackEnd;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CreatorReasource;
+use App\Http\Resources\FollowerResource;
 use App\Models\Account;
 use App\Support\Collection;
 use Illuminate\Http\Request;
@@ -14,9 +15,29 @@ class FollowController extends Controller
     {
         $currentAccount = auth('accounts')->user();
 
-        $follows = (new Collection($currentAccount->follows))->paginate($request->limit ?? 1);
+        $follows = (new Collection($currentAccount->follows))->paginate($request->limit ?? 10);
 
         return CreatorReasource::collection($follows);
+    }
+
+    public function listFollower(Request $request)
+    {
+        $currentAccount = auth('accounts')->user();
+
+        $followers = (new Collection($currentAccount->hasFollows))->paginate($request->limit ?? 10);
+
+        return FollowerResource::collection($followers);
+    }
+
+    public function deleteFollow($code)
+    {
+        $account = Account::where('code', $code)->first();
+
+        $currentAccount = auth('accounts')->user();
+
+        $currentAccount->hasFollows()->detach($account->id);
+
+        return response()->json(true);
     }
 
     public function follow(Request $request, $code)

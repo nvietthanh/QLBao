@@ -58,6 +58,17 @@ class Account extends Authenticatable
             ->orderByPivot('follow_at', 'desc');
     }
 
+    public function hasFollows()
+    {
+        return $this->belongsToMany(Account::class, 'follows', 'follower_id', 'account_id');
+    }
+
+    public function notices()
+    {
+        return $this->belongsToMany(Notice::class, 'account_notice', 'account_id', 'notice_id')
+            ->withPivot('read_at'); 
+    }
+
     public static function getAccountByChart($period, $items, $fieldTime)
     {
         $dataPeriod = [];
