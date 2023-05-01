@@ -9,7 +9,7 @@
                                 <img src="/image/logo/logo.png" alt="Logo bao moi" class="h-[60px]">
                             </Link>
                         </div>
-                        <div class="col-5 mt-1 flex items-center search relative">
+                        <div class="col-6 mt-1 flex items-center search relative">
                             <Dropdown align="left" class="right-0 w-[100%] text-[#000]" :contentClasses="[backgroundColor]"
                                 @click="cleareDataSearch">
                                 <template #trigger>
@@ -41,7 +41,7 @@
                                 </template>
                             </Dropdown>
                         </div>
-                        <div class="col-5 flex items-center justify-end text-black pl-5">
+                        <div class="col-4 flex items-center justify-end text-black pl-5">
                             <el-dropdown v-if="this.$page.props.auth.account" :placement="top-end" ref="dropdown2" trigger="contextmenu" class="mr-[18px]">
                                 <span class="el-dropdown-link" @click="clickNotification()">
                                     <span class="text-[20px] mt-[8px] relative">
@@ -53,17 +53,18 @@
                                     </span>
                                 </span>
                                 <template #dropdown>
-                                    <el-dropdown-menu class="max-w-[300px] w-[300px]">
+                                    <el-dropdown-menu class="max-w-[310px] w-[310px]">
                                         <div class="h-[42px] leading-[42px] mb-[2px] border-b-[1px] border-b-[#adb5bd] text-[15px] text-center">
                                             <i class="bi bi-bell mr-[6px] text-[17px]"></i>Thông báo
                                         </div>
-                                        <div id="list-notice" class="max-h-[320px] overflow-y-scroll">
+                                        <div id="list-notice" class="max-h-[320px] overflow-y-scroll"
+                                         :class="{ 'mb-[12px]' : listNotice.length > 0}">
                                             <template v-if="listNotice.length > 0" v-for="notice in listNotice">
                                                 <Link :href="route('post', [notice.post_slug, notice.notice_id])">
-                                                    <div class="py-[12px] px-[12px] flex items-center cursor-pointer hover:bg-[#e9ecef]"
+                                                    <div class="mx-[1px] py-[12px] px-[12px] flex items-center cursor-pointer hover:bg-[#e9ecef]"
                                                         :class="{ 'bg-[#e9ecef]' : !notice.is_read}">
-                                                        <img :src="notice.creator_image" v-if="notice.creator_image">
-                                                        <div v-else class="min-w-[32px] w-[32px] h-[32px] leading-[32px] text-center text-white
+                                                        <img v-if="notice.creator_image" :src="notice.creator_image" class="w-[40px] h-[40px] rounded-[50%] object-cover">
+                                                        <div v-else class="min-w-[40px] w-[40px] h-[40px] leading-[40px] text-center text-white
                                                             rounded-[50%] bg-[#5c6bc0]">
                                                             {{ notice.creator_name[0] }}
                                                         </div>
@@ -71,8 +72,8 @@
                                                             <span class="font-bold text-[13px]">{{ notice.creator_name }}</span>
                                                             <span class="text-[13px] ml-[4px]">{{ notice.content }}</span>
                                                         </div>
-                                                        <div v-if="!notice.is_read" class="ml-[12px] w-[8px] h-[8px] rounded-[50%] bg-[green]"></div>
-                                                        <div v-else class="ml-[20px]"></div>
+                                                        <div v-if="!notice.is_read" class="ml-[8px] w-[8px] h-[8px] rounded-[50%] bg-[green]"></div>
+                                                        <div v-else class="ml-[16px]"></div>
                                                     </div>
                                                 </Link>
                                             </template>
@@ -464,17 +465,14 @@ export default {
             const responseNotice = await axios.get(route('get-notices', pagram))
             this.listNotice = responseNotice.data.data
 
+            const responseCountNotice = await axios.get(route('get-count-notices'))
+            this.countNotice = responseCountNotice.data
+
             if(responseNotice.data.meta.last_page == responseNotice.data.meta.current_page) {
                 this.nextNotice = false
             }
             else{
                 this.nextNotice = true
-            }
-
-            for(let notice of this.listNotice) {
-                if(notice.is_read == false) {
-                    this.countNotice++
-                }
             }
         },
         nextMoreNotice() {
@@ -567,7 +565,7 @@ export default {
 
 <style>
 #list-notice::-webkit-scrollbar {
-    width: 10px !important;
+    width: 8px !important;
 }
 #list-notice::-webkit-scrollbar-track {
     background: #fff !important;
