@@ -31,6 +31,14 @@
                     Tác giả đã theo dõi
                 </div>
             </Link>
+            <template v-if="this.$page.props.roles[0] == 'Creator'">
+                <Link :href="route('user.list-follower')">
+                    <div class="py-[12px] px-[12px] text-[17px] border-b-[1px] cursor-pointer hover:bg-[#e9ecef]"
+                    :class="{ 'bg-[#e9ecef] text-[#0d6efd] font-bold' :currentTab == 'tab-5' }">
+                        Người theo dõi
+                    </div>
+                </Link>
+            </template>
             <Link :href="route('user.list-read')">
                 <div class="py-[12px] px-[12px] text-[17px] border-b-[1px] cursor-pointer hover:bg-[#e9ecef]"
                 :class="{ 'bg-[#e9ecef] text-[#0d6efd] font-bold' :currentTab == 'tab-2' }">

@@ -6,7 +6,9 @@ use App\Exceptions\FailException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AdminPostRequest;
 use App\Http\Resources\AdminPostResource;
+use App\Models\Account;
 use App\Models\Category;
+use App\Models\Notice;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -83,7 +85,7 @@ class PostController extends Controller
             $path = $request->file('image') ? Storage::putFile('public/posts', $request->file('image')) : '';
 
             $post->update(
-                array_merge($request->only(['title', 'description', 'content']),
+                array_merge($request->only(['title', 'description', 'content', 'is_popular']),
                 [
                     'slug' =>  Str::slug($request->title),
                     'category_id' => Category::where('slug', $request->categorySlug)->first()->id,
@@ -128,6 +130,34 @@ class PostController extends Controller
             $post->update([
                 'is_approved' => !$post->is_approved
             ]);
+            
+            if($post->is_notice == 1) {
+                $notice = Notice::where('post_id', $post->id)->first();
+                
+                if($post->is_approved) {
+                    $notice->update([
+                        'status' => 1
+                    ]);
+
+                    $creator = Account::find($notice->creator_id);
+                    $follows = $creator->hasFollows;
+
+                    if($follows) {
+                        foreach($follows as $follow) {
+                            $notice->noticeAccount()->attach([
+                                $follow->id
+                            ]);
+                        }
+                    }
+                }
+                else {
+                    $notice->update([
+                        'status' => 0
+                    ]);
+
+                    $notice->noticeAccount()->detach();
+                }
+            }
         }
 
         return response()->json(200);

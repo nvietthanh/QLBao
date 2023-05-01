@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\BackEnd\CommentController;
 use App\Http\Controllers\Api\BackEnd\Creator\PostController;
 use App\Http\Controllers\Api\BackEnd\FollowController;
 use App\Http\Controllers\Api\BackEnd\HomeController;
+use App\Http\Controllers\Api\Backend\NoticeController;
 use App\Http\Controllers\Api\BackEnd\ProfileController;
 use App\Http\Controllers\Api\FrontEnd\CreatorController;
 use App\Http\Controllers\Api\FrontEnd\PostController as HomePostController;
@@ -51,6 +52,8 @@ Route::middleware(['is_approved', 'auth:accounts', 'is_creator'])->prefix('creat
     Route::post('/post-valition', [PostController::class, 'validateStore'])->name('posts.validate');
     Route::post('/posts/{id}', [PostController::class, 'update'])
         ->name('posts.update');
+    
+    Route::get('/get-count-view/{id}', [PostController::class, 'getViewCount'])->name('posts.get-count-view');
 });
 
 Route::middleware([
@@ -60,6 +63,8 @@ Route::middleware([
 ->prefix('user')->group(function () {
     Route::apiResource('profiles', ProfileController::class);
     Route::post('/profiles/{id}', [ProfileController::class, 'update'])->name('profiles.update');
+
+    Route::get('/get-notices', [NoticeController::class, 'getNotice'])->name('get-notices');
 
     // create comment
     Route::post('/comment/{id}', [CommentController::class, 'createComment'])->name('create-comment');
@@ -76,11 +81,15 @@ Route::middleware([
     // update comment
     Route::post('/update-comment/{id}', [CommentController::class, 'updateComment'])->name('update-comment');
 
-    // list follow
-    Route::get('/list-follows', [FollowController::class, 'listFollow'])->name('list-follows');
+    // list following
+    Route::get('/list-following', [FollowController::class, 'listFollow'])->name('list-follows');
     // follow account
     Route::get('/follow-account/{code}', [FollowController::class, 'follow'])->name('follow-account');
     Route::get('/unfollow-account/{code}', [FollowController::class, 'unfollow'])->name('unfollow-account');
+
+    // list follower
+    Route::get('/list-follower', [FollowController::class, 'listFollower'])->name('list-followers');
+    Route::get('/delete-follow-account/{code}', [FollowController::class, 'deleteFollow'])->name('delete-follow-account');
 
     // list read post
     Route::get('/list-read-post', [HomeController::class, 'getListRead'])->name('get-list-read');

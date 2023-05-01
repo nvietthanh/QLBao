@@ -36,6 +36,7 @@ class AdminPostResource extends JsonResource
             'categorySlug' => $this->category->slug,
             'is_approved' => $this->is_approved,
             'status' => $this->status ? true : false,
+            'is_popular' => $this->is_popular ? "1" : "0",
             'created_at' => Carbon::create($this->created_at)->format('Y-m-d H:i'),
             'updated_at' => Carbon::create($this->updated_at)->format('Y-m-d H:i'),
             'creator' => $this->creator->accountProfile->getFullName(),

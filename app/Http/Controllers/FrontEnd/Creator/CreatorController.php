@@ -12,4 +12,9 @@ class CreatorController extends Controller
     {
         return Inertia::render('Creater/ListPost');
     }
+
+    public function lisFollowers()
+    {
+        return Inertia::render('User/ListHasFollow');
+    }
 }

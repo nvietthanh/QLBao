@@ -1,6 +1,6 @@
 <template>
-    <el-dialog v-model="dialogVisible" id="edit-post" class="bg-[#f4f1f8] max-h-[90%] overflow-y-scroll" width="900px" 
-     style="margin-top: 34px !important;" :show-close="true">
+    <el-dialog v-model="dialogVisible" id="edit-post" class="bg-[#f4f1f8] max-h-[96%] overflow-y-scroll" width="900px" 
+     style="margin-top: 14px !important;" :show-close="true">
         <template #header>
             <div class="text-center font-bold text-[18px]">
                 Chỉnh sửa bài viết
@@ -77,6 +77,32 @@
                     {{ errors.content[0] }}
                 </div>
             </div>
+            <div class="mt-[18px]" v-if="listCategory.length != 0">
+                <div class="text-[16px] font-bold text-[#000]">Kết quả phân loại</div>
+                <div class="mt-[6px] mx-[12px]">
+                    <el-radio-group size="large" disabled="false">
+                        <template v-for="category in listCategory">
+                            <el-radio :label="category.slug" size="large" border>
+                                <span class="font-bold">{{ category.name }}</span>
+                                :
+                                <span class="font-bold">{{ category.value }} %</span>
+                            </el-radio>
+                        </template>
+                    </el-radio-group>
+                </div>
+            </div>
+            <div class="mt-[18px]">
+                <div class="text-[16px] font-bold text-[#000] mb-[8px]">Bài viết nổi bật</div>
+                <el-radio-group v-model="dataForm.is_popular" size="large">
+                    <el-radio label="1" size="large" border>Bài viết nổi bật</el-radio>
+                    <el-radio label="0" size="large" border>Không phải bài viết nổi bật</el-radio>
+                </el-radio-group>
+            </div>
+            <!-- <div class="float-right mt-[18px] mr-[24px] cursor-pointer flex justify-center items-center w-[110px]
+             rounded-[4px] bg-[#007bff] py-[4px] h-[32px] text-[15px] text-white"
+                @click="findCategory">
+                Phân loại
+            </div> -->
             <div class="mt-[18px]">
                 <div class="text-[16px] font-bold text-[#000]">Chủ đề được phân loại</div>
                 <el-select v-model="dataForm.categorySlug" class="mt-[2px] max-w-[250px]" placeholder="Chọn chủ đề">
@@ -95,6 +121,10 @@
                         Hủy bỏ
                     </div>
                     <div class="cursor-pointer flex justify-center items-center w-[110px] ml-[18px] rounded-[4px] bg-[#007bff] py-[4px] h-[32px] text-[15px] text-white"
+                        @click="findCategory">
+                        Phân loại
+                    </div>
+                    <div class="cursor-pointer flex justify-center items-center w-[110px] ml-[18px] rounded-[4px] bg-[#007bff] py-[4px] h-[32px] text-[15px] text-white"
                         @click="editPost">
                         Xác nhận
                     </div>
@@ -109,6 +139,7 @@ import axios from 'axios';
 import { Link } from '@inertiajs/vue3'
 import CkeditorPost from '@/Components/Ckeditor/Ckeditor.vue';
 import { ElMessage } from 'element-plus'
+import { ElLoading } from 'element-plus'
 
 export default {
     components: {
@@ -121,8 +152,10 @@ export default {
             dialogVisible: false,
             imageSelected: '',
             dataForm: {},
+            listHagTag: [],
+            listCategory: '',
+            categorySelect: '',
             errors: [],
-            listHagTag: []
         }
     },
     watch: {
@@ -180,6 +213,21 @@ export default {
                 console.log('handleUploadContent', err);
             }
         },
+        findCategory() {
+            const loading = ElLoading.service({
+                lock: true,
+                text: 'Đang tiến hành phân loại',
+                background: 'rgba(0, 0, 0, 0.7)',
+            })
+            const pagramCategory = new FormData()
+            const content = this.$refs['content'].editorData.replace(/(<([^>]+)>)/gi, "").replace(/&nbsp;/gi,"")
+            pagramCategory.append('content', content)
+            axios.post('http://127.0.0.1:5000/classify', pagramCategory)
+                .then(response => {
+                    this.listCategory = response.data
+                    loading.close()
+                })
+        },
         async editPost() {
             const pagram = new FormData()
             pagram.append('title', this.dataForm.title ?? '')
@@ -188,6 +236,7 @@ export default {
             pagram.append('content', this.$refs['content'].editorData ?? '')
             pagram.append('hagtags', this.dataForm.hagtags ?? '')
             pagram.append('categorySlug', this.dataForm.categorySlug ?? '')
+            pagram.append('is_popular', this.dataForm.is_popular ?? 0)
             await axios.post(route('admin.posts.update', this.dataForm.id), pagram)
                 .then(response => {
                     if(response.data.status == false){
@@ -215,6 +264,10 @@ export default {
 }
 </script>
 <style>
+#edit-post .el-radio {
+    min-width: 220px;
+    margin-top: 8px;
+}
 #edit-post .el-dialog__headerbtn {
     font-size: 24px !important;
 }

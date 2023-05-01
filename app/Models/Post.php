@@ -17,11 +17,13 @@ class Post extends Model
         'description',
         'content',
         'image',
+        'is_notice',
         'is_approved',
         'category_id',
         'creator_id',
         'updater_id',
         'updaterable',
+        'is_popular',
         'status'
     ];
 

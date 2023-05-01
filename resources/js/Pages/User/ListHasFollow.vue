@@ -2,18 +2,18 @@
     <AppLayout :current-tab="'main-full'">
         <template v-slot:main-full>
             <div class="min-w-[280px] w-[280px]">
-                <Navigation :currentTab="'tab-1'"/>
+                <Navigation :currentTab="'tab-5'"/>
             </div>
             <div class="flex-auto ml-[16px]">
                 <div class="py-[20px] bg-[#fff] box-shadow">
                     <div class="border-b-[2px] mb-[8px]">
                         <div class="border-l-[5px] border-[#db562b] text-[#db562b] font-bold ml-[8px] pl-[8px] mb-[12px] text-[17px]">
-                            Danh sách theo dõi ({{ countFollow }})
+                            Người theo dõi ({{ countFollower }})
                         </div>
                     </div>
                     <template v-if="formData.length == 0">
                         <div class="text-center text-[16px] mt-[18px] mb-[6px]">
-                            Bạn chưa theo dõi tác giả nào
+                            Bạn chưa có người dùng nào theo dõi
                         </div>
                     </template>
                     <template v-else>
@@ -31,9 +31,9 @@
                                             <div class="description text-[13px]">{{ item.description }}</div>
                                         </div>
                                     </Link>
-                                    <div class="flex items-center text-[26px] ml-[8px] mr-[8px] text-[#adb5bd] cursor-pointer hover:text-[#6c757d]" 
-                                     @click="unFollow(item.code, item.first_name + ' ' + item.last_name)">
-                                        <i class="bi bi-check-lg"></i>
+                                    <div class="flex items-center text-[28px] ml-[8px] mr-[8px] text-[#adb5bd] cursor-pointer hover:text-[#6c757d]" 
+                                     @click="deleteFollow(item.code, item.first_name + ' ' + item.last_name)">
+                                        <i class="bi bi-x"></i>
                                     </div>
                                 </div>
                             </div>
@@ -72,7 +72,7 @@ export default{
             },
             paginate: [],
             formData: [],
-            countFollow: 0
+            countFollower: 0
         }  
     },
     created() {
@@ -81,20 +81,20 @@ export default{
     methods: {
         async fetchData() {
             const pagram = { ...this.filter }
-            const response = await axios.get(route('list-follows', pagram)  )
+            const response = await axios.get(route('list-followers', pagram)  )
             this.formData = response.data.data
             this.paginate = response.data.meta
-            this.countFollow = response.data.meta.total
+            this.countFollower = response.data.meta.total
         },
         handleCurrentPage(value) {
             this.filter.page = value
             this.fetchData()
         },
-        unFollow(code, name) {
+        deleteFollow(code, name) {
             ElMessageBox({
                 title: 'Hủy theo dõi',
                 message: h('p', null, [
-                    h('span', null, `Bạn có muốn hủy theo dõi ${ name } ?`),
+                    h('span', null, `Bạn có xóa lượt theo dõi của ${ name } ?`),
                 ]),
                 showCancelButton: true,
                 confirmButtonText: 'Xác nhận',
@@ -104,7 +104,7 @@ export default{
                         instance.confirmButtonLoading = true
                         instance.confirmButtonText = 'Loading...'
                         instance.closeForm = false
-                        axios.get(route('unfollow-account', code))
+                        axios.get(route('delete-follow-account', code))
                             .then(response => {
                                 done()
                             })
@@ -117,7 +117,7 @@ export default{
             }).then(() => {
                 ElMessage({
                     type: 'success',
-                    message: `Hủy theo dõi ${name} thành công`,
+                    message: `Xóa lượt theo dõi ${name} thành công`,
                 })
                 this.fetchData()
             }).catch(() => {})

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('count_view')->default(0);
             $table->boolean('status')->default(1);
             $table->boolean('is_approved')->default(0);
+            $table->integer('is_notice')->default(0);
             $table->unsignedBigInteger('category_id')->nullable();
             $table->unsignedBigInteger('creator_id')->nullable();
             $table->string('updaterable')->nullable();

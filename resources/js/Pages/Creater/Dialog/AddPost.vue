@@ -32,6 +32,13 @@
                 </el-select>
             </div>
             <div class="mt-[18px]">
+                <div class="text-[16px] font-bold text-[#000] mb-[8px]">Thông báo</div>
+                <el-radio-group v-model="dataForm.is_notice" size="large">
+                    <el-radio label="1" size="large" border>Gửi thông báo</el-radio>
+                    <el-radio label="0" size="large" border>Không gửi thông báo</el-radio>
+                </el-radio-group>
+            </div>
+            <div class="mt-[18px]">
                 <div class="text-[16px] font-bold text-[#000]">Hình ảnh <span class="text-[red]">*</span></div>
                 <div class="w-[280px] mt-[8px]" v-if="imageSelected != ''">
                     <img :src="imageSelected" alt="" class="rounded-[4px]">
@@ -53,7 +60,7 @@
                     {{ errors.content[0] }}
                 </div>
             </div>
-            <div class="mt-[18px]" v-if="listCategory.length != 0">
+            <div class="list-find-category mt-[18px]" v-if="listCategory.length != 0">
                 <div class="text-[16px] font-bold text-[#000]">Kết quả phân loại</div>
                 <div class="mt-[6px] mx-[12px]">
                     <el-radio-group v-model="categorySelect" size="large">
@@ -111,6 +118,7 @@ export default {
                 image: '',
                 content: '',
                 hagtags: [],
+                is_notice: "1"
             },
             listHagTag: [],
             listCategory: '',
@@ -131,7 +139,7 @@ export default {
             this.dataForm.title = ''
             this.dataForm.description = ''
             this.dataForm.image = ''
-            this.$refs['content'].editorData = ''
+            // this.$refs['content'].editorData = ''
             this.categorySelect = ''
             this.listCategory = ''
             this.listHagTag = []
@@ -197,6 +205,7 @@ export default {
             pagram.append('content', this.$refs['content'].editorData ?? '')
             pagram.append('hagtags', this.dataForm.hagtags ?? '')
             pagram.append('category', this.categorySelect)
+            pagram.append('is_notice', this.dataForm.is_notice)
             axios.post(route('creator.posts.store', this.id), pagram)
                 .then(() => {
                     ElMessage({
@@ -220,7 +229,7 @@ export default {
 }
 </script>
 <style>
-#add-post .el-radio {
+#add-post .list-find-category .el-radio {
     min-width: 220px;
     margin-top: 8px;
 }

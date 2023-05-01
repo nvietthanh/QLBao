@@ -9,7 +9,7 @@
                                 <img src="/image/logo/logo.png" alt="Logo bao moi" class="h-[60px]">
                             </Link>
                         </div>
-                        <div class="col-6 mt-1 flex items-center search relative">
+                        <div class="col-5 mt-1 flex items-center search relative">
                             <Dropdown align="left" class="right-0 w-[100%] text-[#000]" :contentClasses="[backgroundColor]"
                                 @click="cleareDataSearch">
                                 <template #trigger>
@@ -41,7 +41,54 @@
                                 </template>
                             </Dropdown>
                         </div>
-                        <div class="col-4 flex items-center justify-end text-black pl-5">
+                        <div class="col-5 flex items-center justify-end text-black pl-5">
+                            <el-dropdown v-if="this.$page.props.auth.account" :placement="top-end" ref="dropdown2" trigger="contextmenu" class="mr-[18px]">
+                                <span class="el-dropdown-link" @click="clickNotification()">
+                                    <span class="text-[20px] mt-[8px] relative">
+                                        <i class="bi bi-bell"></i>
+                                        <span v-if="countNotice != 0" class="absolute left-[60%] top-[-4px] text-[11px] text-[#000] text-white font-bold
+                                         bg-[red] max-w-[16px] h-[16px] leading-[17px] text-center rounded-[50%]">
+                                            {{ this.countNotice }}
+                                        </span>
+                                    </span>
+                                </span>
+                                <template #dropdown>
+                                    <el-dropdown-menu class="max-w-[300px] w-[300px]">
+                                        <div class="h-[42px] leading-[42px] mb-[2px] border-b-[1px] border-b-[#adb5bd] text-[15px] text-center">
+                                            <i class="bi bi-bell mr-[6px] text-[17px]"></i>Thông báo
+                                        </div>
+                                        <div id="list-notice" class="max-h-[320px] overflow-y-scroll">
+                                            <template v-if="listNotice.length > 0" v-for="notice in listNotice">
+                                                <Link :href="route('post', [notice.post_slug, notice.notice_id])">
+                                                    <div class="py-[12px] px-[12px] flex items-center cursor-pointer hover:bg-[#e9ecef]"
+                                                        :class="{ 'bg-[#e9ecef]' : !notice.is_read}">
+                                                        <img :src="notice.creator_image" v-if="notice.creator_image">
+                                                        <div v-else class="min-w-[32px] w-[32px] h-[32px] leading-[32px] text-center text-white
+                                                            rounded-[50%] bg-[#5c6bc0]">
+                                                            {{ notice.creator_name[0] }}
+                                                        </div>
+                                                        <div class="ml-[8px]">
+                                                            <span class="font-bold text-[13px]">{{ notice.creator_name }}</span>
+                                                            <span class="text-[13px] ml-[4px]">{{ notice.content }}</span>
+                                                        </div>
+                                                        <div v-if="!notice.is_read" class="ml-[12px] w-[8px] h-[8px] rounded-[50%] bg-[green]"></div>
+                                                        <div v-else class="ml-[20px]"></div>
+                                                    </div>
+                                                </Link>
+                                            </template>
+                                            <template v-else>
+                                                <div class="text-[14px] py-[18px] text-center text-[#6c757d]">
+                                                    Không có thông báo nào
+                                                </div>
+                                            </template>
+                                        </div>
+                                        <div v-if="this.nextNotice" class="text-center py-[8px] text-[14px] cursor-pointer hover:text-[#17a2b8] hover:bg-[#e9ecef]"
+                                            @click="nextMoreNotice">
+                                            Đọc thêm
+                                        </div>
+                                    </el-dropdown-menu>
+                                </template>
+                            </el-dropdown>
                             <el-dropdown ref="dropdown1" trigger="contextmenu">
                                 <span class="el-dropdown-link" @click="clickDropdown()">
                                     <template v-if="this.$page.props.auth.account">
@@ -106,7 +153,6 @@
                                     </el-dropdown-menu>
                                 </template>
                             </el-dropdown>
-                            <!-- <i class="bi bi-phone cursor-pointer mt-[2px]" style="font-size: 1.4rem;"></i> -->
                         </div>
                     </div>
                 </div>
@@ -348,13 +394,23 @@ export default {
                 '/image/partner/partner-3.png',
                 '/image/partner/partner-4.png',
             ],
-            searchFooter: ''
+            searchFooter: '',
+            listNotice: [],
+            countNotice: 0,
+            filterNotice: {
+                limit: 5
+            },
+            nextNotice: true,
         }
     },
     mounted() {
         const thisChild = this.$refs.dropdown1
+        const thisChild2 = this.$refs.dropdown2
         window.onscroll = function() {
             thisChild.handleClose()
+            if(thisChild2) {
+                thisChild2.handleClose()
+            }
             if(this.scrollY <= 56) {
                 document.querySelector('.header-search').classList.remove('hidden')
             }
@@ -395,8 +451,35 @@ export default {
 
                 const responsePostInterested = await axios.get(route('post.get-post-interested'))
                 this.listPostInterested = responsePostInterested.data.data
-
             }
+
+            if (this.$page.props.auth.account) {
+                this.loadNotice()
+            }
+        },
+        async loadNotice() {
+            const pagram = {
+                ...this.filterNotice
+            }
+            const responseNotice = await axios.get(route('get-notices', pagram))
+            this.listNotice = responseNotice.data.data
+
+            if(responseNotice.data.meta.last_page == responseNotice.data.meta.current_page) {
+                this.nextNotice = false
+            }
+            else{
+                this.nextNotice = true
+            }
+
+            for(let notice of this.listNotice) {
+                if(notice.is_read == false) {
+                    this.countNotice++
+                }
+            }
+        },
+        nextMoreNotice() {
+            this.filterNotice.limit += 4
+            this.loadNotice()
         },
         convertTime(created_at) {
             const now = moment()
@@ -423,6 +506,9 @@ export default {
         },
         clickDropdown() {
             this.$refs.dropdown1.handleOpen()
+        },
+        clickNotification() {
+            this.$refs.dropdown2.handleOpen()
         },
         openLogin() {
             this.$refs.loginForm.open()
@@ -480,6 +566,16 @@ export default {
 </script>
 
 <style>
+#list-notice::-webkit-scrollbar {
+    width: 10px !important;
+}
+#list-notice::-webkit-scrollbar-track {
+    background: #fff !important;
+}
+#list-notice::-webkit-scrollbar-thumb {
+    background: #ced4da !important;
+    border-radius: 10px !important;
+}
 .header-title {
   max-height: 52px;
   line-height: 22px;

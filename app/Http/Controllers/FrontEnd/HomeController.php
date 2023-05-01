@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Account;
 use App\Models\Category;
 use App\Models\HagTag;
+use App\Models\Notice;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -27,15 +28,23 @@ class HomeController extends Controller
         return Inertia::render('ListPostCategory', ['category' => $category->slug, 'categoryName' =>  $category->name]);
     }
     
-    public function post($slugPost)
+    public function post($slugPost, $noticeId = null)
     {
+        $currentAccount = auth('accounts')->user();
+
         $post = Post::where('slug', $slugPost)
                 ->where('is_approved', 1)
                 ->where('status', 1)
                 ->first();
-                
+
         if(!$post) {
             abort(404);
+        }
+
+        if($currentAccount && $noticeId) {
+            $notice = Notice::find($noticeId);
+
+            $notice->noticeAccount()->updateExistingPivot($currentAccount->id, ['read_at' => now()]);
         }
 
         return Inertia::render('Post', ['slug' => $slugPost]);

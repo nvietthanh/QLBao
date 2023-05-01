@@ -15,10 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('content');
             $table->boolean('status');
+            $table->unsignedBigInteger('post_id')->nullable();
             $table->unsignedBigInteger('creator_id')->nullable();
             $table->unsignedBigInteger('updater_id')->nullable();
             $table->timestamps();
 
+            $table->foreign('post_id')->references('id')->on('posts')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('creator_id')->references('id')->on('accounts')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('updater_id')->references('id')->on('accounts')->onUpdate('cascade')->onDelete('cascade');
         });

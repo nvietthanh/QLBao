@@ -67,7 +67,7 @@
             <div class="py-[12px] bg-[#fff] box-shadow">
                 <div class="border-b-[2px] mb-[8px]">
                     <div class="border-l-[5px] border-[#db562b] text-[#db562b] font-bold ml-[8px] pl-[8px] mb-[12px] text-[15px]">
-                       Tác giả được đọc nhiều nhất
+                       Tác giả có thể bạn quan tâm
                     </div>
                 </div>
                 <div v-for="item in listCreatorPopular" class="mx-[2px]">

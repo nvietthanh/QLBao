@@ -1,6 +1,6 @@
 <template>
-    <el-dialog v-model="dialogVisible" id="edit-post" class="bg-[#f4f1f8] max-h-[90%] overflow-y-scroll" width="900px" 
-     style="margin-top: 34px !important;" :show-close="true">
+    <el-dialog v-model="dialogVisible" id="edit-post" class="bg-[#f4f1f8] max-h-[95%] overflow-y-scroll" width="900px" 
+     style="margin-top: 14px !important;" :show-close="true">
         <template #header>
             <div class="text-center font-bold text-[18px]">
                 Chỉnh sửa bài viết
@@ -30,6 +30,13 @@
                         :value="item.id"
                     />
                 </el-select>
+            </div>
+            <div class="mt-[18px]">
+                <div class="text-[16px] font-bold text-[#000] mb-[8px]">Thông báo</div>
+                <el-radio-group v-model="dataForm.is_notice" size="large">
+                    <el-radio label="1" size="large" border>Gửi thông báo</el-radio>
+                    <el-radio label="0" size="large" border>Không gửi thông báo</el-radio>
+                </el-radio-group>
             </div>
             <div class="mt-[18px] w-[100%]">
                 <div class="text-[16px] font-bold text-[#000]">Hình ảnh <span class="text-[red]">*</span></div>
@@ -201,6 +208,7 @@ export default {
             pagram.append('content', this.$refs['content'].editorData ?? '')
             pagram.append('hagtags', this.dataForm.hagtags ?? '')
             pagram.append('category', this.categorySelect)
+            pagram.append('is_notice', this.dataForm.is_notice)
             await axios.post(route('creator.posts.update', this.dataForm.id), pagram)
                 .then(response => {
                     if(response.data.status == false){
@@ -233,6 +241,10 @@ export default {
 }
 </script>
 <style>
+#edit-post .el-radio {
+    min-width: 220px;
+    margin-top: 8px;
+}
 #edit-post .el-dialog__headerbtn {
     font-size: 24px !important;
 }

@@ -44,7 +44,7 @@ Route::get('/home', function () {
 Route::middleware('is_approved')->group(function () {
     Route::get('/', [HomeController::class, 'home'])->name('home');
     Route::get('/category/{category}', [HomeController::class, 'category'])->name('list-category');
-    Route::get('/post/{slugPost}', [HomeController::class, 'post'])->name('post');
+    Route::get('/post/{slugPost}/{id?}', [HomeController::class, 'post'])->name('post');
     Route::get('/search/{search}', [HomeController::class, 'search'])->name('search');    
     Route::get('/creator/id={id}', [HomeController::class, 'creator'])->name('creator');
     Route::get('/hagtag/{slug}', [HomeController::class, 'listPostHagtag'])->name('list-post-hagtag');
@@ -58,12 +58,14 @@ Route::middleware([
     'auth:accounts',
 ])->prefix('user')->name('user.')->group(function () {
     Route::get('my-profile', [UserController::class, 'myProfile'])->name('my-profile');
-    Route::get('follows', [UserController::class, 'lisFollows'])->name('list-follow');
+    Route::get('following', [UserController::class, 'lisFollows'])->name('list-follow');
     Route::get('list-reads', [UserController::class, 'listReads'])->name('list-read');
     Route::get('list-saves', [UserController::class, 'listSaves'])->name('list-save');
 
     Route::middleware('is_creator')->group(function () {
         Route::get('my-post', [CreatorController::class, 'listPosts'])->name('my-post');
+
+        Route::get('follower', [CreatorController::class, 'lisFollowers'])->name('list-follower');
     });
 });
 

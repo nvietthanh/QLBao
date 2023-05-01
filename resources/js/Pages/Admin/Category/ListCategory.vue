@@ -22,10 +22,10 @@
                 </div>
                 <DataTable :fields="fields" :items="tableData" enable-select-box @row-selected="handleSelectionChange">
                     <template #options="{ row }">
-                        <span class="px-[8px] py-[8px] text-[20px] cursor-pointer" @click="editCategory(row)">
+                        <span class="px-[8px] py-[8px] text-[18px] cursor-pointer" @click="editCategory(row)">
                             <i class="bi bi-pencil-fill"></i>
                         </span>
-                        <span class="px-[8px] py-[8px] text-[20px] cursor-pointer" @click="deleteSelection(row)">
+                        <span class="px-[8px] py-[8px] text-[18px] cursor-pointer" @click="deleteSelection(row)">
                             <i class="bi bi-trash3-fill"></i>
                         </span>
                     </template>
@@ -71,7 +71,7 @@ export default{
             ],
             options: [10, 20, 30],
             filterSearch: {
-                limit: 2,
+                limit: 10,
                 search: '',
                 page: 1
             },
