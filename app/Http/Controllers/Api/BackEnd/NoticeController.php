@@ -17,4 +17,19 @@ class NoticeController extends Controller
 
         return NoticeResource::collection($notices);
     }
+
+    public function getCountNoticeUnread()
+    {
+        $currentAccount = auth('accounts')->user();
+        $notices = $currentAccount->notices;
+        $count = 0;
+
+        foreach($notices as $notice) {
+            if(!$notice->pivot->read_at) {
+                $count++;
+            }
+        }
+
+        return $count;
+    }
 }

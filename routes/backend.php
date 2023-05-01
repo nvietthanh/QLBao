@@ -65,6 +65,7 @@ Route::middleware([
     Route::post('/profiles/{id}', [ProfileController::class, 'update'])->name('profiles.update');
 
     Route::get('/get-notices', [NoticeController::class, 'getNotice'])->name('get-notices');
+    Route::get('/get-count-notices', [NoticeController::class, 'getCountNoticeUnread'])->name('get-count-notices');
 
     // create comment
     Route::post('/comment/{id}', [CommentController::class, 'createComment'])->name('create-comment');
