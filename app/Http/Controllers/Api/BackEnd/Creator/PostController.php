@@ -99,7 +99,8 @@ class PostController extends Controller
                 'status' => 0,
                 'post_id' => $post->id,
                 'creator_id' => auth('accounts')->user()->id,
-                'updater_id' => auth('accounts')->user()->id
+                'updater_id' => auth('accounts')->user()->id,
+                'type' => 0
             ]);
         }
 

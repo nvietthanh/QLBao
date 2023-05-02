@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('notices', function (Blueprint $table) {
             $table->id();
             $table->string('content');
+            $table->string('notice_type')->nullable();
             $table->boolean('status');
+            $table->integer('type');
             $table->unsignedBigInteger('post_id')->nullable();
             $table->unsignedBigInteger('creator_id')->nullable();
             $table->unsignedBigInteger('updater_id')->nullable();

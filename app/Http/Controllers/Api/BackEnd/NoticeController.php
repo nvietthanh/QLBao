@@ -13,7 +13,8 @@ class NoticeController extends Controller
     {
         $currentAccount = auth('accounts')->user();
 
-        $notices = (new Collection($currentAccount->notices))->paginate($request->limit ?? 4);;
+        $notices = (new Collection($currentAccount->notices->sortByDesc('created_at')))
+                ->paginate($request->limit ?? 4);;
 
         return NoticeResource::collection($notices);
     }

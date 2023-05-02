@@ -126,7 +126,7 @@
                         @change="fetchData()"
                     />
                 </div>
-                <div class="grid grid-cols-4 gap-4">
+                <div class="grid grid-cols-5 gap-4">
                     <div class="bg-[#01A3A4] text-white p-[20px] rounded-[8px]">
                         <div class="text-[24px] font-bold">{{ categoryCountData.sum }}</div>
                         <div class="mt-[12px] text-[14px] uppercase">Tổng bài viết</div>
@@ -293,9 +293,12 @@ export default{
                 labels: [],
                 datasets: [
                     {
-                        backgroundColorText: ['bg-[#41B883]', 'bg-[#E46651]', 'bg-[#ffc107]', 'bg-[#00D8FF]',
-                         'bg-[#DD1B16]', 'bg-[#6f42c1]', 'bg-[#F46B9C]', 'bg-[#6610f2]'],
-                        backgroundColor: ['#41B883', '#E46651', '#ffc107', '#00D8FF', '#DD1B16', '#6f42c1', '#F46B9C', '#6610f2'],
+                        backgroundColorText: [
+                            'bg-[#41B883]', 'bg-[#E46651]', 'bg-[#ffc107]', 'bg-[#00D8FF]', 'bg-[#DD1B16]', 'bg-[#6f42c1]',
+                            'bg-[#F46B9C]', 'bg-[#6610f2]', 'bg-[#dc3545]' , 'bg-[#198754]', 'bg-[#212529]'],
+                        backgroundColor: [
+                            '#41B883', '#E46651', '#ffc107', '#00D8FF', '#DD1B16', '#6f42c1', '#F46B9C', 
+                            '#6610f2', '#dc3545', '#198754', '#212529'],
                         data: []
                     }
                 ]

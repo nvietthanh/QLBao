@@ -77,13 +77,29 @@ class HomeController extends Controller
         return Inertia::render('ListSearch', ['search' => $search]);
     }
 
-    public function termOfUse()
+    public function termOfUse($noticeId = null)
     {
+        $currentAccount = auth('accounts')->user();
+
+        if($currentAccount) {
+            $notice = Notice::find($noticeId);
+
+            $notice->noticeAccount()->updateExistingPivot($currentAccount->id, ['read_at' => now()]);
+        }
+
         return Inertia::render('TermOfUse');
     }
 
-    public function privatePolicy()
+    public function privatePolicy($noticeId = null)
     {
+        $currentAccount = auth('accounts')->user();
+
+        if($currentAccount) {
+            $notice = Notice::find($noticeId);
+
+            $notice->noticeAccount()->updateExistingPivot($currentAccount->id, ['read_at' => now()]);
+        }
+
         return Inertia::render('PrivatePolicy');
     }
 
