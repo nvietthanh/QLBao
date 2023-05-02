@@ -30,5 +30,18 @@ class HagtagSeeder extends Seeder
             'updated_at' => now()
         ]);
 
+        HagTag::create([
+            'name' => 'Thị trường tiêu dùng',
+            'slug' => Str::remove('-', Str::slug('Thị trường tiêu dùng')),
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        HagTag::create([
+            'name' => 'Giảm nghèo bền vững',
+            'slug' => Str::remove('-', Str::slug('Giảm nghèo bền vững')),
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
     }
 }

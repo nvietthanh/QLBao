@@ -22,10 +22,12 @@ class NoticeResource extends JsonResource
         return [
             'id' => $this->id,
             'content' => $this->content,
-            'creator_name' => $creator->accountProfile->first_name . " " . $creator->accountProfile->last_name,
-            'creator_image' => $creator->accountProfile->image,
-            'post_slug' => $post->slug,
+            'creator_name' => $this->type == 0 ? $creator->accountProfile->first_name . " " . $creator->accountProfile->last_name : '',
+            'creator_image' => $this->type == 0 ? $creator->accountProfile->image : '',
+            'post_slug' => $this->type == 0 ? $post->slug : '',
             'notice_id' => $this->pivot->notice_id,
+            'notice_type' => $this->type == 1 ? $this->notice_type : '',
+            'type' => $this->type,
             'is_read' => $this->pivot->read_at ? true : false,
         ];
     }

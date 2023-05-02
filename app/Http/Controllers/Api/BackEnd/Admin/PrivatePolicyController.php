@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\BackEnd\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PrivatePolicyRequest;
+use App\Models\Account;
+use App\Models\Notice;
 use App\Models\Page;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -38,6 +40,19 @@ class PrivatePolicyController extends Controller
                     'title' => $request->title,
                     'content' => $request->content
                 ]);
+            }
+
+            $notice = Notice::create([
+                'content' => 'cập nhật thông tin chính sách bảo mật',
+                'notice_type' => 'private-policy',
+                'status' => 0,
+                'type' => 1
+            ]);
+
+            $accounts = Account::all();
+
+            foreach($accounts as $account) {
+                $notice->noticeAccount()->attach($account->id);
             }
 
             DB::commit();

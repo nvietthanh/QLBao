@@ -11,8 +11,10 @@ class Notice extends Model
 
     protected $fillable = [
         'content',
+        'notice_type',
         'post_id',
         'status',
+        'type',
         'creator_id',
         'updater_id'
     ];

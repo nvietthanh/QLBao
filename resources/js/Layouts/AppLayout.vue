@@ -60,19 +60,39 @@
                                         <div id="list-notice" class="max-h-[320px] overflow-y-scroll"
                                          :class="{ 'mb-[12px]' : listNotice.length > 0}">
                                             <template v-if="listNotice.length > 0" v-for="notice in listNotice">
-                                                <Link :href="route('post', [notice.post_slug, notice.notice_id])">
-                                                    <div class="mx-[1px] py-[12px] px-[12px] flex items-center cursor-pointer hover:bg-[#e9ecef]"
+                                                <Link v-if="notice.type == 0" :href="route('post', [notice.post_slug, notice.notice_id])">
+                                                    <div class="mx-[1px] py-[12px] px-[12px] flex items-center cursor-pointer border-b-[2px] hover:bg-[#e9ecef]"
                                                         :class="{ 'bg-[#e9ecef]' : !notice.is_read}">
-                                                        <img v-if="notice.creator_image" :src="notice.creator_image" class="w-[40px] h-[40px] rounded-[50%] object-cover">
-                                                        <div v-else class="min-w-[40px] w-[40px] h-[40px] leading-[40px] text-center text-white
-                                                            rounded-[50%] bg-[#5c6bc0]">
-                                                            {{ notice.creator_name[0] }}
-                                                        </div>
+                                                        <template v-if="notice.type == 0">
+                                                            <img v-if="notice.creator_image" :src="notice.creator_image" class="w-[40px] h-[40px] rounded-[50%] object-cover">
+                                                            <div v-else class="min-w-[40px] w-[40px] h-[40px] leading-[40px] text-center text-white
+                                                                rounded-[50%] bg-[#5c6bc0]">
+                                                                {{ notice.creator_name[0] }}
+                                                            </div>
+                                                        </template>
                                                         <div class="ml-[8px]">
-                                                            <span class="font-bold text-[13px]">{{ notice.creator_name }}</span>
-                                                            <span class="text-[13px] ml-[4px]">{{ notice.content }}</span>
+                                                            <span v-if="notice.type == 0" class="font-bold text-[13px]">
+                                                                {{ notice.creator_name }}
+                                                            </span>
+                                                            <span v-else class="font-bold text-[13px]">
+                                                                Quản trị hệ thống
+                                                            </span>
+                                                            <span class="text-[13px] ml-[3px]">{{ notice.content }}</span>
                                                         </div>
-                                                        <div v-if="!notice.is_read" class="ml-[8px] w-[8px] h-[8px] rounded-[50%] bg-[green]"></div>
+                                                        <div v-if="!notice.is_read" class="ml-[8px] w-[8px] min-w-[8px] h-[8px] rounded-[50%] bg-[green]"></div>
+                                                        <div v-else class="ml-[16px]"></div>
+                                                    </div>
+                                                </Link>
+                                                <Link v-else :href="route(notice.notice_type, notice.notice_id)">
+                                                    <div class="mx-[1px] py-[12px] px-[12px] flex items-center cursor-pointer border-b-[2px] hover:bg-[#e9ecef]"
+                                                        :class="{ 'bg-[#e9ecef]' : !notice.is_read}">
+                                                        <div class="ml-[8px]">
+                                                            <span class="font-bold text-[13px]">
+                                                                Quản trị hệ thống
+                                                            </span>
+                                                            <span class="text-[13px]">{{ notice.content }}</span>
+                                                        </div>
+                                                        <div v-if="!notice.is_read" class="ml-[8px] w-[8px] min-w-[8px] h-[8px] rounded-[50%] bg-[green]"></div>
                                                         <div v-else class="ml-[16px]"></div>
                                                     </div>
                                                 </Link>
@@ -306,7 +326,7 @@
     <footer>
         <div class="border-t-2 border-zinc-300 bg-[#17a2b8] py-2">
             <div class="max-w-[970px] mx-auto flex justify-between">
-                <img src="" alt="Logo bao moi">
+                
                 <div class="w-[450px]">
                     <el-input v-model="searchFooter" placeholder="Nhập nội dung tìm kiếm" clearable @keyup.enter="openPageSearch"/>
                 </div>
@@ -332,7 +352,7 @@
                         <Link :href="route('about-us')">Liên hệ</Link>
                     </div>
                     <div class="my-[5px] hover:underline">
-                        <Link :href="route('termofuse')">Điều khoản sử dụng</Link>
+                        <Link :href="route('term-of-use')">Điều khoản sử dụng</Link>
                     </div>
                     <div class="my-[5px] hover:underline">
                         <Link :href="route('private-policy')">Chính sách bảo mật</Link>

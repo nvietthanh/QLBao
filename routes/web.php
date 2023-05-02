@@ -48,8 +48,8 @@ Route::middleware('is_approved')->group(function () {
     Route::get('/search/{search}', [HomeController::class, 'search'])->name('search');    
     Route::get('/creator/id={id}', [HomeController::class, 'creator'])->name('creator');
     Route::get('/hagtag/{slug}', [HomeController::class, 'listPostHagtag'])->name('list-post-hagtag');
-    Route::get('/dieu-khoan-su-dung', [HomeController::class, 'termOfUse'])->name('termofuse');
-    Route::get('/chinh-sach-bao-mat', [HomeController::class, 'privatePolicy'])->name('private-policy');
+    Route::get('/dieu-khoan-su-dung/{id?}', [HomeController::class, 'termOfUse'])->name('term-of-use');
+    Route::get('/chinh-sach-bao-mat/{id?}', [HomeController::class, 'privatePolicy'])->name('private-policy');
     Route::get('/lien-he', [HomeController::class, 'aboutUs'])->name('about-us');    
 });
 
