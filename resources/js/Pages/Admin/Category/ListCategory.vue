@@ -22,10 +22,10 @@
                 </div>
                 <DataTable :fields="fields" :items="tableData" enable-select-box @row-selected="handleSelectionChange">
                     <template #options="{ row }">
-                        <span class="px-[8px] py-[8px] text-[18px] cursor-pointer" @click="editCategory(row)">
+                        <span class="text-[18px] cursor-pointer" @click="editCategory(row)">
                             <i class="bi bi-pencil-fill"></i>
                         </span>
-                        <span class="px-[8px] py-[8px] text-[18px] cursor-pointer" @click="deleteSelection(row)">
+                        <span class="pl-[8px] text-[18px] cursor-pointer" @click="deleteSelection(row)">
                             <i class="bi bi-trash3-fill"></i>
                         </span>
                     </template>
@@ -63,15 +63,15 @@ export default{
         return {
             tab: 'tab-0',
             fields: [
-                { key: 'name', label: 'Tên chủ đề', align: 'center'},
+                { key: 'name', label: 'Tên chủ đề', align: 'center', sortable: true},
                 { key: 'slug', label: 'Slug', align: 'center'},
                 { key: 'created_at', label: 'Ngày tạo', align: 'center', width: 190 },
-                { key: 'updated_at', label: 'Ngày cập nhật', align: 'center', width: 170 },
-                { key: 'options', label: 'Tùy chỉnh', align: 'center', width: 180 },
+                { key: 'updated_at', label: 'Ngày cập nhật', align: 'center', width: 190 },
+                { key: 'options', label: 'Tùy chỉnh', align: 'center', width: 160 },
             ],
             options: [10, 20, 30],
             filterSearch: {
-                limit: 10,
+                limit: 11,
                 search: '',
                 page: 1
             },

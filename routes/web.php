@@ -21,7 +21,8 @@ use Inertia\Inertia;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
+Route::get('/auth/{provider}', [LoginController::class, 'loginSocial'])->name('guest.login-social');
+Route::get('/auth/{provider}/callback', [LoginController::class, 'loginSocialCallback'])->name('guest.login-social-callback');
 Route::post('login', [LoginController::class, 'login'])->name('guest.login');
 Route::get('logout', [LoginController::class, 'logout'])->name('guest.logout');
 Route::middleware('is_approved')->post('change-password', [LoginController::class, 'changePassword'])

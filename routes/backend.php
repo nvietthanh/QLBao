@@ -118,6 +118,8 @@ Route::middleware('is_admin')->prefix('admin')->name('admin.')->group(function (
     Route::get('/get-chart-category', [DashboardController::class, 'getChartCategory'])->name('get-chart-category');
 
     Route::apiResource('accounts', AccountController::class);
+    Route::get('/change-to-creator/{id}', [AccountController::class, 'changeToCreator'])->name('accounts.change-to-creator');
+    Route::get('/change-to-reader/{id}', [AccountController::class, 'changeToReader'])->name('accounts.change-to-reader');
     Route::post('/change-status-account/{id}', [AccountController::class, 'changeStatus'])->name('accounts.change-status');
     Route::get('/get-status-account/{id}', [AccountController::class, 'getStatus'])->name('accounts.get-status');
     Route::post('/delete-selected-accounts', [AccountController::class, 'deleteAccounts'])->name('accounts.delete-accounts');

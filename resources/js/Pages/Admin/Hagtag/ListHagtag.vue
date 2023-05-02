@@ -67,7 +67,7 @@ export default{
         return {
             tab: 'tab-0',
             fields: [
-                { key: 'name', label: 'Tên chủ đề', align: 'center'},
+                { key: 'name', label: 'Tên chủ đề', align: 'center', sortable: true},
                 { key: 'slug', label: 'Slug', align: 'center'},
                 { key: 'created_at', label: 'Ngày tạo', align: 'center', width: 190 },
                 { key: 'updated_at', label: 'Ngày cập nhật', align: 'center', width: 170 },

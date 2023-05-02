@@ -76,7 +76,7 @@
         </div>
         <template #footer>
             <div v-if="currentTab == 'login'">
-                <div class="pb-[12px] pt-[8px]">
+                <div class="pb-[12px]">
                     <div class="flex justify-center items-center">
                         <div @click="close"
                             class="cursor-pointer flex justify-center items-center gap-1  w-[120px] rounded-[8px] bg-[#ffffff] py-[4px] h-[32px] text-[15px] text-black border border-[#7d7f92]">
@@ -87,6 +87,12 @@
                             @click="login">
                             Đăng nhập
                         </div>
+                    </div>
+                </div>
+                <div class="text-[16px] pt-[12px] pb-[24px] flex justify-center cursor-pointer">
+                    <div class="flex items-center justify-center py-[2px]" @click="loginGoogle">
+                        <img src="/image/social_icon/google-register.svg" alt="">
+                        <span>Login with google</span>
                     </div>
                 </div>
             </div>
@@ -127,9 +133,13 @@
 
 <script>
 import axios from 'axios';
+import { Link } from '@inertiajs/vue3'
 import { ElMessage } from 'element-plus'
 
 export default {
+    components:{
+        Link,
+    },
     data() {
         return {
             dialogVisible: false,
@@ -283,6 +293,13 @@ export default {
                 .catch(errors => {
                     this.errors = errors.response.data.errors
                 })
+        },
+        loginGoogle(){
+            const pagram = {
+                'provider': 'google',
+                'url': window.location.href
+            }
+            window.location.href = route('guest.login-social', pagram)
         }
     },
 }

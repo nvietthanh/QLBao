@@ -325,8 +325,8 @@
     </main>
     <footer>
         <div class="border-t-2 border-zinc-300 bg-[#17a2b8] py-2">
-            <div class="max-w-[970px] mx-auto flex justify-between">
-                
+            <div class="max-w-[970px] mx-auto flex justify-between items-center">
+                <div class="text-[17px] text-white">Báo mới</div>
                 <div class="w-[450px]">
                     <el-input v-model="searchFooter" placeholder="Nhập nội dung tìm kiếm" clearable @keyup.enter="openPageSearch"/>
                 </div>
