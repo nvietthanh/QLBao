@@ -28,7 +28,7 @@ class LoginController extends Controller
         // Check OTP
         $email = $request->email;
         $password = $request->password;
-        $user = Account::whereEmail($email)->first();
+        $user = Account::whereEmail($email)->where('type_signup', null)->first();
         if(!$user) {
             $errors = [
                 'email' => 'Email không tồn tại trong hệ thống'
