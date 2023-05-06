@@ -92,6 +92,36 @@ class AccountController extends Controller
         return response()->json(200);
     }
 
+    public function changeToCreator($id)
+    {
+        $account = Account::find($id);
+
+        if(!$account) {
+            throw new FailException('Không thể thay đổi trạng thái tài khoản người dùng');
+        }
+
+        $account->update([
+            'userable_type' => 'Creator'
+        ]);
+
+        return response()->json(200);
+    }
+
+    public function changeToReader($id)
+    {
+        $account = Account::find($id);
+
+        if(!$account) {
+            throw new FailException('Không thể thay đổi trạng thái tài khoản người dùng');
+        }
+
+        $account->update([
+            'userable_type' => 'Reader'
+        ]);
+
+        return response()->json(200);
+    }
+
     /**
      * Remove the specified resource from storage.
      */

@@ -31,7 +31,7 @@
                             :initial-index="1"
                             fit="cover"
                         />
-                        <div class="text-[14px] text-center italic">
+                        <div class="text-[14px] text-center italic mx-[24px]">
                             {{ dataForm.description }}
                         </div>
                     </div>
@@ -391,6 +391,7 @@ export default{
     },
     created() {
         this.fetchData()
+        document.title = this.$page.props.title
     },
     methods: {
         moment,

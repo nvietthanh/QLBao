@@ -144,6 +144,7 @@ export default{
     },
     created() {
         this.fetchData()
+        document.title = `Quản lý bài viết - Admin hệ thống`
     },
     methods: {
         clearFilter() {

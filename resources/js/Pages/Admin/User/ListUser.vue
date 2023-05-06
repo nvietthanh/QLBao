@@ -49,6 +49,14 @@
                         </div>
                     </template>
                     <template #options="{ row }">
+                        <span v-if="tab == 'tab-0'" class="px-[6px] py-[8px] text-[22px] cursor-pointer"
+                         @click="changeToCreator(row)">
+                            <i class="bi bi-person-check"></i>
+                        </span>
+                        <span v-else class="px-[6px] py-[8px] text-[22px] cursor-pointer"
+                         @click="changeToReader(row)">
+                            <i class="bi bi-person-fill-dash"></i>
+                        </span>
                         <span class="px-[6px] py-[8px] text-[20px] cursor-pointer" @click="changeStatus(row)">
                             <i class="bi bi-gear-fill"></i>
                         </span>
@@ -110,6 +118,7 @@ export default{
     },
     created() {
         this.fetchData()
+        document.title = `Quản lý người dùng - Admin hệ thống`
     },
     methods: {
         clearFilter() {
@@ -146,10 +155,52 @@ export default{
         },
         changeStatus(row) {
             this.$refs.showChangeStatusForm.open(row)
-            // axios.get(route('admin.accounts.change-status', row.id))
-            //     .then(response => {
-            //         this.fetchData()
-            //     })
+        },
+        changeToCreator(row) {
+            ElMessageBox.confirm(
+                `Bạn có muốn chuyển người dùng ${row.email} thành tác giả không?`,
+                'Warning',
+                {
+                    confirmButtonText: 'Xác nhận',
+                    cancelButtonText: 'Hủy bỏ',
+                    type: 'warning',
+                    draggable: true,
+                }
+            )
+            .then(() => {
+                axios.get(route('admin.accounts.change-to-creator', row.id))
+                .then(response => {
+                    this.fetchData()
+                    ElMessage({
+                        type: 'success',
+                        message: 'Chuyển người dùng thành tác giả thành công',
+                    })
+                })
+            })
+            .catch(() => {})
+        },
+        changeToReader(row) {
+            ElMessageBox.confirm(
+                `Bạn có muốn chuyển tác giả ${row.email} thành độc giả không?`,
+                'Warning',
+                {
+                    confirmButtonText: 'Xác nhận',
+                    cancelButtonText: 'Hủy bỏ',
+                    type: 'warning',
+                    draggable: true,
+                }
+            )
+            .then(() => {
+                axios.get(route('admin.accounts.change-to-reader', row.id))
+                .then(response => {
+                    this.fetchData()
+                    ElMessage({
+                        type: 'success',
+                        message: 'Chuyển người dùng thành độc giả thành công',
+                    })
+                })
+            })
+            .catch(() => {})
         },
         deleteSelection(row) {
             ElMessageBox.confirm(
@@ -168,7 +219,7 @@ export default{
                         this.fetchData()
                         ElMessage({
                             type: 'success',
-                            message: 'Delete completed',
+                            message: 'Xoá tài khoản người dùng thành công',
                         })
                     })
             })
@@ -199,7 +250,7 @@ export default{
                             this.fetchData()
                             ElMessage({
                                 type: 'success',
-                                message: 'Delete completed',
+                                message: 'Xoá tài khoản người dùng thành công',
                             })
                         })
                 })

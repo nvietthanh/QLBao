@@ -85,6 +85,7 @@ export default{
     },
     created() {
         this.fetchData()
+        document.title = `Danh sách bài viết đã lưu`
     },
     methods: {
         async fetchData() {

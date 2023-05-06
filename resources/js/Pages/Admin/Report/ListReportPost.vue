@@ -153,6 +153,7 @@ export default{
     },
     created() {
         this.fetchData()
+        document.title = `Quản lý báo cáo bài viết - Admin hệ thống`
     },
     methods: {
         clearFilter() {

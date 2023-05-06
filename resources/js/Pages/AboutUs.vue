@@ -120,6 +120,7 @@ export default{
     },
     created() {
         this.fetchData()
+        document.title = `Liên hệ - Báo mới`
     },
     methods: {
         fetchData() {

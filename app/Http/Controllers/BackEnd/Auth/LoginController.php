@@ -11,6 +11,8 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
 {
@@ -26,7 +28,7 @@ class LoginController extends Controller
         // Check OTP
         $email = $request->email;
         $password = $request->password;
-        $user = Account::whereEmail($email)->first();
+        $user = Account::whereEmail($email)->where('type_signup', null)->first();
         if(!$user) {
             $errors = [
                 'email' => 'Email không tồn tại trong hệ thống'
@@ -159,5 +161,60 @@ class LoginController extends Controller
         ]);
 
         return response()->json(200);
+    }
+
+    public function loginSocial($provider, Request $request)
+    {
+        $request->session()->put('redirect_path', $request->url);
+        return Socialite::driver($provider)->redirect();
+    }
+
+    public function loginSocialCallback($provider, Request $request)
+    {
+        $redirect_path = $request->session()->get('redirect_path') ?? route('home');
+
+        $accountSocial = Socialite::driver($provider)->user();
+
+        $account = Account::where('email', $accountSocial->email)->first();
+
+        if(!$account) {
+            do {
+                $code = rand(10000000, 99999999);
+            }
+            while(Account::where('code', $code)->first());
+
+            $account = Account::create([
+                'code' => $code,
+                'email' => $accountSocial->email,
+                'password' => '',
+                'userable_type' => 'Reader',
+                'type_signup' => $provider
+            ]);
+
+            $account->accountProfile()->create([
+                'first_name' => $accountSocial->user['family_name'] ?? '',
+                'last_name' => $accountSocial->user['given_name'],
+                'image' => $accountSocial->avatar,
+                'description' => '',
+                'remark' => '',
+            ]);
+        }
+        else {
+            $account->accountProfile()->update([
+                'first_name' => $accountSocial->user['family_name'] ?? '',
+                'last_name' => $accountSocial->user['given_name'],
+                'image' => $accountSocial->avatar,
+                'description' => '',
+                'remark' => '',
+            ]);
+        }
+
+        auth('accounts')->login($account);
+
+        $request->session()->put('auth.password_confirmed_at', time());
+        
+        Session::forget('redirect_path');
+
+        return redirect()->to($redirect_path);
     }
 }
