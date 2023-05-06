@@ -82,6 +82,7 @@ export default{
     },
     created() {
         this.fetchData()
+        document.title = `Quản lý chủ đề - Admin hệ thống`
     },
     methods: {
         clearFilter() {

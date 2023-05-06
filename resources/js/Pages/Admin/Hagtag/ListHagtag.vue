@@ -86,6 +86,7 @@ export default{
     },
     created() {
         this.fetchData()
+        document.title = `Quản lý hagtag - Admin hệ thống`
     },
     methods: {
         clearFilter() {

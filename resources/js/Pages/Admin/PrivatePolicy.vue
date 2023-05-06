@@ -59,6 +59,7 @@ export default{
     },
     created(){
         this.fetchData()
+        document.title = `Quản lý chính sách bảo mật - Admin hệ thống`
     },
     methods: {
         fetchData() {

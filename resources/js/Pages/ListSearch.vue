@@ -84,6 +84,7 @@ export default{
     created() {
         this.dataForm.search = this.$page.props.search
         this.fecthData()
+        document.title = `Tìm kiếm - Báo mới`
     },
     methods: {
         moment,

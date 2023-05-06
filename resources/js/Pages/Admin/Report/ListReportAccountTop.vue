@@ -130,6 +130,7 @@ export default{
     },
     created() {
         this.fetchData()
+        document.title = `Quản lý báo cáo người dùng - Admin hệ thống`
     },
     methods: {
         clearFilter() {

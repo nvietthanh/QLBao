@@ -77,6 +77,7 @@ export default{
     },
     created() {
         this.fetchData()
+        document.title = `Danh sách tác giả theo dõi`
     },
     methods: {
         async fetchData() {

@@ -311,6 +311,7 @@ export default{
     },
     created() {
         this.fetchData()
+        document.title = `Thống kê - Admin hệ thống`
     },
     methods: {
         moment,

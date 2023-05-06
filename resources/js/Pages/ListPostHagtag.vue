@@ -78,6 +78,7 @@ export default{
     },
     created() {
         this.fetchData()
+        document.title = `Danh mục - ${this.$page.props.hagtagName}`
     },
     methods: {
         moment,

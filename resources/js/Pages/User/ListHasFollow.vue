@@ -77,6 +77,7 @@ export default{
     },
     created() {
         this.fetchData()
+        document.title = `Danh sách theo dõi`
     },
     methods: {
         async fetchData() {

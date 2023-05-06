@@ -139,7 +139,10 @@ export default {
             this.dataForm.title = ''
             this.dataForm.description = ''
             this.dataForm.image = ''
-            // this.$refs['content'].editorData = ''
+            if(this.$refs['content']) {
+                this.$refs['content'].editorData = ''
+            }
+            this.dataForm.is_notice = "1"
             this.categorySelect = ''
             this.listCategory = ''
             this.listHagTag = []

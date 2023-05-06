@@ -171,6 +171,7 @@ export default{
     },
     created() {
         this.fetchData()
+        document.title = `Danh sách bài viết`
     },
     methods: {
         moment,

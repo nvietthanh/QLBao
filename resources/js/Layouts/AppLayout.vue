@@ -243,19 +243,19 @@
             </div>
         </div>
     </header>
-    <main>
-        <div class="container-fuild">
+    <main class="row">
+        <div class="col-8 mx-auto pt-[118px]">
             <div v-if="currentTab == 'main-full'" class="main flex justify-center">
                 <slot name="main-full" />
             </div>
-            <div v-else class="main flex justify-center">
-                <div class="main-1 flex-1">
+            <div v-else class="row">
+                <div class="col-8 flex-1">
                     <slot name="main-1" />
                 </div>
-                <div v-if="currentTab == 'main-creater'" class="main-2 w-[310px]">
+                <div v-if="currentTab == 'main-creater'" class="w-[310px]">
                     <slot name="main-2" />
                 </div>
-                <div v-else class="main-2 w-[310px]">
+                <div v-else class="col-4">
                     <div class="bg-[#fff] py-[12px] mb-[24px] rounded-[4px] box-shadow">
                         <div class="border-b-[2px] mt-[4px] mb-[8px]">
                             <div
@@ -647,24 +647,16 @@ header .header-search .search {
 .active-tab {
     background-color: #2b94a5;
 }
-.sticky {
-    position: fixed;
-    top: 0;
-    width: 100%
-}
-.sticky+.content {
-    padding-top: 58px;
-}
 main .container-fuild {
     width: 1070px;
     margin: 0 auto;
     padding-top: 118px;
     padding-bottom: 30px;
 }
-main .container-fuild .main-1 {
+/* main .container-fuild .main-1 {
     margin-right: 16px;
     flex: 2;
-}
+} */
 .post-new-title {
     max-height: 48px;
     overflow: hidden;

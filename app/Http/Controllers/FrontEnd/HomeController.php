@@ -47,7 +47,7 @@ class HomeController extends Controller
             $notice->noticeAccount()->updateExistingPivot($currentAccount->id, ['read_at' => now()]);
         }
 
-        return Inertia::render('Post', ['slug' => $slugPost]);
+        return Inertia::render('Post', ['slug' => $slugPost, 'title' => $post->title]);
     }
 
     public function creator($id)
@@ -59,7 +59,10 @@ class HomeController extends Controller
             abort(404);
         }
 
-        return Inertia::render('Creator', ['id' => $id  ]);
+        return Inertia::render('Creator', [
+            'id' => $id,
+            'name' => $creator->accountProfile->first_name . ' ' . $creator->accountProfile->last_name
+        ]);
     }
 
     public function listPostHagtag($slug)

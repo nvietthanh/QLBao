@@ -34,6 +34,7 @@ export default{
     },
     created() {
         this.fetchData()
+        document.title = `Điều khoản sử dụng - Báo mới`
     },
     methods: {
         changeTabComment(tab) {

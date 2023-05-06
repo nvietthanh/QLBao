@@ -49,6 +49,9 @@ export default{
             errors: []
         }  
     },
+    created() {
+        document.title = "Đăng nhập - Admin hệ thống"
+    },
     methods: {
         async login() {
             if(this.validateUser()) {

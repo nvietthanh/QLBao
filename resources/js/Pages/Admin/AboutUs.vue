@@ -170,6 +170,7 @@ export default{
     },
     created(){
         this.fetchData()
+        document.title = `Quản lý liên hệ - Admin hệ thống`
     },
     methods: {
         fetchData() {

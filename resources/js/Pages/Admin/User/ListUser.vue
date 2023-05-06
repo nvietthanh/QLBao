@@ -118,6 +118,7 @@ export default{
     },
     created() {
         this.fetchData()
+        document.title = `Quản lý người dùng - Admin hệ thống`
     },
     methods: {
         clearFilter() {

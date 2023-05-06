@@ -109,6 +109,7 @@ export default{
     created() {
         this.fecthData()
         this.listHagtagPopular = this.$page.props.hagtags
+        document.title = "Trang chủ"
     },
     methods: {
         moment,

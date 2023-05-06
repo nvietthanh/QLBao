@@ -124,6 +124,7 @@ export default{
     },
     created() {
         this.fetchData()
+        document.title = `Tác giả - ${this.$page.props.name}`
     },
     methods: {
         moment,

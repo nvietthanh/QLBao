@@ -72,6 +72,7 @@ export default{
     },
     created() {
         this.fetchData()
+        document.title = `Danh sách bài viết đọc gần đây`
     },
     methods: {
         moment,

@@ -73,6 +73,7 @@ export default{
     },
     created() {
         this.fetchData()
+        document.title = `Tin tức - ${this.$page.props.categoryName}`
     },
     methods: {
         moment,

@@ -157,6 +157,7 @@ export default{
     },
     created() {
         this.fetchData()
+        document.title = `Quản lý thông tin cá nhân`
     },
     methods: {
         async fetchData() {

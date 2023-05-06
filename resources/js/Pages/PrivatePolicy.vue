@@ -34,6 +34,7 @@ export default{
     },
     created() {
         this.fetchData()
+        document.title = `Chính sách bảo mật - Báo mới`
     },
     methods: {
         changeTabComment(tab) {
