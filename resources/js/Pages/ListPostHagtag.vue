@@ -2,50 +2,45 @@
     <AppLayout :currentTab="this.$page.props.hagtag">
         <template v-slot:main-1>
             <div class="main">
-                <div class="heading">{{ this.$page.props.hagtagName }}</div>
-                <div class="news mb-[24px]">
-                    <div class="mt-[20px] grid grid-cols-2 gap-2">
-                        <div v-for="(item, index) in listPost"  class="new-item-default">
+                <div class="border-l-[5px] pl-[12px] border-l-[red] font-bold text-[red]">{{ this.$page.props.hagtagName }}</div>
+                <div class="mb-[24px]">
+                    <div class="mt-[20px] grid grid-cols-2 gap-3">
+                        <div v-for="(item, index) in listPost" class="post-item">
                             <template v-if="index < 2">
                                 <Link :href="route('post', item.slug)">
-                                    <img :src="item.image" :alt="item.description" class="border-[1px] h-[260px] w-[100%] object-cover">
+                                    <img :src="item.image" :alt="item.description" class="post-image border-[1px] rounded-[4px] h-[260px] w-[100%] object-cover">
                                 </Link>
                                 <div class="mt-[12px] mx-[4px]">
                                     <Link :href="route('post', item.slug)">
-                                        <div class="title mt-[8px]">{{ item.title }}</div>
+                                        <div class="post-title font-bold text-[17px]">{{ item.title }}</div>
                                     </Link>
                                     <Link :href="route('list-category', item.categorySlug)">
-                                        <div class="category my-[4px]">{{ item.categoryName }}</div>
+                                        <div class="text-[#076db6] font-bold text-[15px] my-[4px]">{{ item.categoryName }}</div>
                                     </Link>
-                                    <div class="time">{{ convertTime(item.created_at) }}</div>
+                                    <div class="text-[14px]">{{ convertTime(item.created_at) }}</div>
                                 </div>
                             </template>
                         </div>
                     </div>
                     <div class="mt-[24px]">
-                        <template v-if="listPost.length == 0">
-                            <div class="text-center text-[17px] my-[36px]">
-                                Không có bài viết
-                            </div>
-                        </template>
-                        <template v-else v-for="(item, index) in listPost">
-                            <div class="new-item flex mt-[24px]" v-if="index >= 2">
-                                <Link :href="route('post', item.slug)">
-                                    <img :src="item.image" :alt="item.description" class="h-[200px] w-[100%] object-cover">
+                        <template v-for="(item, index) in listPost">
+                            <div class="flex mt-[24px] post-item" v-if="index >= 2">
+                                <Link :href="route('post', item.slug)" class="mr-[4px]">
+                                    <img :src="item.image" :alt="item.description" class="post-image rounded-[4px] border-[1px] min-w-[260px] w-[260px] h-[200px] object-cover">
                                 </Link>
-                                <div class="ml-[12px]">
+                            <div class="ml-[12px]">
                                     <Link :href="route('post', item.slug)">
-                                        <div class="title">{{ item.title }}</div>
+                                        <div class="post-title font-bold text-[17px]" style="height: auto;">{{ item.title }}</div>
                                     </Link>
                                     <Link :href="route('list-category', item.categorySlug)">
-                                        <div class="category mt-[8px] mb-[4px]">{{ item.categoryName }}</div>
+                                        <div class="text-[#076db6] mt-[8px] font-bold text-[15px] my-[4px]">{{ item.categoryName }}</div>
                                     </Link>
-                                    <div class="time">{{ convertTime(item.created_at) }}</div>
+                                    <div class="text-[14px]">{{ convertTime(item.created_at) }}</div>
                                 </div>
                             </div>
                         </template>
                     </div>
-                    <div v-if="listPost.length > 0" class="flex mt-[54px] mb-[64px] justify-center">
+                    <div class="flex mt-[24px] mb-[64px] justify-center">
                         <Paginate @page-change="handleCurrentPage" :paginate="paginate" :current-page="filter.page || 1"
                             paginate-background/>
                     </div>
