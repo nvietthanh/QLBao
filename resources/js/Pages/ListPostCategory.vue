@@ -2,7 +2,7 @@
     <AppLayout :currentTab="this.$page.props.category">
         <template v-slot:main-1>
             <div class="main">
-                <div class="heading">{{ this.$page.props.categoryName }}</div>
+                <div class="border-l-[5px] pl-[12px] border-l-[red] font-bold text-[red]">{{ this.$page.props.categoryName }}</div>
                 <div class="mb-[24px]">
                     <div class="mt-[20px] grid grid-cols-2 gap-3">
                         <div v-for="(item, index) in listPost" class="post-item">

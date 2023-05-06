@@ -27,7 +27,7 @@
                         <template v-else v-for="post in listSearchPosts">
                             <div class="post-item flex py-[18px] border-b-[2px]">
                                 <Link :href="route('post', post.slug)">
-                                    <img :src="post.image" :alt="post.description" class="post-image w-[220px] h-[150px] object-cover">
+                                    <img :src="post.image" :alt="post.description" class="post-image min-w-[220px] w-[220px] h-[150px] object-cover">
                                 </Link>
                                 <div class="ml-[12px]">
                                     <Link :href="route('post', post.slug)">
