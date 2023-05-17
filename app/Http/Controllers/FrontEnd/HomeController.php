@@ -84,7 +84,7 @@ class HomeController extends Controller
     {
         $currentAccount = auth('accounts')->user();
 
-        if($currentAccount) {
+        if($currentAccount && $noticeId) {
             $notice = Notice::find($noticeId);
 
             $notice->noticeAccount()->updateExistingPivot($currentAccount->id, ['read_at' => now()]);
@@ -97,7 +97,7 @@ class HomeController extends Controller
     {
         $currentAccount = auth('accounts')->user();
 
-        if($currentAccount) {
+        if($currentAccount && $noticeId) {
             $notice = Notice::find($noticeId);
 
             $notice->noticeAccount()->updateExistingPivot($currentAccount->id, ['read_at' => now()]);
