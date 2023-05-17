@@ -324,7 +324,7 @@
         </div>
     </main>
     <footer>
-        <div class="border-t-2 border-zinc-300 bg-[#17a2b8] py-2">
+        <div class="mt-[32px] border-t-2 border-zinc-300 bg-[#17a2b8] py-2">
             <div class="max-w-[970px] mx-auto flex justify-between items-center">
                 <div class="text-[17px] text-white">Báo mới</div>
                 <div class="w-[450px]">

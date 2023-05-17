@@ -24,15 +24,17 @@
                             :value="item"
                         />
                     </el-select>
-                    <el-date-picker
-                        v-model="filterSearch.date"
-                        type="month"
-                        class="max-w-[280px] mx-[28px]"
-                        placeholder="Chọn theo tháng năm"
-                        format="MM-YYYY"
-                        value-format="DD-MM-YYYY"
-                        @change="fetchData()"
-                    />
+                    <div class="mx-[28px]">
+                        <el-date-picker
+                            v-model="filterSearch.date"
+                            type="month"
+                            class="max-w-[280px]"
+                            placeholder="Chọn theo tháng năm"
+                            format="MM-YYYY"
+                            value-format="DD-MM-YYYY"
+                            @change="fetchData()"
+                        />
+                    </div>
                     <el-input class="max-w-[300px]" v-model="filterSearch.search"
                             placeholder="Nhập từ khóa" clearable @keyup.enter="fetchData()"/>
                 </div>
