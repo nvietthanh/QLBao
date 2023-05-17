@@ -103,6 +103,8 @@ class AccountController extends Controller
         $account->update([
             'userable_type' => 'Creator'
         ]);
+        
+        $account->assignRole('Creator');
 
         return response()->json(200);
     }
@@ -118,6 +120,8 @@ class AccountController extends Controller
         $account->update([
             'userable_type' => 'Reader'
         ]);
+
+        $account->assignRole('Reader');
 
         return response()->json(200);
     }

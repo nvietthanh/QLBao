@@ -51,14 +51,14 @@
                     <template #options="{ row }">
                         <span v-if="tab == 'tab-0'" class="px-[6px] py-[8px] text-[22px] cursor-pointer"
                          @click="changeToCreator(row)">
-                            <i class="bi bi-person-check"></i>
+                            <i class="bi bi-person-fill-check"></i>
                         </span>
                         <span v-else class="px-[6px] py-[8px] text-[22px] cursor-pointer"
                          @click="changeToReader(row)">
-                            <i class="bi bi-person-fill-dash"></i>
+                            <i class="bi bi-person-fill-x"></i>
                         </span>
-                        <span class="px-[6px] py-[8px] text-[20px] cursor-pointer" @click="changeStatus(row)">
-                            <i class="bi bi-gear-fill"></i>
+                        <span class="px-[6px] py-[8px] text-[24px] cursor-pointer" @click="changeStatus(row)">
+                            <i class="bi bi-person-fill-gear"></i>
                         </span>
                         <span class="px-[6px] py-[8px] text-[20px] cursor-pointer" @click="deleteSelection(row)">
                             <i class="bi bi-trash3-fill"></i>

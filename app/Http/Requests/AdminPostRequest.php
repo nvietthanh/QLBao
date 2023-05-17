@@ -11,7 +11,7 @@ class AdminPostRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->user()->hasRole('Super Admin');
+        return auth()->user()->hasRole('Super Admin') || auth()->user()->hasRole('Manager');
     }
 
     /**

@@ -20,12 +20,12 @@
                                   :class="{ 'cursor-pointer': isEditProfile }" @click="changeImage">
                                     <span class="text-[#fff] text-[50px]">{{ formData.first_name[0] }}</span>
                                 </div>
-                                <img v-else-if="imageSelected" :src="imageSelected" :alt="formData.image" class="w-[226px] h-[226px] rounded-[8px] border-[1px] object-cover"
+                                <img v-else-if="imageSelected" :src="imageSelected" :alt="formData.image" class="min-w-[226px] w-[226px] h-[226px] rounded-[8px] border-[1px] object-cover"
                                     :class="{ 'cursor-pointer': isEditProfile }" @click="changeImage">
-                                <img v-else :src="formData.image" :alt="formData.image" class="w-[226px] h-[226px] rounded-[8px] border-[1px] object-cover"
+                                <img v-else :src="formData.image" :alt="formData.image" class="min-w-[226px] w-[226px] h-[226px] rounded-[8px] border-[1px] object-cover"
                                     :class="{ 'cursor-pointer': isEditProfile }" @click="changeImage">
                                 
-                                <div v-if="isEditProfile" class="absolute top-[12px] right-[24px] z-50">
+                                <div v-if="isEditProfile" class="absolute top-[12px] right-[0] z-50">
                                     <div v-if="formData.image || imageSelected" class="bg-[#fff] py-[2px] px-[6px] text-[#000] 
                                     text-[15px] rounded-[6px] mb-[8px] cursor-pointer hover:bg-[#ced4da]" @click="deleteImage">
                                         <i class="bi bi-trash3"></i>
@@ -39,7 +39,7 @@
                                 <input v-show="false" ref="file" type="file" @change="handleUploadContent"
                                     accept=".jpg,.png,.bmp,.jpeg,.tif,.gif" />
                             </div>
-                            <div class="col-6">
+                            <div class="col-6 ml-[12px]">
                                 <div class="flex">
                                     <div class="w-[150px]">
                                         <div class="text-[#000] font-bold text-[14px] mb-[3px]">Họ <span class="text-[red]">*</span>

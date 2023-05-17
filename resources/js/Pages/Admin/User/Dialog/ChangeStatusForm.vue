@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-model="dialogVisible" id="show-report-account" class="bg-[#f4f1f8] h-[60%] overflow-scroll" width="520px" 
+    <el-dialog v-model="dialogVisible" id="show-change-user" class="bg-[#f4f1f8] h-[60%] overflow-scroll" width="520px" 
      style="margin-top: 82px !important;" :show-close="true">
         <template #header>
             <div class="text-center font-bold text-[18px]">
@@ -116,19 +116,19 @@ export default {
 }
 </script>
 <style>
-#show-report-account {
+#show-change-user {
     position: relative;
 }
-#show-report-account .el-dialog__headerbtn {
+#show-change-user .el-dialog__headerbtn {
     font-size: 24px !important;
 }
-#show-report-account.el-dialog {
+#show-change-user.el-dialog {
     border-radius: 4px !important;
     position: fixed !important;
     left: 0;
     right: 0;
 }
-#show-report-account .el-dialog__header {
+#show-change-user .el-dialog__header {
     position: fixed;
     width: 520px;
     background-color: #fff;
@@ -136,21 +136,21 @@ export default {
     margin-right: 0 !important;
     z-index: 100;
 }
-#show-report-account .el-dialog__footer {
+#show-change-user .el-dialog__footer {
     position: absolute;
     bottom: 0;
     right: 0;
     background-color: #fff;
     z-index: 100;
 }
-#show-report-account .el-select,
-#show-report-account .el-date-editor {
+#show-change-user .el-select,
+#show-change-user .el-date-editor {
     width: 100% !important;
 }
-#show-report-account .el-input__inner {
+#show-change-user .el-input__inner {
     margin-top: 2px;
 }
-#show-report-account .creator {
+#show-change-user .creator {
     margin: 0 12px;
     padding: 0 12px;
     border-left: 2px solid rgba(0, 0, 0, 0.55);

@@ -24,17 +24,19 @@
                             :value="item"
                         />
                     </el-select>
-                    <el-date-picker
-                        v-model="filterSearch.dateRange"
-                        type="daterange"
-                        start-placeholder="Ngày bắt đầu"
-                        end-placeholder="Ngày kết thúc"
-                        :size="small"
-                        format="DD-MM-YYYY"
-                        value-format="DD-MM-YYYY"
-                        class="max-w-[260px] mx-[28px]"
-                        @change="fetchData()"
-                    />
+                    <div class="mx-[28px]">
+                        <el-date-picker
+                            v-model="filterSearch.dateRange"
+                            type="daterange"
+                            start-placeholder="Ngày bắt đầu"
+                            end-placeholder="Ngày kết thúc"
+                            :size="small"
+                            format="DD-MM-YYYY"
+                            value-format="DD-MM-YYYY"
+                            class="max-w-[260px]"
+                            @change="fetchData()"
+                        />
+                    </div>
                     <el-input class="max-w-[300px]" v-model="filterSearch.search"
                         placeholder="Nhập từ khóa" clearable @keyup.enter="fetchData()"/>
                     <div class="text-[14px] ml-[24px] text-center w-[120px] py-[6px] rounded-[4px] bg-[red] text-white cursor-pointer"

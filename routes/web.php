@@ -4,6 +4,7 @@ use App\Http\Controllers\BackEnd\Auth\ForgotPasswordController;
 use App\Http\Controllers\BackEnd\Auth\LoginController;
 use App\Http\Controllers\BackEnd\Auth\ResgisterController;
 use App\Http\Controllers\FrontEnd\Admin\Auth\LoginController as AdminLoginController;
+use App\Http\Controllers\FrontEnd\Admin\Auth\ProfileController;
 use App\Http\Controllers\FrontEnd\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\FrontEnd\Creator\CreatorController;
 use App\Http\Controllers\FrontEnd\HomeController;
@@ -74,6 +75,8 @@ Route::middleware([
 // admin
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('check-otp-user', [AdminLoginController::class, 'sendOtp'])->name('check-otp');
+    Route::post('/change-password', [ProfileController::class, 'changePassword'])->name('change-password');
+    Route::post('/update-profile', [ProfileController::class, 'updateProfile'])->name('update-profile');
 
     Route::middleware(['guest:' . config('fortify.guard')])
         ->get('/login', [AdminLoginController::class, 'formLogin'])->name('login');

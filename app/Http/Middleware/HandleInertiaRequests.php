@@ -58,7 +58,7 @@ class HandleInertiaRequests extends Middleware
             'roles' => $request->user() ? $request->user()->getRoleNames() : [],
             'auth' => [
                 'account' => $account ?  : '',
-                'user' => $user ? $user->only('id', 'name', 'email') : '',
+                'user' => $user ? $user->only('id', 'name', 'email', 'profile_photo_path') : '',
             ],
         ]);
     }
