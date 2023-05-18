@@ -112,4 +112,6 @@ Route::middleware([
     Route::get('/private-policy', [AdminHomeController::class, 'privatePolicy'])->name('private-policy');
 
     Route::get('/about-us', [AdminHomeController::class, 'AboutUs'])->name('about-us');
+
+    Route::get('/advertist', [AdminHomeController::class, 'advertist'])->name('advertist');
 });

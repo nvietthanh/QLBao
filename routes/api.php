@@ -3,6 +3,7 @@
 // use App\Http\Controllers\Api\BackEnd\CategoryController;
 
 use App\Http\Controllers\Api\BackEnd\Admin\AboutUsController;
+use App\Http\Controllers\Api\Backend\Admin\AdvertistController;
 use App\Http\Controllers\Api\BackEnd\Admin\PrivatePolicyController;
 use App\Http\Controllers\Api\BackEnd\Admin\TermOfUseController;
 use App\Http\Controllers\Api\BackEnd\Creator\HagTagController;
@@ -56,4 +57,5 @@ Route::get('/get-term-of-use', [TermOfUseController::class, 'index'])->name('get
 Route::get('/get-private-policy', [PrivatePolicyController::class, 'index'])->name('get-private-policy');
 Route::get('/get-about-us', [AboutUsController::class, 'index'])->name('get-about-us');
 Route::post('/send-contact', [AboutUsController::class, 'send'])->name('send-contact');
+Route::get('/get-all-advertist', [AdvertistController::class, 'getAll'])->name('advertists.get-all');
 

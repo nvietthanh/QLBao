@@ -243,8 +243,8 @@
             </div>
         </div>
     </header>
-    <main class="row">
-        <div class="col-8 mx-auto pt-[118px]">
+    <main>
+        <div class="w-[1000px] mx-auto pt-[118px]">
             <div v-if="currentTab == 'main-full'" class="main flex justify-center">
                 <slot name="main-full" />
             </div>
@@ -287,8 +287,8 @@
                         </div>
                         <div class="mt-[12px]">
                             <el-carousel height="150px" :interval="10000">
-                                <el-carousel-item v-for="partner in listPartners">
-                                    <img :src="partner" alt="" class="object-contain">
+                                <el-carousel-item v-for="advertist in advertists">
+                                    <img :src="advertist.image" alt="" class="object-contain">
                                 </el-carousel-item>
                             </el-carousel>
                         </div>
@@ -357,9 +357,9 @@
                     <div class="my-[5px] hover:underline">
                         <Link :href="route('private-policy')">Chính sách bảo mật</Link>
                     </div>
-                    <div class="my-[5px] hover:underline">
+                    <!-- <div class="my-[5px] hover:underline">
                         <Link>Tiêu chuẩn vi phạm cộng đồng</Link>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -405,16 +405,11 @@ export default {
                 search: ''
             },
             dataSearch: [],
+            advertists: [],
             options: [],
             listHagTag: [],
             listNewPost: [],
             listPostInterested: [],
-            listPartners: [
-                '/image/partner/partner-1.png',
-                '/image/partner/partner-2.png',
-                '/image/partner/partner-3.png',
-                '/image/partner/partner-4.png',
-            ],
             searchFooter: '',
             listNotice: [],
             countNotice: 0,
@@ -472,6 +467,9 @@ export default {
 
                 const responsePostInterested = await axios.get(route('post.get-post-interested'))
                 this.listPostInterested = responsePostInterested.data.data
+
+                const responseAdvertist = await axios.get(route('advertists.get-all'))
+                this.advertists = responseAdvertist.data.data
             }
 
             if (this.$page.props.auth.account) {
@@ -653,6 +651,7 @@ main .container-fuild {
     padding-top: 118px;
     padding-bottom: 30px;
 }
+
 /* main .container-fuild .main-1 {
     margin-right: 16px;
     flex: 2;
