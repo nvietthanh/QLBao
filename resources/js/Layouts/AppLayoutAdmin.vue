@@ -214,9 +214,9 @@ export default {
                             tab: 'tab-2'
                         },
                         {
-                            name: 'Tiêu chuẩn cộng đồng',
-                            route: 'admin.private-policy',
-                            tab: 'tab-2'
+                            name: 'Quảng cáo',
+                            route: 'admin.advertist',
+                            tab: 'tab-4'
                         },
                     ]
                 }

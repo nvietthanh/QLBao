@@ -1,20 +1,10 @@
 <template>
-    <AppLayoutAdmin :currentTab="'tab-4'">
+    <AppLayoutAdmin :currentTab="'tab-6'" :currentTabChild="'tab-4'">
         <template v-slot:main-full>
             <div class="mt-[12px] flex text-[18px] font-bold uppercase">
-                Danh sách bài viết 
+                Danh sách đối tác quảng cáo
             </div>
-            <div class="mt-[12px] flex items-center text-[15px] border-b-[3px] border-b-[#adb5bd]">
-                <div class="w-[120px] text-center py-[6px] cursor-pointer"
-                 :class="{ 'bg-[#495057] text-white' : tab == 'tab-0' }" @click="changeTab('tab-0')">
-                    Đã duyệt
-                </div>
-                <div class="w-[120px] text-center py-[6px] cursor-pointer"
-                 :class="{ 'bg-[#495057] text-white' : tab == 'tab-1' }" @click="changeTab('tab-1')">
-                    Chưa duyệt
-                </div>
-            </div>
-            <div class="my-[24px]">
+            <div class="mb-[24px] mt-[12px]">
                 <div class="mb-[18px] flex items-center">
                     <el-select v-model="filterSearch.limit" class="max-w-[60px] ml-[8px]" @change="fetchData()">
                         <el-option
@@ -24,27 +14,16 @@
                             :value="item"
                         />
                     </el-select>
-                    <el-select class="ml-[18px] max-w-[300px]" v-model="filterSearch.categorySelect" placeholder="Chọn danh mục" 
-                        multiple multiple-limit="2" clearable @change="fetchData">
-                        <el-option
-                            v-for="item in this.$page.props.categories"
-                            :key="item.slug"
-                            :label="item.name"
-                            :value="item.slug"
-                        />
-                    </el-select>
                     <el-input class="mx-[20px] max-w-[300px]" v-model="filterSearch.search"
                         placeholder="Nhập từ khóa" clearable @keyup="fetchData()"/>
-                    <div class="text-[14px] px-[24px] py-[4px] rounded-[4px] bg-[red] text-white cursor-pointer" @click="deletePosts">
-                        Xóa bài
+                    <div class="bg-[blue] text-[14px] py-[5px] px-[18px] text-white rounded-[4px] cursor-pointer" @click="addAdvertist">
+                        Thêm mới
+                    </div>
+                    <div class="ml-[18px] text-[14px] px-[24px] py-[5px] rounded-[4px] bg-[red] text-white cursor-pointer" @click="deletePosts">
+                        Xóa quảng cáo
                     </div>
                 </div>
                 <DataTable :fields="fields" :items="tableData" enable-select-box @row-selected="handleSelectionChange">
-                    <template #title="{ row }">
-                        <div class="text-left cursor-pointer hover:text-[blue]" @click="editPost(row)">
-                            {{row.title}}
-                        </div>
-                    </template>
                     <template #slug="{ row }">
                         <div class="text-left hover:text-[blue]">
                             <Link :href="route('post', row.slug)">{{row.slug}}</Link>
@@ -54,7 +33,7 @@
                         <div class="text-left post-content" v-html="row.content"></div>
                     </template>
                     <template #image="{ row }">
-                        <img :src="row.image" alt="" class="object-cover h-[120px] w-[100%]">
+                        <img :src="row.image" alt="" class="object-cover h-[180px] w-[100%]">
                     </template>
                     <template #status="{ row }">
                         <div class="h-[36px] flex justify-center items-center">
@@ -68,22 +47,14 @@
                             />
                         </div>
                     </template>
-                    <template #created_at="{ row }">
-                        {{ row.created_at }}
-                        <div class="mx-[6px]">({{ row.creator }})</div>
-                    </template>
-                    <template #updated_at="{ row }">
-                        {{ row.updated_at }}
-                        <div class="mx-[6px]">({{ row.updater }})</div>
-                    </template>
                     <template #options="{ row }">
                         <div class="flex justify-center">
-                            <template v-if="tab == 'tab-0'">
-                                <Link :href="route('post', row.slug)" class="text-[20px] cursor-pointer mr-[8px]">
-                                    <i class="bi bi-arrow-right-square"></i>
-                                </Link>
-                            </template>
-                            <div class="text-[20px] cursor-pointer" @click="showPost(row)"><i class="bi bi-gear-fill"></i></div>
+                            <span class="text-[18px] cursor-pointer" @click="editAdvertist(row)">
+                                <i class="bi bi-pencil-fill"></i>
+                            </span>
+                            <span class="pl-[8px] text-[18px] cursor-pointer" @click="deleteSelection(row)">
+                                <i class="bi bi-trash3-fill"></i>
+                            </span>
                         </div>
                     </template>
                 </DataTable>
@@ -92,8 +63,8 @@
                       paginate-background/>
                 </div>
             </div>
-            <EditPostForm ref="editPostForm" @change-post="fetchData"/>
-            <ShowPostForm ref="showPostForm" @change-post="fetchData"/>
+            <AddAdvertistForm ref="addAdvertistForm" @change-advertist="fetchData"/>
+            <EditAdvertistForm ref="editAdvertistForm" @change-advertist="fetchData"/>
         </template>
     </AppLayoutAdmin>
 </template>
@@ -102,8 +73,8 @@ import AppLayoutAdmin from '@/Layouts/AppLayoutAdmin.vue'
 import { Link } from '@inertiajs/vue3'
 import DataTable from '@/Components/UI/DataTable.vue'
 import Paginate from "@/Components/UI/Paginate.vue"
-import ShowPostForm from './Dialog/ShowPost.vue'
-import EditPostForm from './Dialog/EditPost.vue'
+import AddAdvertistForm from './Dialog/AddAdvertist.vue'
+import EditAdvertistForm from './Dialog/EditAdvertist.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import axios from 'axios'
 
@@ -113,27 +84,23 @@ export default{
         Link,
         Paginate,
         DataTable,
-        ShowPostForm,
-        EditPostForm
+        AddAdvertistForm,
+        EditAdvertistForm
     },
     data() {
         return {
             tab: 'tab-0',
             fields: [
-                { key: 'title', label: 'Tiêu đề', align: 'center', width: 200 },
-                { key: 'categoryName', label: 'Chủ đề', align: 'center', width: 130 },
-                // { key: 'description', label: 'Mô tả', align: 'center', width: 180 },
-                { key: 'content', label: 'Nội dung', align: 'center' },
-                { key: 'image', label: 'Hình ảnh', align: 'center', width: 160 },
-                { key: 'status', label: 'Trạng thái', align: 'center', width: 100 },
-                { key: 'created_at', label: 'Ngày tạo', align: 'center', width: 140 },
-                { key: 'updated_at', label: 'Ngày cập nhật', align: 'center', width: 140 },
+                { key: 'name', label: 'Tên đối tác', align: 'center' },
+                { key: 'image', label: 'Hình ảnh', align: 'center', width: 300 },
+                { key: 'status', label: 'Trạng thái', align: 'center', width: 120 },
+                { key: 'created_at', label: 'Ngày tạo', align: 'center', width: 160 },
+                { key: 'updated_at', label: 'Ngày cập nhật', align: 'center', width: 160 },
                 { key: 'options', label: 'Options', align: 'center', width: 90 },
             ],
             options: [6, 12, 24, 32],
             filterSearch: {
                 limit: 6,
-                categorySelect: [],
                 search: '',
                 page: 1
             },
@@ -144,33 +111,21 @@ export default{
     },
     created() {
         this.fetchData()
-        document.title = `Quản lý bài viết - Admin hệ thống`
+        document.title = `Quản lý quảng cáo - Admin hệ thống`
     },
     methods: {
         clearFilter() {
             this.filterSearch.page = 1
-            this.filterSearch.isApproved = "2"
             this.filterSearch.search = ""
-            this.filterSearch.limit = 10
+            this.filterSearch.limit = 6
             this.paginate = []
             this.tableData = []
         },
         async fetchData() {
             const pagram = { ...this.filterSearch }
-            const response = await axios.get(route('admin.posts.index', pagram))
+            const response = await axios.get(route('admin.advertists.index', pagram))
             this.tableData = response.data.data
             this.paginate = response.data.meta
-        },
-        changeTab(tab) {
-            this.tab = tab
-            this.clearFilter()
-            if(this.tab == 'tab-0') {
-                this.filterSearch.isApproved = true
-            }
-            else {
-                this.filterSearch.isApproved = false
-            }
-            this.fetchData()
         },
         handleCurrentPage(value) {
             this.filterSearch.page = value
@@ -179,14 +134,15 @@ export default{
         handleSelectionChange(value) {
             this.selectedValue = value
         },
-        editPost(row) {
-            this.$refs.editPostForm.open(row)
+        addAdvertist() {
+            this.$refs.addAdvertistForm.open()
         },
-        showPost(row) {
-            this.$refs.showPostForm.open(row)
+        editAdvertist(row) {
+            console.log(row)
+            this.$refs.editAdvertistForm.open(row.id)
         },
         changeStatus(row) {
-            axios.get(route('admin.posts.change-status', row.id))
+            axios.get(route('admin.advertists.change-status', row.id))
                 .then(response => {
                     this.fetchData()
                 })
@@ -211,9 +167,9 @@ export default{
                 )
                 .then(() => {
                     const pagram = { ...{
-                        'posts': this.selectedValue
+                        'advertists': this.selectedValue
                     } }
-                    axios.post(route('admin.posts.delete-posts'), pagram)
+                    axios.post(route('admin.advertists.delete-advertists'), pagram)
                         .then(response => {
                             this.fetchData()
                             ElMessage({
@@ -224,6 +180,16 @@ export default{
                 })
                 .catch(() => {})
             }
+        },
+        deleteSelection(row) {
+            axios.delete(route('admin.advertists.destroy', row.id))
+                .then(response => {
+                    this.fetchData()
+                    ElMessage({
+                        type: 'success',
+                        message: 'Xóa bài viết thành công',
+                    })
+                })
         }
     }
 }

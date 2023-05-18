@@ -67,4 +67,9 @@ class HomeController extends Controller
     {
         return Inertia::render('Admin/AboutUs');
     }
+
+    public function advertist()
+    {
+        return Inertia::render('Admin/Advertist/ListAdvertist');
+    }
 }

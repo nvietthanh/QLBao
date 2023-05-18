@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\BackEnd\Admin\AboutUsController;
 use App\Http\Controllers\Api\BackEnd\Admin\AccountController;
+use App\Http\Controllers\Api\Backend\Admin\AdvertistController;
 use App\Http\Controllers\Api\BackEnd\Admin\CategoryController;
 use App\Http\Controllers\Api\BackEnd\Admin\HagtagController;
 use App\Http\Controllers\Api\BackEnd\Admin\PostController as AdminPostController;
@@ -162,4 +163,9 @@ Route::middleware('is_admin')->prefix('admin')->name('admin.')->group(function (
     Route::post('/delete-contacts', [AboutUsController::class, 'deleteContacts'])->name('delete-contacts');
     Route::get('/get-contact/{id}', [AboutUsController::class, 'getContact'])->name('get-contact');
     Route::post('/send-reply-contact/{id}', [AboutUsController::class, 'sendEmailContact'])->name('send-reply-contact');
+
+    Route::apiResource('/advertists', AdvertistController::class);
+    Route::post('/advertists/update/{id}', [AdvertistController::class, 'update'])->name('advertists.update');
+    Route::get('/advertist-change-status/{id}', [AdvertistController::class, 'changeStatus'])->name('advertists.change-status');
+    Route::post('/advertist-delete', [AdvertistController::class, 'deleteAdverts'])->name('advertists.delete-advertists');
 });
