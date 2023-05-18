@@ -47,6 +47,25 @@
                 </div>
             </div>
         </template>
+        <template v-slot:slide-default>
+            <div class="bg-[#fff] py-[12px] mb-[24px] rounded-[4px] box-shadow">
+                <div class="border-b-[2px] mt-[4px] mb-[8px]">
+                    <div
+                        class="border-l-[5px] border-[#db562b] text-[#db562b] font-bold ml-[8px] pl-[8px] mb-[12px] text-[17px]">
+                        Danh sách chủ đề
+                    </div>
+                </div>
+                <div class="px-[10px]">
+                    <div v-for="category in this.$page.props.categories">
+                        <template v-if="category.slug != this.$page.props.category">
+                            <Link :href="route('list-category', category.slug)" class="w-[100%]">
+                                <div class="text-[16px] py-[8px] px-[8px] hover:bg-[#e9ecef] hover:text-[#076db6]">{{ category.name }}</div>
+                            </Link>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </template>
     </AppLayout>
 </template>
 <script>

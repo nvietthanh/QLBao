@@ -256,6 +256,7 @@
                     <slot name="main-2" />
                 </div>
                 <div v-else class="col-4">
+                    <slot name="slide-default" />
                     <div class="bg-[#fff] py-[12px] mb-[24px] rounded-[4px] box-shadow">
                         <div class="border-b-[2px] mt-[4px] mb-[8px]">
                             <div
