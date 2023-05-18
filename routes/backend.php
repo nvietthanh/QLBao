@@ -45,7 +45,7 @@ Route::middleware('is_approved')->get('/get-post/{slugPost}', [HomeController::c
 // Infor creator
 Route::get('/get-infor-user/{id}', [CreatorController::class, 'getInfor'])->name('cretor.get-infor');
 
-Route::Get('/get-new-post-interested', [HomePostController::class, 'getPostInterested'])->name('post.get-post-interested');
+Route::get('/get-new-post-interested', [HomePostController::class, 'getPostInterested'])->name('post.get-post-interested');
 
 // creator
 Route::middleware(['is_approved', 'auth:accounts', 'is_creator'])->prefix('creator')->name('creator.')->group(function () {
