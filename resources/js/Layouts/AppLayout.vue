@@ -83,7 +83,7 @@
                                                         <div v-else class="ml-[16px]"></div>
                                                     </div>
                                                 </Link>
-                                                <Link v-else :href="route(notice.notice_type, notice.notice_id)">
+                                                <Link v-else-if="notice.type == 1" :href="route(notice.notice_type, notice.notice_id)">
                                                     <div class="mx-[1px] py-[12px] px-[12px] flex items-center cursor-pointer border-b-[2px] hover:bg-[#e9ecef]"
                                                         :class="{ 'bg-[#e9ecef]' : !notice.is_read}">
                                                         <div class="ml-[8px]">
@@ -137,6 +137,10 @@
                                 <template #dropdown>
                                     <el-dropdown-menu>
                                         <template v-if="this.$page.props.auth.account">
+                                            <el-dropdown-item @click="redirctPage('user.list-message')">
+                                                <div class="w-[23px]"><i class="bi bi-chat-square-text"></i></div>
+                                                <span class="ml-[3px]">Cuộc trò chuyện</span>
+                                            </el-dropdown-item>
                                             <el-dropdown-item @click="redirctPage('user.list-save')">
                                                 <div class="w-[23px]"><i class="bi bi-bookmark-check-fill text-[16px]"></i>
                                                 </div>
@@ -206,7 +210,7 @@
                     </div>
                     <div class="py-[1px] px-[12px] mr-[8px] text-[#fff] text-[24px] cursor-pointer hover:bg-[#22b1c7]"
                         :class="{ 'bg-[#22b1c7]': hiddenMenu == true }" @click="hiddenMenu = !hiddenMenu">
-                        <i class="bi bi-list"></i>
+                            <i class="bi bi-list"></i>
                     </div>
                 </div>
             </div>
@@ -438,6 +442,9 @@ export default {
     },
     created() {
         this.fetchData()
+        // Echo.channel(`send-message.${this.$page.props.auth.account.id}`).listen('SendMessageEvent', (e) => {
+        //     console.log(e);
+        // })
     },
     methods: {
         moment,

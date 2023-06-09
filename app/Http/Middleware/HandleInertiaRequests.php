@@ -46,7 +46,8 @@ class HandleInertiaRequests extends Middleware
             $account = array_merge(
                 $account->accountProfile->only('first_name' , 'last_name', 'image'),
                 [
-                    'code' => $account->code
+                    'code' => $account->code,
+                    'id' => $account->id
                 ]
             );
         }

@@ -63,6 +63,7 @@ Route::middleware([
     Route::get('following', [UserController::class, 'lisFollows'])->name('list-follow');
     Route::get('list-reads', [UserController::class, 'listReads'])->name('list-read');
     Route::get('list-saves', [UserController::class, 'listSaves'])->name('list-save');
+    Route::get('message/{id?}', [UserController::class, 'message'])->name('list-message');
 
     Route::middleware('is_creator')->group(function () {
         Route::get('my-post', [CreatorController::class, 'listPosts'])->name('my-post');

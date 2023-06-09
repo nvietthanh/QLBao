@@ -49,7 +49,7 @@
                   @click="this.$refs.file.click()">
                     <input type="file" ref="file" accept=".jpg,.png,.bmp,.jpeg,.tif,.gif" @change="changeImage" hidden>
                     <i class="bi bi-upload text-lg mr-[8px] text-white"></i> Upload hình ảnh
-                </div>
+                </div>  
                 <div v-if="errors.image" class="mt-[5px] text-[#ff0000]">
                     {{ errors.image[0] }}
                 </div>
