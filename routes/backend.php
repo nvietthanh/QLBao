@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\BackEnd\Admin\PrivatePolicyController;
 use App\Http\Controllers\Api\BackEnd\Admin\ReportAccountController;
 use App\Http\Controllers\Api\BackEnd\Admin\ReportPostController;
 use App\Http\Controllers\Api\BackEnd\Admin\TermOfUseController;
+use App\Http\Controllers\Api\BackEnd\ChatMesssageController;
 use App\Http\Controllers\Api\BackEnd\CommentController;
 use App\Http\Controllers\Api\BackEnd\Creator\PostController;
 use App\Http\Controllers\Api\BackEnd\FollowController;
@@ -62,6 +63,12 @@ Route::middleware([
     'auth:accounts'
 ])
 ->prefix('user')->group(function () {
+    Route::get('/list-account-message', [ChatMesssageController::class, 'listAccount'])->name('list-account-message');
+    Route::get('/search-account-message', [ChatMesssageController::class, 'searchAccount'])->name('search-account-message');
+    Route::get('/list-message/{id}', [ChatMesssageController::class, 'listMessage'])->name('list-message');
+    Route::get('/change-status-message/{id}', [ChatMesssageController::class, 'changeStatus'])->name('change-status-message');
+    Route::post('/send-message', [ChatMesssageController::class, 'sendMessage'])->name('send-message');
+
     Route::apiResource('profiles', ProfileController::class);
     Route::post('/profiles/{id}', [ProfileController::class, 'update'])->name('profiles.update');
 
