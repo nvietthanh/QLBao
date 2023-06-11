@@ -54,14 +54,20 @@
                                             </div>
                                             <div class="ml-[10px]">
                                                 <div class="text-[14px] font-bold">{{ account.account_name }}</div>
-                                                <div class="text-[13px]">
-                                                    <span :class="{ 'font-bold' : account.is_account_send && !account.status }">{{ account.is_account_send ? '' : 'Bạn: ' }}{{ account.last_message }}</span>
-                                                    <span> . </span>
-                                                    <span class="text-[12px]">{{ convertTime(account.last_message_time) }}</span>
+                                                <div class="text-[13px] flex">
+                                                    <span class="message-content">
+                                                        <span :class="{ 'font-bold' : account.last_account_id && !account.status }">{{ !account.last_account_id ? 'Bạn: ' : '' }}{{ account.last_message }}</span>
+                                                    </span>
+                                                    <span class="ml-[12px] text-[12px]">{{ convertTime(account.last_message_time) }}</span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div v-if="!account.is_account_send && !account.status" class="w-[10px] h-[10px] bg-[#0099FF] rounded-[50%]"></div>
+                                        <template v-if="account.status == -1">
+                                            <div class="ml-[12px] text-[20px] min-w-[10px]">...</div>
+                                        </template>
+                                        <template v-else>
+                                            <div v-if="account.last_account_id && !account.status" class="ml-[12px] min-w-[10px] h-[10px] bg-[#0099FF] rounded-[50%]"></div>
+                                        </template>
                                     </div>
                                 </Link>
                             </template>
@@ -89,12 +95,12 @@
                         <div class="overflow-y-scroll px-[12px] pb-[8px] flex flex-col-reverse"
                          :class="{ 'border-r-[2px] border-r-[#3578E5]' : !seenMessage, 'h-[498px] max-h-[498px]' : fileImageSelects.length == 0,
                          'h-[415px] max-h-[415px]' : fileImageSelects.length > 0 }" @click="changeStatus">
-                            <div class="flex justify-end text-[12px] mt-[2px]" v-if="!accountSelect.is_account_send">
-                                {{ accountSelect.status ? 'Đã xem' : 'Đã gửi' }}
+                            <div class="flex justify-end text-[12px] mt-[2px]" v-if="!accountSelect.last_account_id">
+                                {{ accountSelect.status == -1 ? 'Đang gửi' : (accountSelect.status ? 'Đã xem' : 'Đã gửi') }}
                             </div>
                             <template v-for="(message, index) in listMessage">
                                 <template v-if="message.account_send_id == this.$page.props.auth.account.id">
-                                    <div class="flex justify-end items-end text-white mt-[4px]" v-if="message.type == 0">
+                                    <div v-if="message.type == 0" class="flex justify-end items-end text-white mt-[4px]">
                                         <div class="text-[15px] ml-[8px] bg-[#3578E5] max-w-[400px] py-[8px] px-[18px] rounded-[8px]">
                                             {{ message.content }}
                                         </div>
@@ -261,6 +267,11 @@
                             </div>
                         </div>
                     </template>
+                    <template v-else>
+                        <div class="w-[100%] h-[100%] flex justify-center items-center">
+                            <b>Không có cuộc hội thoại nào, hãy chọn cuộc hội thoại</b>
+                        </div>
+                    </template>
                 </div>
             </div>
         </template>
@@ -310,7 +321,15 @@ export default{
         document.title = `Danh sách cuộc trò chuyện`
         this.fetchData()
         Echo.channel(`send-message.${this.$page.props.auth.account.id}`).listen('SendMessageEvent', (e) => {
-            this.fetchListAccount()
+            const index = this.listAccount.findIndex(account => account.account_id == e.account_send_id)
+            let account = this.listAccount.find(account => account.account_id == e.account_send_id)
+            account.last_account_id = true
+            account.last_message = e.message.content
+            account.status = 0
+            account.last_message_time = moment().format('YYYY/MM/DD H:mm:ss')
+            this.listAccount.splice(index, 1)
+            this.listAccount.unshift(account)
+
             if(e.account_send_id == this.accountSelect.account_id) {
                 this.listMessage.unshift(e.message)
                 this.accountSelect.is_account_send = 1
@@ -324,7 +343,10 @@ export default{
         })
 
         Echo.channel(`change-status-message.${this.$page.props.auth.account.id}`).listen('ChangeStatusMessageEvent', (e) => {
-            this.fetchListAccount()
+            let accountFind = this.listAccount.find(account => account.account_id == e.account_send_id)
+            if(accountFind) {
+                accountFind = e.status
+            }
             if(e.account_send_id == this.accountSelect.account_id) {
                 this.accountSelect.status = e.status
             }
@@ -353,12 +375,6 @@ export default{
                     this.fetchListMessage()
                 }
             }
-            else {
-                if(this.listAccount.length > 0) {
-                    this.accountSelect = this.listAccount[0]
-                    this.fetchListMessage()
-                }
-            }
         },
         async fetchListAccount() {
             await axios.get(route('list-account-message'))
@@ -370,8 +386,8 @@ export default{
         async fetchListMessage() {
             await axios.get(route('list-message', this.accountSelect.account_id))
                 .then(response => {
-                    this.listMessage = response.data.data
-                    if(this.listMessage.length > 0 && this.accountSelect.status == 0 && this.accountSelect.is_account_send) {
+                    this.listMessage = response.data.data.reverse()
+                    if(this.listMessage.length > 0 && this.accountSelect.status == 0 && this.accountSelect.last_account_id) {
                         this.seenMessage = false
                     }
                     else {
@@ -411,20 +427,36 @@ export default{
                     account_send_image: this.$page.props.auth.account.id,
                     account_send_name: this.$page.props.auth.account.first_name + ' ' + this.$page.props.auth.account.last_name,
                     content: this.dataForm.message,
-                    created_at: moment().format('YYYY/MM/DD h:mm:ss'),
+                    created_at: moment().format('YYYY/MM/DD H:mm:ss'),
                     file: JSON.parse(JSON.stringify(this.fileImageSelects)),
                     status: false,
                     type: this.dataForm.message ? 0 : 1,
                 }
                 this.listMessage.unshift(message)
+
+                // clear data input message
                 this.dataForm.message = ''
                 this.dataForm.images = []
                 this.fileImageSelects = []
                 this.isChangeMessage = false
 
+                this.accountSelect.status = -1
+                this.accountSelect.last_account_id = false
+                this.accountSelect.last_message_time = moment().format('YYYY/MM/DD H:mm:ss')
+                let accountFind = this.listAccount.find(account => account.account_id == this.accountSelect.account_id)
+                if(!accountFind) {
+                    accountFind = this.listAccount.append(this.accountSelect)
+                }
+            
+                accountFind.last_message = message.content
+                accountFind.last_account_id = false
+                accountFind.last_message_time = moment().format('YYYY/MM/DD H:mm:ss')
+                accountFind.status = -1
+
                 axios.post(route('send-message'), pagram)
                     .then(response => {
-                        this.fetchListAccount()
+                        this.accountSelect.status = 0
+                        accountFind.status = 0
                     })
                     .catch(errors => {
                         this.errors = errors.response.data.errors
@@ -435,10 +467,11 @@ export default{
             const lastMesssage = this.listMessage[0]
             if(lastMesssage && lastMesssage.account_receive_id == this.$page.props.auth.account.id && lastMesssage.status == 0) {
                 this.seenMessage = true
+                let accountFind = this.listAccount.find(account => account.account_id == this.accountSelect.account_id)
+                if(accountFind) {
+                    accountFind.status = 1
+                }
                 axios.get(route('change-status-message', this.accountSelect.account_id))
-                    .then(response => {
-                        this.fetchListAccount()
-                    })
             }
         },
         changeInput() {
@@ -498,6 +531,9 @@ export default{
             else if(now.diff(time, 'seconds') > 0) {
                 return `${now.diff(time, 'seconds')} giây trước`
             }
+            else{
+                return `1 giây trước`
+            }
         },
     }
 }
@@ -510,6 +546,14 @@ export default{
 }
 .search .absolute  {
     width: 100% !important;
+}
+.message-content {
+    max-width: 145px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 1;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
 }
 </style>
   
